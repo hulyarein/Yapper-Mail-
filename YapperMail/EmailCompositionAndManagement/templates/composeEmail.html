@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Compose Email</title>
+        <style>
+            body{
+                background-color: #F4F4F4;
+                height: 97vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .logoImage{
+                width: 250px;
+            }
+            .bodyContent{
+                display: flex;
+                flex-direction: row;
+                flex: 1;
+            }
+            .buttonPart{
+                display: flex;
+                flex-direction: column;
+            }
+            .emailpart{
+                background-color: black;
+                flex: 1;
+            }
+            .composeButton{
+                width: 170px;
+                margin-bottom: 20px;
+            }
+            .inboxButton{
+                height: 35px;
+                width: 150px;
+                object-fit: contain;
+            }
+            .sentButton{
+                height: 35px;
+                width: 150px;
+                object-fit: contain;
+            }
+            .trashButton{
+                height: 35px;
+                width: 150px;
+                object-fit: contain;
+            }
+            .viewEmailButtons{
+                display: flex;
+                flex-direction: column;
+                margin-left: 20px;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div>
+            <img src = "{% static 'images/logo.png' %}" class = "logoImage">
+        </div>
+        <div class = "bodyContent">
+            <div class = "buttonPart">
+                <img src = "{% static 'images/Compose.png' %}" class = "composeButton">
+                <div class = "viewEmailButtons">
+                    <img src = "{% static 'images/Inbox.png' %}" class = "inboxButton">
+                    <img src = "{% static 'images/Sent.png' %}" class = "sentButton">
+                    <img src = "{% static 'images/Trash.png' %}" class = "trashButton">
+                </div>
+            </div>
+            <div class = "emailpart">
+
+            </div>
+        </div>
+    </body>
+</html>
