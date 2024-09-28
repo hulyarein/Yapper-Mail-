@@ -26,5 +26,5 @@ def email_sent_view(request):
         form = ReplyComposeForm()
 
         
-    return render(request,"emailSentView.html",{'form':form})
+    return render(request,"emailReceiveView.html",{'form':form})
 
