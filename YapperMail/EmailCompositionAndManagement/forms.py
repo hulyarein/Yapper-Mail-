@@ -48,3 +48,12 @@ class EditEmailForm(forms.Form):
             'class': 'descriptionForm',
             'placeholder': 'Enter Description here',
         }))
+    
+class EditReplyForm(forms.Form):
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows':20,
+            'columns':40,
+            'class': 'descriptionForm',
+            'placeholder': 'Enter Description here',
+        }))

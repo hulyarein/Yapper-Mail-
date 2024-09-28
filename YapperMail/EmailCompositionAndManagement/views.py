@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404
-from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm
+from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm
 
 # Create your views here.
 
@@ -39,4 +39,15 @@ def edit_email(request):
         form = EditEmailForm()
 
     return render(request,"editEmail.html",{'form':form})
+
+def edit_reply(request):
+    if request.method == "POST":
+        form = EditReplyForm(request.POST)
+        if form.is_valid():
+            pass
+
+    else:
+        form = EditReplyForm()
+
+    return render(request,"editReply.html",{'form':form})
 
