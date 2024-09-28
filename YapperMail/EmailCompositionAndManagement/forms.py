@@ -18,3 +18,13 @@ class EmailComposeForm(forms.Form):
             'class': 'descriptionForm',
             'placeholder': 'Enter Description here',
         }))
+    
+class ReplyComposeForm(forms.Form):
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows':2,
+            'columns':40,
+            'class':'messageForm',
+            'placeholder':'Enter reply here'
+        })
+    )
