@@ -18,6 +18,181 @@
     {% include 'components/header.html' %}
     <div class="header">{% block header %}{% endblock %}</div>
 
+    <div class="title flex flex-col justify-center items-center">
+      <h2>Personal Info</h2>
+      <h3>Manage how the world sees you</h3>
+    </div>
+
+    <div class="content pb-20">
+      <div class="personalInfo border-2 border-[#F37D84] m-10 rounded-3xl">
+        <div class="flex items-center m-6">
+          <label class="font-sans text-3xl mx-10">Personal Info</label>
+        </div>
+        <hr class="border-[#F37D84] border-2" />
+        <div class="profilePic m-6 flex justify-between items-center">
+          <label class="mx-10">Profile Picture</label>
+          <img
+            src="https://iv1.lisimg.com/image/25565557/740full-im-nayeon.jpg"
+            alt="nayeon"
+            class="h-16 w-16 rounded-full mx-10"
+          />
+        </div>
+        <hr class="border-[#F37D84] border-2" />
+        <div class="name m-6 flex justify-between items-center">
+          <div class="flex content-between">
+            <label class="w-24 mx-10">Name</label>
+            <label>Im Nayeon</label>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-chevron-right mx-16"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+            />
+          </svg>
+        </div>
+        <hr class="border-[#F37D84] border-2" />
+
+        <div class="birthday m-6 flex justify-between items-center">
+          <div class="flex content-between">
+            <label class="w-24 mx-10">Birthday</label>
+            <label>September 22, 1995</label>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-chevron-right mx-16"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+            />
+          </svg>
+        </div>
+        <hr class="border-[#F37D84] border-2" />
+
+        <div class="name m-6 flex justify-between items-center">
+          <div class="flex content-between">
+            <label class="w-24 mx-10">Gender</label>
+            <label>Female</label>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-chevron-right mx-16"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="contactinfo border-2 border-[#F37D84] m-10 rounded-3xl">
+        <div class="flex items-center m-6">
+          <label class="font-sans text-3xl mx-10">Contact Information</label>
+        </div>
+        <hr class="border-[#F37D84] border-2" />
+        <div class="name m-6 flex justify-between items-center">
+          <div class="flex content-between gap-14">
+            <label class="mx-10">Email</label>
+            <label>imnayeon@yapper.com</label>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-chevron-right mx-16"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+            />
+          </svg>
+        </div>
+        <hr class="border-[#F37D84] border-2" />
+        <div class="name m-6 flex justify-between items-center">
+          <div class="flex content-between gap-14">
+            <label class="mx-10">Phone</label>
+            <label>09123456789</label>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-chevron-right mx-16"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="personalInfo border-2 border-[#F37D84] m-10 rounded-3xl">
+        <div class="flex items-center m-6">
+          <label class="font-sans text-3xl mx-10">Addresses</label>
+        </div>
+        <hr class="border-[#F37D84] border-2" />
+        <div class="name m-6 flex justify-between items-center">
+          <div class="flex content-between gap-14">
+            <label class="mx-10">Home</label>
+            <label>Im Nayeon</label>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-chevron-right mx-16"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+            />
+          </svg>
+        </div>
+        <hr class="border-[#F37D84] border-2" />
+        <div class="name m-6 flex justify-between items-center">
+          <div class="flex content-between gap-14">
+            <label class="mx-10">Work</label>
+            <label>Im Nayeon</label>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            class="bi bi-chevron-right mx-16"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
     <!-- bootstrapshiz-->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
