@@ -29,7 +29,7 @@
         }
 
         .emailCompose {
-            min-height: 600px;
+            min-height: 650px;
             width: 80%;
             background-color: white;
             border-style: solid;
@@ -228,7 +228,7 @@
     </div>
     <div class = "backEmailComp">←</div>
     <div class="bodyContent">
-        <form method="POST" class="emailCompose">
+        <form method="post" class="emailCompose" enctype="multipart/form-data">
             {%csrf_token%}
             <div class=UsertoClass>
                 <div class="toDesign">
@@ -237,6 +237,11 @@
                 <div class=formUserDiv>
                     {{form.toUser}}
                 </div>
+            </div>
+            <div style="margin-left: 60px; color: rgb(255, 64, 118);">
+                {% if form.toUser.errors %}
+                    <div class="error">Invalid email</div> 
+                {% endif %}
             </div>
 
             <div class=SubjectClass>
