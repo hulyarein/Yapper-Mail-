@@ -14,3 +14,43 @@ p {
     margin: 0;
     padding: 0;
 }
+
+.background-img {
+    background: url(https://www.ledr.com/colours/red.jpg)
+      0 0 no-repeat;
+    width: 100%;
+    height: 800px;
+  }
+  
+.vmiddle {
+display: flex;
+align-items: center;
+}
+.form-control:focus {
+    border-color: #FF0000;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.5);
+}
+
+.form-control-lg {   
+    font-size: 15px !important; 
+    height: 55px;
+    color: rgba(26,26,26,0.5);
+    border: solid 2px;
+    border-color: rgba(26,26,26,0.5);
+
+}  
+
+a {
+    text-decoration: none;
+    color: #F37D84;
+    font-weight: bold;
+  }
+/* 
+.container {
+    margin:0px !important;
+}
+
+.row {
+    margin:0px;
+    padding: 0px;
+} */
