@@ -1,0 +1,5 @@
+<h1>You are logged in as {{ request.user }}.</h1>
+<form method="post" action="{% url 'landing' %}">
+  {% csrf_token %}
+  <button type="submit">Logout</button>
+</form>

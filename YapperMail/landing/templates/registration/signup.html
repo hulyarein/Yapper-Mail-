@@ -18,9 +18,12 @@
             
             <div class = "col-lg-6 p-0 m-0 d-flex justify-content-center align-items-center">
 
-                    <form class="row w-100 d-flex align-items-center justify-content-center g-3" style="padding: 100px;">
+                    <form class="row w-100 d-flex align-items-center justify-content-center g-3" style="padding: 100px;" method="post">
                         {% csrf_token %} 
                         <p class="fs-3 fw-bold" style="color: #111111;" >Sign up</p> 
+                        <div class="col-12">
+                            <input type="text" class="form-control form-control-lg" placeholder="Username" aria-label=".form-control-sm example" name="username">
+                        </div>
                         <div class="col-md-6">
                             <input type="text" class="form-control form-control-lg" placeholder="First name" aria-label="First name" name="fname">
                         </div>
