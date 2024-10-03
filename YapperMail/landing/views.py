@@ -44,4 +44,6 @@ def loginForm(request):
         form = AuthenticationForm()
         print("Displaying login form")
     
-    return render(request, 'home', {"form": form})
+    # ako gi change laine -ninin
+    return render(request, 'registration/login.html', {"form": form})
+    # return render(request, 'home', {"form": form})
