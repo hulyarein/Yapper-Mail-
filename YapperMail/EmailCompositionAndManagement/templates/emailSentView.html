@@ -267,6 +267,9 @@
         return b.files;
     }
     $(document).ready(function(){
+        $(".editPost").click(function(e){
+            window.location.href = "http://127.0.0.1:8000/emailmanagement/editEmail"
+        })
         $('.sendImage').on('click', function () {
             $('#fileInput').click();
         });

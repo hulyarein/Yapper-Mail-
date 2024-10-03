@@ -56,6 +56,18 @@ def email_sent_view(request):
         form = ReplyComposeForm()
 
         
+    return render(request,"emailSentView.html",{'form':form})
+
+def email_reply_view(request):
+    if request.method == "POST":
+        form = ReplyComposeForm(request.POST)
+
+        if form.is_valid():
+            message = form.cleaned_data['message']
+    else:
+        form = ReplyComposeForm()
+
+        
     return render(request,"emailReceiveView.html",{'form':form})
 
 def edit_email(request):
