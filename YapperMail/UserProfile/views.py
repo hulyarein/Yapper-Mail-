@@ -59,7 +59,6 @@ def changeHome(request):
     return render(request, "homeChange.html")
 
 def checkSession(request):
-    print("hi")
-    # if not request.user.is_authenticated:
-    #     return redirect('changeBday')
-    # return None
+    if not request.user.is_authenticated:
+        return redirect('changeBday')
+    return None
