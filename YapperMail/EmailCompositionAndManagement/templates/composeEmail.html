@@ -241,6 +241,8 @@
             <div style="margin-left: 60px; color: rgb(255, 64, 118);">
                 {% if form.toUser.errors %}
                     <div class="error">Invalid email</div> 
+                {% elif errormessage %}
+                    <div class="error">User Not Found</div>
                 {% endif %}
             </div>
 
