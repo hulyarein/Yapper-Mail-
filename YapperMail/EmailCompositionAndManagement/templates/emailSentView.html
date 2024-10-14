@@ -164,6 +164,7 @@
         <div class = "backEmailComp">←</div>
         <div class = "deletePost">🗑</div>
         <img src="{%static 'images/Edit.png'%}" class = "editPost">
+        <div style="display: none;" class = "numEmail">{{emailCont.id}}</div>
     </div>
     <div class="bodyContent">
         <form method="POST" class = viewEmail>
@@ -262,7 +263,8 @@
 
     $(document).ready(function(){
         $(".editPost").click(function(e){
-            window.location.href = "http://127.0.0.1:8000/emailmanagement/editEmail"
+            console.log("Hello")
+            window.location.href = `http://127.0.0.1:8000/emailmanagement/editEmail/${parseInt($(".numEmail").text())}`
         })
         $('.sendImage').on('click', function () {
             $('#fileInput').click();

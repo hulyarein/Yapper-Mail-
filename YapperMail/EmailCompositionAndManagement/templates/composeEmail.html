@@ -25,7 +25,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            
+
         }
 
         .emailCompose {
@@ -176,20 +176,23 @@
             width: 30px;
             height: 30px;
         }
-        .file-item{
+
+        .file-item {
             background-color: #F0F0F0;
             padding: 10px 15px;
             margin-bottom: 10px;
             border-radius: 10px;
             color: #F69BA0;
         }
-        .delete-button{
+
+        .delete-button {
             color: #F69BA0;
             margin-left: 10px;
         }
-        .backEmailComp{
+
+        .backEmailComp {
             font-size: 30px;
-            color:#F69BA0 ;
+            color: #F69BA0;
             margin-left: 10%;
         }
 
@@ -226,7 +229,7 @@
     <div>
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
-    <div class = "backEmailComp">←</div>
+    <div class="backEmailComp">←</div>
     <div class="bodyContent">
         <form method="post" class="emailCompose" enctype="multipart/form-data">
             {%csrf_token%}
@@ -240,9 +243,9 @@
             </div>
             <div style="margin-left: 60px; color: rgb(255, 64, 118);">
                 {% if form.toUser.errors %}
-                    <div class="error">Invalid email</div> 
+                <div class="error">Invalid email</div>
                 {% elif errormessage %}
-                    <div class="error">User Not Found</div>
+                <div class="error">User Not Found</div>
                 {% endif %}
             </div>
 
@@ -259,7 +262,8 @@
                 {{form.description}}
             </div>
             <div style="height: 130px; margin-bottom: 30px; margin-left: 60px ;
-                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;" id="fileList">
+                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;"
+                id="fileList">
 
             </div>
 
@@ -290,23 +294,42 @@
 
         // Handle the file selection
         $('#fileInput').on('change', function () {
-            var files = this.files; // Get the selected files
-            console.log(files)
+            var fileInput = this; // Get the input element
+            var files = Array.from(fileInput.files); // Convert FileList to array
+            console.log(files);
+
             if (files.length > 0) {
                 $('#fileList').empty(); // Clear existing file list
-                //$('#uploadButton').show(); // Show the upload button
+
+                // Create an array to hold modified files
+                var modifiedFiles = [];
 
                 // Loop through selected files
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
+                    var uniqueString = new Date().getTime(); // Create a unique string using the current timestamp
+                    var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
+
+                    // Create a new File object with the unique name
+                    var newFile = new File([files[i]], uniqueName, { type: files[i].type });
+
+                    // Push the new file to the modifiedFiles array
+                    modifiedFiles.push(newFile);
+
+                    // Create and display the file item
                     var fileItem = $('<div class="file-item"></div>');
-                    fileItem.append($('<span></span>').text(fileName));
+                    fileItem.append($('<span></span>').text(uniqueName)); // Display the unique name
                     fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
 
                     $('#fileList').append(fileItem);
                 }
+
+                // Update the input element with the modified files using FileListItems
+                fileInput.files = FileListItems(modifiedFiles);
+                console.log(Array.from(fileInput.files))
             }
         });
+
 
         // Handle delete button click
         $(document).on('click', '.delete-button', function () {
