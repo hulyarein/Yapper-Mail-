@@ -170,7 +170,7 @@
             {%csrf_token%}
             <div class="aboveReply">
                 <div class = "postSection">
-                    <div class = "postHeader">My Submissionansdlkfnsldfnlsakdnflsas
+                    <div class = "postHeader">{{emailCont.subject}}
                     </div>
                     <div class = "postContent">
                         <div class = "accountContain">
@@ -179,31 +179,24 @@
                                     J
                                 </div>
                                 <div>
-                                    <div class = fromName>Jake</div>
-                                    <div class = toName>Mary</div>
+                                    <div class = fromName>{{emailCont.fromUser.firstname}}</div>
+                                    <div class = toName>{{emailCont.fromUser.lastname}}</div>
+                                    <div class = dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">{{emailCont.date_sent}}</div>
                                 </div>
                             </div>
                             <img src = "{%static 'images/keyboard_return.png'%}" class = "returnImage">
                         </div>
-                        <div class = descriptionDiv>fdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaffdjnsajndfkjsnadfkjsndajkfnsdkjfnkjsdanfkjankdsfnakjsdnfkjsadnfkjnadskfjnsjkdaf
-                        sandkjfnsdkjafnskd
-                        kjasndjkfnsakdf
-    
-                        kjasndkjfnsadkjfnkjasfn
+                        <div class = descriptionDiv>{{emailCont.content}}
                         </div>
                         <div class = "imageContain">
-                            <div class = "filePostItem">
-                                <span>HEllo worldnbAKDFbskadjbfhashfasjfbbsjafhsdajfbsahfsahfbhsdaf.png</span>
-                                <span class = "delete-button-post">🗑️</span>
-                            </div>
-                            <div class = "filePostItem">
-                                <span>HEllo worldnbAKDFbskadjbfhashfasjfbbsjafhsdajfbsahfsahfbhsdaf.png</span>
-                                <span class = "delete-button-post">🗑️</span>
-                            </div>
-                            <div class = "filePostItem">
-                                <span>HEllo worldnbAKDFbskadjbfhashfasjfbbsjafhsdajfbsahfsahfbhsdaf.png</span>
-                                <span class = "delete-button-post">🗑️</span>
-                            </div>
+                            {% for files in filesCont %}
+                                <div class="filePostItem">
+                                    <a href="{% url 'download_file' files.file %}" style = "color: #F69BA0; text-decoration: none;">
+                                        {{files.file}}
+                                    </a>
+                                </div>
+                            {% endfor %}
+
                         </div>
                     </div>
                 </div>
@@ -266,6 +259,7 @@
         }
         return b.files;
     }
+
     $(document).ready(function(){
         $(".editPost").click(function(e){
             window.location.href = "http://127.0.0.1:8000/emailmanagement/editEmail"

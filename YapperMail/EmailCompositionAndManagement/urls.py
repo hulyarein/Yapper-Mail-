@@ -8,4 +8,5 @@ urlpatterns = [
     path('emailReceiveView/',views.email_reply_view,name='emailReceiveView'),
     path('editEmail/',views.edit_email,name='editEmail'),
     path('editReply/',views.edit_reply,name='editReply'),
+    path('download/<path:filename>/', views.download_file, name='download_file')
 ]
