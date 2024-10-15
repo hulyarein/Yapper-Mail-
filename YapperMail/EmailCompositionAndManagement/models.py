@@ -34,3 +34,25 @@ class EmailFiles(models.Model):
     def __str__(self):
         return f"{self.file}"
     
+
+class Reply(models.Model):
+    fromUser = models.ForeignKey(TemporaryUser,on_delete=models.CASCADE,related_name="reply_to_email")
+    emailId = models.ForeignKey(Email,on_delete=models.CASCADE,related_name="emialReply")
+    content = models.TextField()
+    date_sent = models.DateTimeField(auto_now_add=True)   
+
+    def __str__(self):
+        return f"{self.id}-{self.fromUser}"
+    
+
+class ReplyFiles(models.Model):
+    fromUser = models.ForeignKey(TemporaryUser,on_delete=models.CASCADE,related_name="reply_files_user")
+    emailId = models.ForeignKey(Email,on_delete=models.CASCADE,related_name="emialReplyFiles",null=True,blank=True)
+    replyid = models.ForeignKey(Reply,on_delete=models.CASCADE,related_name="reply_file_replyid")
+    file = models.FileField(upload_to='uploads/')
+
+    def __str__(self):
+        return f"{self.id}-{self.file}"
+
+    
+

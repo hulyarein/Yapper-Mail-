@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm
-from .models import Email,EmailFiles,TemporaryUser
+from .models import Email,EmailFiles,TemporaryUser,Reply,ReplyFiles
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, Http404
@@ -60,27 +60,80 @@ def email_composition(request):
 
 
 def email_sent_view(request):
-    if request.method == "POST":
-        form = ReplyComposeForm(request.POST)
-
-        if form.is_valid():
-            message = form.cleaned_data['message']
-    else:
-        form = ReplyComposeForm()
-
-    
     getEmail = Email.objects.get(id = 7)
 
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
+
+    userRep = TemporaryUser.objects.get(id = 3)
+
+
+    if request.method == "POST":
+        form = ReplyComposeForm(request.POST,request.FILES)
+
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            try:
+                replyModel = Reply(
+                    fromUser = userRep,
+                    emailId = getEmail,
+                    content = message
+                )
+
+                replyModel.save()
+
+
+                uploaded_files = request.FILES.getlist('file')
+                if uploaded_files:
+                    for uploaded_file in uploaded_files:
+                        email_file = ReplyFiles(
+                            fromUser=userRep,
+                            emailId = getEmail,
+                            replyid=replyModel, 
+                            file=uploaded_file
+                        )
+                        email_file.save()  
+                else:
+                    print("No files were uploaded.")
+
+                return redirect("../emailSentView")
+            
+            except ObjectDoesNotExist:
+                print("Does not Exists")
+
+    else:
+        form = ReplyComposeForm()
+    
+    allRep = Reply.objects.filter(emailId = getEmail)
+    allRepFiles = ReplyFiles.objects.filter(emailId = getEmail)
         
-    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles})
+    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles})
 
 def email_reply_view(request):
+
     if request.method == "POST":
         form = ReplyComposeForm(request.POST)
 
         if form.is_valid():
             message = form.cleaned_data['message']
+
+            try:
+                emailRep = Email.objects.get(id = pk)
+                userRep = TemporaryUser.objects.get(id = 3)
+
+                replyModel = Reply(
+                    fromUser = userRep,
+                    emailId = emailRep,
+                    content = message
+                )
+
+                replyModel.save()
+
+            
+            except ObjectDoesNotExist:
+                print("Does not Exists")
+
+
+
     else:
         form = ReplyComposeForm()
 
