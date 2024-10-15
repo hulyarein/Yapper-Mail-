@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
+from landing.models import Profile
 
 # Create your views here.
 def profilePage(request):
@@ -7,7 +8,40 @@ def profilePage(request):
     if isinstance(session_check, HttpResponse):
         return session_check
 
-    return render(request, "profilePage.html")
+    profile = Profile.objects.filter(user=request.user).first()
+
+    first_name = profile.user.first_name
+    last_name = profile.user.last_name
+    #    birthday = profile.birthday
+    #    gender = profile.gender
+
+    phone_number = profile.pnumber
+    email_address = profile.user.username
+
+    # home = profile.home_address
+    # work = profile.work_address
+   
+    context = {
+        'first_name': ' '.join(word.capitalize() for word in first_name.split()),
+        'last_name': ' '.join(word.capitalize() for word in last_name.split()),
+        #'bday': bday
+        #'gender': gender
+
+        'phone_number': phone_number,
+        'email_address': email_address + '@yapper.com'
+        
+        # 'home_address': home
+        # 'work_address': work
+    }
+#    lastname
+#    birthday
+#    phonenumber
+#    emailaddress
+#    home
+#    work
+
+
+    return render(request, "profilePage.html",context)
 
 def changeName(request):
     session_check = checkSession(request)
