@@ -222,16 +222,70 @@ def editExistingImage(request,pk):
 
 
 
-def edit_reply(request):
+def edit_reply(request,pk):
+    getReply = Reply.objects.get(id = pk)
+    getReplyFiles = ReplyFiles.objects.filter(replyid = getReply)
     if request.method == "POST":
         form = EditReplyForm(request.POST)
         if form.is_valid():
-            pass
+            description = form.cleaned_data["description"]
+
+            try:
+                getReply.content = description
+                getReply.save()
+
+                uploaded_files = request.FILES.getlist('file')
+                if uploaded_files:
+                    for uploaded_file in uploaded_files:
+                        email_file = ReplyFiles(
+                            fromUser=getReply.fromUser,
+                            emailId = getReply.emailId,
+                            replyid= getReply, 
+                            file=uploaded_file
+                        )
+                        email_file.save()  
+                else:
+                    print("No files were uploaded.")
+
+                return redirect("../emailSentView")
+
+            except ObjectDoesNotExist:
+                print("Does Not exist")
+
+
 
     else:
-        form = EditReplyForm()
+        initialValue = {
+            'description':getReply.content
+        }
+        form = EditReplyForm(initial=initialValue)
 
-    return render(request,"editReply.html",{'form':form})
+    return render(request,"editReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply})
+
+def existingReplyFile(request, pk):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  # Parse JSON data
+            list_to_delete = data.get('listme', [])  # Get list of filenames to delete
+            print(list_to_delete)
+
+            # Get the email instance by primary key (pk)
+            reply_instance = get_object_or_404(Reply, id=pk)
+
+            # Query files linked to the email instance and filter by filenames
+            files_to_delete = ReplyFiles.objects.filter(replyid=reply_instance).exclude(file__in=list_to_delete)
+            deleted_files_count = files_to_delete.delete()
+
+            response = {
+                'message': 'Files deleted successfully',
+                'deleted_files_count': deleted_files_count[0]  # Number of deleted files
+            }
+            return JsonResponse(response, status=200)
+
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': f'Invalid JSON: {str(e)}'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 

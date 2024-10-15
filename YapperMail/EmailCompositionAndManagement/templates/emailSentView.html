@@ -208,7 +208,6 @@
                                         {{emailCont.date_sent}}</div>
                                 </div>
                             </div>
-                            <img src="{%static 'images/keyboard_return.png'%}" class="returnImage">
                         </div>
                         <div class=descriptionDiv>{{emailCont.content}}
                         </div>
@@ -233,6 +232,7 @@
                     <div style="border-top-style: solid;border-color: rgb(113, 113, 113);border-width: 2px;">
                         <div class="accountContain">
                             <div class="profCont">
+                                <div class = "repId" style="display: none;">{{rep.id}}</div>
                                 <div class="profShow">
                                     {{rep.fromUser.firstname|slice:":1"}}
                                 </div>
@@ -243,7 +243,10 @@
                                         {{rep.date_sent}}</div>
                                 </div>
                             </div>
-                            <img src="{%static 'images/keyboard_return.png'%}" class="returnImage">
+                            <div style="display: flex; flex-direction: row; align-items: center;">
+                                <div class = "deleteReply" style="color: #F37D84; margin-right: 10px; font-size: 20px;">🗑</div>
+                                <img src="{%static 'images/Edit.png'%}" class = "editReply" style="height: 15px;">
+                            </div>
                         </div>
                         <div class=descriptionDiv>
 {{rep.content}}
@@ -252,7 +255,10 @@
                             {% for repfiles in allRepFiles %}
                                 {% if rep.id == repfiles.replyid.id %}
                                     <div class="filePostItem">
-                                        <span>{{repfiles.file}}</span>
+                                        <a href="{% url 'download_file' repfiles.file %}"
+                                        style="color: #F69BA0; text-decoration: none;">
+                                            {{repfiles.file}}
+                                        </a>
                                     </div>
                                 {% endif %}
                             {% endfor %}
@@ -294,6 +300,15 @@
     }
 
     $(document).ready(function () {
+        var repedit = document.querySelectorAll(".editReply")
+
+        for(a of repedit){
+            a.addEventListener("click",function(e){
+                ff = e.target.parentElement.parentElement.firstElementChild.firstElementChild.innerText
+                window.location.href = `http://127.0.0.1:8000/emailmanagement/editReply/${parseInt(ff)}`
+            })
+        }
+
         $(".editPost").click(function (e) {
             console.log("Hello")
             window.location.href = `http://127.0.0.1:8000/emailmanagement/editEmail/${parseInt($(".numEmail").text())}`

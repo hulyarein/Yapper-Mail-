@@ -228,22 +228,25 @@
     </div>
     <div class = "backEmailComp">←</div>
     <div class="bodyContent">
-        <form method="POST" class="emailCompose">
+        <div class = "replyIdCont" style="display: none;">{{reply.id}}</div>
+        <form method="POST" class="emailCompose" enctype="multipart/form-data">
             {%csrf_token%}
-
             <div class="descriptionDiv">
                 {{form.description}}
             </div>
             <div style="height: 130px; margin-bottom: 30px; margin-left: 60px ;
-                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;" id="fileList">
-                <div class="file-item">
-                    <span>Hello world.png</span>
-                    <span class="delete-button">🗑️</span>
-                </div>
-                <div class="file-item">
-                    <span>Hello world.png</span>
-                    <span class="delete-button">🗑️</span>'
-                </div>
+                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;" >
+
+                {% for files in myfiles %}
+                    <div class="file-item">
+                        <span>{{files.file}}</span>
+                        <span class="delete-button-myfile">🗑️</span>
+                    </div>
+                {% endfor %}
+
+                    <div id="fileList">
+
+                    </div>
             </div>
 
             <div class="ButtonClass">
@@ -254,6 +257,7 @@
                 <input type="file" id="fileInput" name="file" multiple style="display:none;">
             </div>
         </form>
+        <div class="clickImage" style="display: none;">Image</div>
     </div>
 </body>
 <script>
@@ -266,34 +270,72 @@
         return b.files;
     }
 
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
     $(document).ready(function () {
-        $(".userToForm").val("Mary Angel")
-        $(".subjectForm").val("2024 Most Handsome man")
-        $(".descriptionForm").val("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+        var delMyfile = document.querySelectorAll(".delete-button-myfile")
+        for(delmf of delMyfile){
+            delmf.addEventListener("click",function(e){
+                e.target.parentElement.remove()
+            })
+        }
+
         $('.attachCls').on('click', function () {
             $('#fileInput').click();
         });
 
         // Handle the file selection
         $('#fileInput').on('change', function () {
-            var files = this.files; // Get the selected files
-            console.log(files)
+            var fileInput = this; // Get the input element
+            var files = Array.from(fileInput.files); // Convert FileList to array
+            console.log(files);
+
             if (files.length > 0) {
                 $('#fileList').empty(); // Clear existing file list
-                //$('#uploadButton').show(); // Show the upload button
+
+                // Create an array to hold modified files
+                var modifiedFiles = [];
 
                 // Loop through selected files
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
+                    var uniqueString = new Date().getTime(); // Create a unique string using the current timestamp
+                    var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
+
+                    // Create a new File object with the unique name
+                    var newFile = new File([files[i]], uniqueName, { type: files[i].type });
+
+                    // Push the new file to the modifiedFiles array
+                    modifiedFiles.push(newFile);
+
+                    // Create and display the file item
                     var fileItem = $('<div class="file-item"></div>');
-                    fileItem.append($('<span></span>').text(fileName));
+                    fileItem.append($('<span></span>').text(uniqueName)); // Display the unique name
                     fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
 
                     $('#fileList').append(fileItem);
                 }
+
+                // Update the input element with the modified files using FileListItems
+                fileInput.files = FileListItems(modifiedFiles);
+                console.log(Array.from(fileInput.files))
             }
         });
 
+        // Handle delete button click
         // Handle delete button click
         $(document).on('click', '.delete-button', function () {
             var index = $(this).data('index'); // Get index of file to delete
@@ -321,6 +363,36 @@
                 $('#uploadButton').hide();
             }*/
         });
+
+        $(".SubmitBut").click(function(e){
+            e.preventDefault()
+            $(".emailCompose").submit()
+            $(".clickImage").click()
+        })
+
+        $(".clickImage").click(function (e) {
+            var delList = document.querySelectorAll(".delete-button-myfile");
+            var listDel = [];
+            delList.forEach(nn => listDel.push(nn.parentElement.firstElementChild.innerText));  // Push inner text to array
+
+            const emailId = parseInt($(".replyIdCont").text());  // Extract email ID
+
+            $.ajax({
+                url: `/emailmanagement/changeImageReply/${emailId}`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "listme": listDel }),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("Email updated successfully:", response);
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+
+        })
     })
 </script>
 
