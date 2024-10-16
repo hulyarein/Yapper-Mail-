@@ -226,6 +226,8 @@
     <div>
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
+    <div class = "userIdh" style="display: none;"> {{userRep}}</div>
+    <div class = "emailIdh" style="display: none;">{{reply.emailId.id}}</div>
     <div class = "backEmailComp">←</div>
     <div class="bodyContent">
         <div class = "replyIdCont" style="display: none;">{{reply.id}}</div>
@@ -286,6 +288,11 @@
 }
 
     $(document).ready(function () {
+        $(".backEmailComp").click(function(e){
+            ukid = parseInt($(".userIdh").text())
+            okkid = parseInt($(".emailIdh").text())
+            window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${ukid}/${okkid}`
+        })
         var delMyfile = document.querySelectorAll(".delete-button-myfile")
         for(delmf of delMyfile){
             delmf.addEventListener("click",function(e){

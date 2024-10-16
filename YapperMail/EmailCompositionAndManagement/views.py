@@ -13,7 +13,7 @@ from django.db.models import Q
 
 # Create your views here.
 
-def email_composition(request):
+def email_composition(request,pk):
     error_message = False
     if request.method == "POST":
         form = EmailComposeForm(request.POST,request.FILES)
@@ -24,7 +24,7 @@ def email_composition(request):
 
 
             try:
-                fromUser = TemporaryUser.objects.get(id = 1)
+                fromUser = TemporaryUser.objects.get(id = pk)
                 toUserDatabase = TemporaryUser.objects.get(userEmail = toUser)
                 email = Email(
                     fromUser=fromUser,
@@ -248,7 +248,7 @@ def edit_reply(request,pk,uk):
                 else:
                     print("No files were uploaded.")
 
-                return redirect(f"../../emailSentView/{uk}/{pk}")
+                return redirect(f"../../emailSentView/{uk}/{getReply.emailId.id}")
 
             except ObjectDoesNotExist:
                 print("Does Not exist")
@@ -261,7 +261,7 @@ def edit_reply(request,pk,uk):
         }
         form = EditReplyForm(initial=initialValue)
 
-    return render(request,"editReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply})
+    return render(request,"editReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk})
 
 def existingReplyFile(request, pk):
     if request.method == 'POST':
