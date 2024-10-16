@@ -121,24 +121,36 @@
             flex-direction: row;
             margin-left: 50px;
             margin-top: 30px;
+            margin-bottom: 30px;
         }
-        .profDiv{
+
+        .profDiv {
             width: 60px;
         }
-        .nameDiv{
+
+        .nameDiv {
             overflow-x: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .subjectDiv{
+
+        .subjectDiv {
             overflow-x: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .contentDiv{
+
+        .contentDiv {
             overflow-x: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .emailGrid {
+            display: grid;
+            grid-template-columns: 300px 300px 300px 300px;
+            gap: 30px;
+            margin-bottom: 30px;
         }
 
 
@@ -188,6 +200,31 @@
 
             }
         }
+
+        @media (min-width: 1371px) {
+            .emailGrid {
+                grid-template-columns: repeat(4, 300px);
+                /* Cleaner repetition */
+            }
+        }
+
+        @media (min-width: 1050px) and (max-width: 1370px) {
+            .emailGrid {
+                grid-template-columns: repeat(3, 300px);
+            }
+        }
+
+        @media (min-width: 700px) and (max-width: 1049px) {
+            .emailGrid {
+                grid-template-columns: repeat(2, 300px);
+            }
+        }
+
+        @media (max-width: 699px) {
+            .emailGrid {
+                grid-template-columns: repeat(1, 300px);
+            }
+        }
     </style>
 </head>
 
@@ -202,372 +239,86 @@
         <div class="allBut">All</div>
         <div class="sentBut">Sent</div>
         <div class="recBut">Received</div>
+        <div>userone</div>
+        <div class="userId" style="display: none;">1</div>
     </div>
     <div class=composeDiv>
         <div class="composeButton">Compose</div>
     </div>
-    <div style="display: grid; grid-template-columns: 300px 300px 300px 300px; gap: 30px;">
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
+    <div style="display: flex; flex-direction: row; justify-content: center;">
+        <div class=emailGrid>
+            {% for email in emails %}
+            <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
+            box-shadow: 7px 7px #cccccc; border-radius: 10px;">
+                <div class=emailIdDiv style="display: none;">{{email.id}}</div>
+                <img src="{% static 'images/profSample.png' %}" class="profDiv"
+                    style="width: 50px; height: 50px; margin-right: 15px;">
+
+                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+
+                    <div class="subjectDiv"
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
+                        {{email.subject}}
+                    </div>
+
+                    <div class="nameDiv"
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
+                        {{email.fromUser}}
+                    </div>
+
+                    <div class="contentDiv"
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
+                        {{email.content}}
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
 
 
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-
-
-        <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-        box-shadow: 7px 7px #cccccc; border-radius: 10px;">
-            <img src="{% static 'images/profSample.png' %}" class="profDiv" style="width: 50px; height: 50px; margin-right: 15px;">
-        
-            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-    
-                <div class="subjectDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 20px;">
-                     My Subject
-                </div>
-    
-                <div class="nameDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                     Mary Jane
-                </div>
-    
-                <div class="contentDiv" 
-                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                    kjasenfkjasndkjfnsakjdfnkjsafksandkfjnasjkdfnsajkdfnsajkfnskajfnjkasfdnkasdfjlNDfldnjdnaskfjnasjkfnsakjnkjsndfkjsand
-                </div>
-            </div>
-        </div>
-    </div>
-    
 </body>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    $(document).ready(function (e) {
+        var allButton = document.querySelector(".allBut")
+        allButton.style.backgroundColor = "#F69BA0"
+        allButton.style.color = "white"
+
+        allButton.addEventListener("click", function (e) {
+            location.reload();
+        });
+
+        $(".sentBut").click(function (e) {
+            $.ajax({
+                url: "../emailmanagement/emailList",  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "sentNum": 2 }),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("Sent successfully:", response);
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+        })
+    })
+</script>
 
 </html>

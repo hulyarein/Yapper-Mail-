@@ -8,6 +8,7 @@ import os
 from urllib.parse import unquote
 import json
 from django.http import JsonResponse,HttpResponse
+from django.db.models import Q
 
 
 # Create your views here.
@@ -312,9 +313,20 @@ def download_file(request, filename):
 
 
 def emailListView(request):
+    form = SearchForm()
+
     if request.method == "POST":
-        form = SearchForm(request.POST)
-    else:
-        form = SearchForm()
-    return render(request,'emailList.html',{'form':form})
+        try:
+            data = json.loads(request.body)
+
+            if data.sentNum == 2:
+                userVar = TemporaryUser.objects.get(id = 1)
+                emailsVar = Email.objects.filter(fromUser = userVar)
+                return render(request,'emailList.html',{'form':form,'emails':emailsVar})
+        except:
+            print("Error")
+
+    userVar = TemporaryUser.objects.get(id = 1)
+    emailsVar = Email.objects.filter(Q(fromUser=userVar) | Q(toUser=userVar))
+    return render(request,'emailList.html',{'form':form,'emails':emailsVar})
 
