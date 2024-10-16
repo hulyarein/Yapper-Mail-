@@ -12,5 +12,7 @@ urlpatterns = [
     path('changeImage/<int:pk>',views.editExistingImage,name = "editExistingImage"),
     path('changeImageReply/<int:pk>',views.existingReplyFile,name = "existingReplyFile"),
     path('emailList',views.emailListView,name='emailListView'),
-    path('emailList/sent',views.sentEmailList,name = "sentEmailList")
+    path('emailList/sent',views.sentEmailList,name = "sentEmailList"),
+    path('deleteEmail',views.deleteEmailFunc,name = "deleteEmailFunc"),
+    path('deleteReply',views.deleteReplyFunc,name = "deleteReplyFunc")
 ]

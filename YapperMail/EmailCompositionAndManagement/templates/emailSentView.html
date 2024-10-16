@@ -184,8 +184,10 @@
     </div>
     <div style="display: flex; flex-direction: row; margin-left: 10%; align-items: center;">
         <div class="backEmailComp">←</div>
+        {% if userRep.id == emailCont.fromUser.id %}
         <div class="deletePost">🗑</div>
         <img src="{%static 'images/Edit.png'%}" class="editPost">
+        {% endif %}
         <div style="display: none;" class="numEmail">{{emailCont.id}}</div>
         <div class="userRephold" style="display: none;">{{userRep.id}}</div>
     </div>
@@ -233,7 +235,7 @@
                     <div style="border-top-style: solid;border-color: rgb(113, 113, 113);border-width: 2px;">
                         <div class="accountContain">
                             <div class="profCont">
-                                <div class = "repId" style="display: none;">{{rep.id}}</div>
+                                <div class="repId" style="display: none;">{{rep.id}}</div>
                                 <div class="profShow">
                                     {{rep.fromUser.firstname|slice:":1"}}
                                 </div>
@@ -245,23 +247,25 @@
                                 </div>
                             </div>
                             <div style="display: flex; flex-direction: row; align-items: center;">
-                                <div class = "deleteReply" style="color: #F37D84; margin-right: 10px; font-size: 20px;">🗑</div>
-                                <img src="{%static 'images/Edit.png'%}" class = "editReply" style="height: 15px;">
+                                {% if userRep.id == rep.fromUser.id %}
+                                <div class="deleteReply" style="color: #F37D84; margin-right: 10px; font-size: 20px;">🗑
+                                </div>
+                                <img src="{%static 'images/Edit.png'%}" class="editReply" style="height: 15px;">
+                                {% endif %}
                             </div>
                         </div>
-                        <div class=descriptionDiv>
-{{rep.content}}
+                        <div class=descriptionDiv>{{rep.content}}
                         </div>
                         <div class="imageContain">
                             {% for repfiles in allRepFiles %}
-                                {% if rep.id == repfiles.replyid.id %}
-                                    <div class="filePostItem">
-                                        <a href="{% url 'download_file' repfiles.file %}"
-                                        style="color: #F69BA0; text-decoration: none;">
-                                            {{repfiles.file}}
-                                        </a>
-                                    </div>
-                                {% endif %}
+                            {% if rep.id == repfiles.replyid.id %}
+                            <div class="filePostItem">
+                                <a href="{% url 'download_file' repfiles.file %}"
+                                    style="color: #F69BA0; text-decoration: none;">
+                                    {{repfiles.file}}
+                                </a>
+                            </div>
+                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>
@@ -277,7 +281,7 @@
             <div
                 style="display: flex; flex-direction: row; justify-content: center; margin-bottom: 10px; margin-left: 10px;">
                 {{form.message}}
-                <button type = submit style="border: none; background-color:#f0f0f000;">
+                <button type=submit style="border: none; background-color:#f0f0f000;">
                     <span><img src="{% static 'images/send.png' %}" class="sendReply"></span>
                 </button>
                 <button type="button" style="border: none; background-color:#f0f0f000;">
@@ -291,6 +295,20 @@
     </div>
 </body>
 <script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
     // Helper to create a new FileList
     function FileListItems(files) {
         var b = new ClipboardEvent('').clipboardData || new DataTransfer();
@@ -300,15 +318,57 @@
         return b.files;
     }
     console.log($(".userRephold").text())
-    $(".backEmailComp").click(function(e){
+    $(".backEmailComp").click(function (e) {
         window.location.href = `../../../emailmanagement/emailList`
     })
 
     $(document).ready(function () {
+
+        var delrep = document.querySelectorAll(".deleteReply")
+
+        for (dr of delrep) {
+            dr.addEventListener("click", function (e) {
+                $.ajax({
+                    url: `/emailmanagement/deleteReply`,
+                    type: 'POST',
+                    data: JSON.stringify({ "delId": parseInt(e.target.parentElement.parentElement.firstElementChild.firstElementChild.innerText) }),
+                    contentType: 'application/json',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    success: function (response) {
+                        console.log("Reply Deleted successfully:", response);
+                        window.location.reload()
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred:', error.responseJSON);
+                    }
+                })
+            })
+        }
+        $(".deletePost").click(function (e) {
+            $.ajax({
+                url: `/emailmanagement/deleteEmail`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "delId": parseInt($(".numEmail").text()) }),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("Email updated successfully:", response);
+                    if (response.message = 'Email deleted successfully.') {
+                        window.location.href = `../../../emailmanagement/emailList`
+                    }
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+
+        })
         var repedit = document.querySelectorAll(".editReply")
 
-        for(a of repedit){
-            a.addEventListener("click",function(e){
+        for (a of repedit) {
+            a.addEventListener("click", function (e) {
                 ff = e.target.parentElement.parentElement.firstElementChild.firstElementChild.innerText
                 window.location.href = `http://127.0.0.1:8000/emailmanagement/editReply/${parseInt(ff)}/${parseInt($(".userRephold").text())}`
             })
@@ -339,7 +399,7 @@
                     var fileName = files[i].name;
                     var uniqueString = new Date().getTime(); // Create a unique string using the current timestamp
                     var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
-                    
+
 
                     // Create a new File object with the unique name
                     var newFile = new File([files[i]], uniqueName, { type: files[i].type });
@@ -377,7 +437,7 @@
                 var fileItem = $('<div class="file-item"></div>');
                 fileItem.append($('<span></span>').text(file.name));
                 fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i));
-                
+
 
                 $('#fileList').append(fileItem);
             });

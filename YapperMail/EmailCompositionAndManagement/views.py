@@ -316,7 +316,7 @@ def emailListView(request):
     form = SearchForm()
 
     userVar = TemporaryUser.objects.get(id = 1)
-    emailsVar = Email.objects.filter(Q(fromUser=userVar) | Q(toUser=userVar))
+    emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
     return render(request,'emailList.html',{'form':form,'emails':emailsVar})
 
 def sentEmailList(request):
@@ -326,14 +326,14 @@ def sentEmailList(request):
 
             if data.get('sentNum') == 2:
                 userVar = TemporaryUser.objects.get(id=1)
-                emailsVar = Email.objects.filter(fromUser=userVar)
+                emailsVar = Email.objects.filter(Q(fromUser=userVar) & Q(isDeleted = False))
 
                 email_data = [
                     {
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
-                        "fromUser": email.fromUser.userEmail,  # Assuming it's a ForeignKey, use the ID
+                        "fromUser": email.fromUser.userEmail,
                     }
                     for email in emailsVar
                 ]
@@ -343,14 +343,14 @@ def sentEmailList(request):
             
             elif data.get('sentNum') == 3:
                 userVar = TemporaryUser.objects.get(id=1)
-                emailsVar = Email.objects.filter(toUser=userVar)
+                emailsVar = Email.objects.filter(Q(toUser=userVar) & Q(isDeleted = False))
 
                 email_data = [
                     {
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
-                        "fromUser": email.fromUser.userEmail,  # Assuming it's a ForeignKey, use the ID
+                        "fromUser": email.fromUser.userEmail,
                     }
                     for email in emailsVar
                 ]
@@ -359,14 +359,14 @@ def sentEmailList(request):
                 return JsonResponse({'emails': email_data}, status=200)
             elif data.get('sentNum') == 4:
                 userVar = TemporaryUser.objects.get(id=1)
-                emailsVar = Email.objects.filter(Q(fromUser=userVar) | Q(toUser=userVar))
+                emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
 
                 email_data = [
                     {
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
-                        "fromUser": email.fromUser.userEmail,  # Assuming it's a ForeignKey, use the ID
+                        "fromUser": email.fromUser.userEmail,
                     }
                     for email in emailsVar
                 ]
@@ -383,3 +383,57 @@ def sentEmailList(request):
 
     # If the request is not POST
     return JsonResponse({'emails': "not Post"}, status=400)
+
+
+def deleteEmailFunc(request):
+    try:
+        data = json.loads(request.body)
+        email_id = data.get('delId')
+
+        if not email_id:
+            return JsonResponse({'message': 'Email ID is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        emailsVar = Email.objects.get(id=email_id)
+        emailsVar.isDeleted = True
+        emailsVar.save()
+
+        return JsonResponse({'message': 'Email deleted successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'Email not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
+
+
+
+def deleteReplyFunc(request):
+    try:
+        data = json.loads(request.body)
+        reply_id = data.get('delId')
+
+        if not reply_id:
+            return JsonResponse({'message': 'Reply ID is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        replyVar = Reply.objects.get(id=reply_id)
+        replyVar.delete()
+
+        return JsonResponse({'message': 'Reply deleted successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'Reply not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)

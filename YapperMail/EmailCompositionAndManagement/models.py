@@ -18,6 +18,7 @@ class Email(models.Model):
     subject = models.CharField(max_length=500)
     content = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)
+    isDeleted = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.subject}"

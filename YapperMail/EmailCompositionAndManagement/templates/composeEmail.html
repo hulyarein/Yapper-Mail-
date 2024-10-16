@@ -315,6 +315,10 @@
     $(document).ready(function () {
         const toastLiveExample = document.getElementById('liveToast');
 
+        $(".backEmailComp").click(function(e){
+            window.location.href = "../../emailmanagement/emailList"
+        })
+
         // Check if there is an error message
         var errorme = document.querySelector(".error").innerText;
         if (errorme === "Invalid email" || errorme === "User Not Found") {
