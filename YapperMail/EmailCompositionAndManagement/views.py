@@ -315,18 +315,55 @@ def download_file(request, filename):
 def emailListView(request):
     form = SearchForm()
 
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-
-            if data.sentNum == 2:
-                userVar = TemporaryUser.objects.get(id = 1)
-                emailsVar = Email.objects.filter(fromUser = userVar)
-                return render(request,'emailList.html',{'form':form,'emails':emailsVar})
-        except:
-            print("Error")
-
     userVar = TemporaryUser.objects.get(id = 1)
     emailsVar = Email.objects.filter(Q(fromUser=userVar) | Q(toUser=userVar))
     return render(request,'emailList.html',{'form':form,'emails':emailsVar})
 
+def sentEmailList(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            if data.get('sentNum') == 2:
+                userVar = TemporaryUser.objects.get(id=1)
+                emailsVar = Email.objects.filter(fromUser=userVar)
+
+                email_data = [
+                    {
+                        "id": email.id,
+                        "subject": email.subject,
+                        "content": email.content,
+                        "fromUser": email.fromUser.userEmail,  # Assuming it's a ForeignKey, use the ID
+                    }
+                    for email in emailsVar
+                ]
+
+                # Send the response back as JSON
+                return JsonResponse({'emails': email_data}, status=200)
+            
+            elif data.get('sentNum') == 3:
+                userVar = TemporaryUser.objects.get(id=1)
+                emailsVar = Email.objects.filter(toUser=userVar)
+
+                email_data = [
+                    {
+                        "id": email.id,
+                        "subject": email.subject,
+                        "content": email.content,
+                        "fromUser": email.fromUser.userEmail,  # Assuming it's a ForeignKey, use the ID
+                    }
+                    for email in emailsVar
+                ]
+
+                # Send the response back as JSON
+                return JsonResponse({'emails': email_data}, status=200)
+            
+            else:
+                return JsonResponse({'emails': "none"}, status=200)
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
+
+    # If the request is not POST
+    return JsonResponse({'emails': "not Post"}, status=400)
