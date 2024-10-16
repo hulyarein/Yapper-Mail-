@@ -306,6 +306,19 @@
         sentButton.style.backgroundColor = ""
         sentButton.style.color = ""
 
+        //clickEmail
+        var ckickId = document.querySelectorAll(".emailIdDiv")
+        for (clck of ckickId) {
+            var clkhold = clck.parentElement
+            clkhold.addEventListener("click", function (e) {
+                var eId = parseInt(this.firstElementChild.innerText)
+                var userIdhol = parseInt($(".userId").text())
+
+                window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${userIdhol}/${eId}`
+            })
+        }
+
+
         allButton.addEventListener("click", function (e) {
             $.ajax({
                 url: "../emailmanagement/emailList/sent",  // Django view URL
@@ -360,6 +373,17 @@
                     </div>
                 </div>
             </div>`
+                    }
+
+                    var ckickId = document.querySelectorAll(".emailIdDiv")
+                    for (clck of ckickId) {
+                        var clkhold = clck.parentElement
+                        clkhold.addEventListener("click", function (e) {
+                            var eId = parseInt(this.firstElementChild.innerText)
+                            var userIdhol = parseInt($(".userId").text())
+
+                            window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${userIdhol}/${eId}`
+                        })
                     }
 
                 },
@@ -424,6 +448,16 @@
                 </div>
             </div>`
                     }
+                    var ckickId = document.querySelectorAll(".emailIdDiv")
+                    for (clck of ckickId) {
+                        var clkhold = clck.parentElement
+                        clkhold.addEventListener("click", function (e) {
+                            var eId = parseInt(this.firstElementChild.innerText)
+                            var userIdhol = parseInt($(".userId").text())
+
+                            window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${userIdhol}/${eId}`
+                        })
+                    }
 
                 },
                 error: function (error) {
@@ -487,6 +521,16 @@
                     </div>
                 </div>
             </div>`
+                    }
+                    var ckickId = document.querySelectorAll(".emailIdDiv")
+                    for (clck of ckickId) {
+                        var clkhold = clck.parentElement
+                        clkhold.addEventListener("click", function (e) {
+                            var eId = parseInt(this.firstElementChild.innerText)
+                            var userIdhol = parseInt($(".userId").text())
+
+                            window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${userIdhol}/${eId}`
+                        })
                     }
 
                 },
@@ -590,6 +634,17 @@
                                 divAdd.append(nn.cloneNode(true))
                             }
 
+                            var ckickId = document.querySelectorAll(".emailIdDiv")
+                            for (clck of ckickId) {
+                                var clkhold = clck.parentElement
+                                clkhold.addEventListener("click", function (e) {
+                                    var eId = parseInt(this.firstElementChild.innerText)
+                                    var userIdhol = parseInt($(".userId").text())
+
+                                    window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${userIdhol}/${eId}`
+                                })
+                            }
+
                         },
                         error: function (error) {
                             console.error('An error occurred:', error.responseJSON);
@@ -681,6 +736,17 @@
                                 emailGrid.append(divAdd)
 
                                 divAdd.append(nn.cloneNode(true))
+                            }
+
+                            var ckickId = document.querySelectorAll(".emailIdDiv")
+                            for (clck of ckickId) {
+                                var clkhold = clck.parentElement
+                                clkhold.addEventListener("click", function (e) {
+                                    var eId = parseInt(this.firstElementChild.innerText)
+                                    var userIdhol = parseInt($(".userId").text())
+
+                                    window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${userIdhol}/${eId}`
+                                })
                             }
 
 
@@ -777,6 +843,17 @@
                                 divAdd.append(nn.cloneNode(true))
                             }
 
+                            var ckickId = document.querySelectorAll(".emailIdDiv")
+                            for (clck of ckickId) {
+                                var clkhold = clck.parentElement
+                                clkhold.addEventListener("click", function (e) {
+                                    var eId = parseInt(this.firstElementChild.innerText)
+                                    var userIdhol = parseInt($(".userId").text())
+
+                                    window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${userIdhol}/${eId}`
+                                })
+                            }
+
                         },
                         error: function (error) {
                             console.error('An error occurred:', error.responseJSON);
@@ -788,6 +865,11 @@
 
             }
         });
+
+
+        $(".composeButton").click(function (e) {
+            window.location.href = "http://127.0.0.1:8000/emailmanagement/composeEmail"
+        })
     })
 </script>
 

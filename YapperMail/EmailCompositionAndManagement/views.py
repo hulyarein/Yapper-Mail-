@@ -47,7 +47,7 @@ def email_composition(request):
                 else:
                     print("No files were uploaded.")
 
-                return redirect('email_composition')
+                return redirect('emailListView')
             except ObjectDoesNotExist:
                 error_message = True
         else:
@@ -60,12 +60,12 @@ def email_composition(request):
     return render(request,"composeEmail.html",{'form':form,"errormessage":error_message})
 
 
-def email_sent_view(request):
-    getEmail = Email.objects.get(id = 7)
+def email_sent_view(request,pk,ok):
+    getEmail = Email.objects.get(id = ok)
 
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
 
-    userRep = TemporaryUser.objects.get(id = 3)
+    userRep = TemporaryUser.objects.get(id = pk)
 
 
     if request.method == "POST":
@@ -96,7 +96,7 @@ def email_sent_view(request):
                 else:
                     print("No files were uploaded.")
 
-                return redirect("../emailSentView")
+                return redirect(f"../../emailSentView/{pk}/{ok}")
             
             except ObjectDoesNotExist:
                 print("Does not Exists")
@@ -107,7 +107,7 @@ def email_sent_view(request):
     allRep = Reply.objects.filter(emailId = getEmail)
     allRepFiles = ReplyFiles.objects.filter(emailId = getEmail)
         
-    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles})
+    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep})
 
 def email_reply_view(request):
 
@@ -141,7 +141,7 @@ def email_reply_view(request):
         
     return render(request,"emailReceiveView.html",{'form':form})
 
-def edit_email(request,pk):
+def edit_email(request,pk,uk):
     getEmail = Email.objects.get(id = pk)
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
     
@@ -171,7 +171,7 @@ def edit_email(request,pk):
                 else:
                     print("No files were uploaded.")
 
-                return redirect(f'../emailSentView')
+                return redirect(f'../../emailSentView/{uk}/{pk}')
             except ObjectDoesNotExist:
                 error_message = True
         else:
@@ -188,7 +188,7 @@ def edit_email(request,pk):
         }
         form = EditEmailForm(initial = initialValue)
 
-    return render(request,"editEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles})
+    return render(request,"editEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk})
 
 def editExistingImage(request,pk):
     '''getEmail = Email.objects.get(id = pk)
@@ -223,7 +223,7 @@ def editExistingImage(request,pk):
 
 
 
-def edit_reply(request,pk):
+def edit_reply(request,pk,uk):
     getReply = Reply.objects.get(id = pk)
     getReplyFiles = ReplyFiles.objects.filter(replyid = getReply)
     if request.method == "POST":
@@ -248,7 +248,7 @@ def edit_reply(request,pk):
                 else:
                     print("No files were uploaded.")
 
-                return redirect("../emailSentView")
+                return redirect(f"../../emailSentView/{uk}/{pk}")
 
             except ObjectDoesNotExist:
                 print("Does Not exist")

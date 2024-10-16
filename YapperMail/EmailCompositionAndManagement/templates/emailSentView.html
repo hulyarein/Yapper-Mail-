@@ -187,6 +187,7 @@
         <div class="deletePost">🗑</div>
         <img src="{%static 'images/Edit.png'%}" class="editPost">
         <div style="display: none;" class="numEmail">{{emailCont.id}}</div>
+        <div class="userRephold" style="display: none;">{{userRep.id}}</div>
     </div>
     <div class="bodyContent">
         <form method="POST" class=viewEmail enctype="multipart/form-data">
@@ -298,6 +299,10 @@
         }
         return b.files;
     }
+    console.log($(".userRephold").text())
+    $(".backEmailComp").click(function(e){
+        window.location.href = `../../../emailmanagement/emailList`
+    })
 
     $(document).ready(function () {
         var repedit = document.querySelectorAll(".editReply")
@@ -305,13 +310,13 @@
         for(a of repedit){
             a.addEventListener("click",function(e){
                 ff = e.target.parentElement.parentElement.firstElementChild.firstElementChild.innerText
-                window.location.href = `http://127.0.0.1:8000/emailmanagement/editReply/${parseInt(ff)}`
+                window.location.href = `http://127.0.0.1:8000/emailmanagement/editReply/${parseInt(ff)}/${parseInt($(".userRephold").text())}`
             })
         }
 
         $(".editPost").click(function (e) {
             console.log("Hello")
-            window.location.href = `http://127.0.0.1:8000/emailmanagement/editEmail/${parseInt($(".numEmail").text())}`
+            window.location.href = `http://127.0.0.1:8000/emailmanagement/editEmail/${parseInt($(".numEmail").text())}/${parseInt($(".userRephold").text())}`
         })
         $('.sendImage').on('click', function () {
             $('#fileInput').click();

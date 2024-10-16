@@ -235,6 +235,7 @@
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
     <div class="backEmailComp">←</div>
+    <div class = "userPK" style="display: none;">{{userRep}}</div>
     <div class="bodyContent">
         <form method="POST" class="emailCompose" enctype="multipart/form-data">
             {%csrf_token%}
@@ -311,6 +312,11 @@
 
 
     $(document).ready(function () {
+        $(".backEmailComp").click(function(e){
+            ukid = parseInt($(".userPK").text())
+            okid = parseInt($(".emailSentId").text())
+            window.location.href = `../../emailSentView/${ukid}/${okid}`
+        })
         var delList = document.querySelectorAll(".delete-button-none")
         for (n of delList) {
             n.addEventListener("click", function (e) {
