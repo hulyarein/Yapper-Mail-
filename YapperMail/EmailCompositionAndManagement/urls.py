@@ -11,4 +11,5 @@ urlpatterns = [
     path('download/<path:filename>/', views.download_file, name='download_file'),
     path('changeImage/<int:pk>',views.editExistingImage,name = "editExistingImage"),
     path('changeImageReply/<int:pk>',views.existingReplyFile,name = "existingReplyFile"),
+    path('emailList',views.emailListView,name='emailListView')
 ]

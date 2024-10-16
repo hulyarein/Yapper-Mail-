@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm
+from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm,SearchForm
 from .models import Email,EmailFiles,TemporaryUser,Reply,ReplyFiles
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
@@ -308,4 +308,13 @@ def download_file(request, filename):
         return FileResponse(open(file_path, 'rb'), as_attachment=True)
     else:
         raise Http404(f"File not found: {filename}")
+    
+
+
+def emailListView(request):
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+    else:
+        form = SearchForm()
+    return render(request,'emailList.html',{'form':form})
 

@@ -57,3 +57,10 @@ class EditReplyForm(forms.Form):
             'class': 'descriptionForm',
             'placeholder': 'Enter Description here',
         }))
+    
+class SearchForm(forms.Form):
+    searchContent = forms.CharField(widget=forms.TextInput(attrs={
+            'class': 'searchCont',
+            'placeholder': 'Search',
+        })
+    )
