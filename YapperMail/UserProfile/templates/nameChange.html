@@ -15,6 +15,35 @@
     <title>I miss you</title>
   </head>
   <body class="bg-[#F4F4F4]">
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('myForm');
+      const submitButton = document.getElementById('submitButton');
+    
+      // Capture initial values
+      const initialValues = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value
+      };
+
+      const checkChanges = () => {
+        const currentValues = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value
+        };
+
+        // Check if values have changed
+        const hasChanges = 
+            currentValues.firstName !== initialValues.firstName ||
+            currentValues.lastName !== initialValues.lastName;
+
+        submitButton.disabled = !hasChanges; // Enable/Disable the button
+      };
+
+      // Attach input event listener
+      form.addEventListener('input', checkChanges);
+});
+    </script>
     {% include 'components/header.html' %}
     <div class="header">{% block header %}{% endblock %}</div>
       <a href="{% url 'profile' %}">
@@ -28,24 +57,24 @@
       <hr class="border-[#f37d84]">
       <div class="content pb-20 flex flex-col items-center">
         <div class="fields border-2 border-[#F37D84] my-10 w-1/2 rounded-lg">
-          <form action="" class="flex flex-col m-12 gap-3">
-
-          <p class="ml-16">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+          <form action="{% url 'changeName' %}" method="POST" id="myForm" class="flex flex-col m-12 gap-3">
+            <p class="ml-16">What should we call you?</p>
+            {% csrf_token %}
             <div class="flex flex-col gap-10">
               <div class="flex flex-col">
                 <label class="mx-16 text-lg font-semibold">First Name</label>
-                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" placeholder="First Name">
+                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" value="{{ form.first_name.value }}" name="first_name" id="firstName">
               </div>
             </div>
             <div class="flex flex-col gap-10">   
               <div class="flex flex-col">
                 <label class="mx-16 text-lg font-semibold">Last Name</label>
-                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" placeholder="Last Name">
+                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" value="{{ form.last_name.value }}" name="last_name" id="lastName">
               </div>
             </div>
             <div class="flex justify-end gap-10 mr-16 items-center">
               <a href="{% url 'profile' %}" class="font-semibold hover:font-medium"><label>Cancel</label></a>
-              <input class="btn btn-primary w-1/6 font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12" type="submit" value="Save">
+              <input class="btn btn-primary w-1/6 font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]" type="submit" id="submitButton" value="Save" disabled>
             </div>
           </form>
         </div>
@@ -57,5 +86,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
   </body>
 </html>

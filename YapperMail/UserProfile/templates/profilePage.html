@@ -12,7 +12,8 @@
       crossorigin="anonymous"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>I miss you</title>
+    <title>Yapper | Profile</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo2.png' %}">
   </head>
   <body class="bg-[#F4F4F4]">
     {% include 'components/header.html' %}
@@ -155,7 +156,28 @@
             </div>
           </div>
         </a>
-      </div>  
+      </div>
+
+       <div class="addresses border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
+        <div class="flex items-center m-6">
+          <label class="font-sans text-3xl mx-10">Security</label>
+        </div>
+                <hr class="border-[#F37D84] border-2" />
+        <a href="{% url 'changeWork' %}">
+          <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
+            <div class="name p-6 flex justify-between items-center">
+              <div class="flex content-between">
+                <div class="ml-10 w-40"><label class="font-medium">Password</label></div>
+                <label class="font-medium">TODO</label>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+      </div>
+
     </div>
     <!-- bootstrapshiz-->
     <script
@@ -163,6 +185,8 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
     <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.11"></script>
