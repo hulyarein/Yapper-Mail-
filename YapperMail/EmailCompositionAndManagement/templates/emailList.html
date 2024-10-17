@@ -239,7 +239,6 @@
         <div class="allBut">All</div>
         <div class="sentBut">Sent</div>
         <div class="recBut">Received</div>
-        <div>userone</div>
         <div class="userId" style="display: none;">1</div>
     </div>
     <div class=composeDiv>
@@ -321,11 +320,11 @@
 
         allButton.addEventListener("click", function (e) {
             $.ajax({
-                url: "../emailmanagement/emailList/sent",  // Django view URL
+                url: "../emailmanagement/emailList/sent",  
                 type: 'POST',
-                data: JSON.stringify({ "sentNum": 4 }),  // JSON-encoded data
-                contentType: 'application/json',  // Set content type to JSON
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                data: JSON.stringify({ "sentNum": 4 }),  
+                contentType: 'application/json',  
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  
                 success: function (response) {
                     var allButton = document.querySelector(".allBut")
                     allButton.style.backgroundColor = "#F69BA0"
@@ -395,11 +394,11 @@
 
         $(".sentBut").click(function (e) {
             $.ajax({
-                url: "../emailmanagement/emailList/sent",  // Django view URL
+                url: "../emailmanagement/emailList/sent",  
                 type: 'POST',
-                data: JSON.stringify({ "sentNum": 2 }),  // JSON-encoded data
-                contentType: 'application/json',  // Set content type to JSON
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                data: JSON.stringify({ "sentNum": 2 }),  
+                contentType: 'application/json',  
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  
                 success: function (response) {
                     var allButton = document.querySelector(".allBut")
                     allButton.style.backgroundColor = ""
@@ -469,11 +468,11 @@
 
         $(".recBut").click(function (e) {
             $.ajax({
-                url: "../emailmanagement/emailList/sent",  // Django view URL
+                url: "../emailmanagement/emailList/sent",  
                 type: 'POST',
-                data: JSON.stringify({ "sentNum": 3 }),  // JSON-encoded data
-                contentType: 'application/json',  // Set content type to JSON
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                data: JSON.stringify({ "sentNum": 3 }),  
+                contentType: 'application/json',  
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  
                 success: function (response) {
                     var allButton = document.querySelector(".allBut")
                     allButton.style.backgroundColor = ""
@@ -549,11 +548,11 @@
 
                 if (allButton.style.color == "white") {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",  // Django view URL
+                        url: "../emailmanagement/emailList/sent",  
                         type: 'POST',
-                        data: JSON.stringify({ "sentNum": 4 }),  // JSON-encoded data
-                        contentType: 'application/json',  // Set content type to JSON
-                        headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                        data: JSON.stringify({ "sentNum": 4 }),  
+                        contentType: 'application/json',  
+                        headers: { 'X-CSRFToken': getCookie('csrftoken') },  
                         success: function (response) {
                             var allButton = document.querySelector(".allBut")
                             allButton.style.backgroundColor = "#F69BA0"
@@ -615,9 +614,9 @@
                             var newarr = []
                             for (var sub in contme) {
                                 searchContent = contme[sub].firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.innerText.toLowerCase()
-                                /*console.log(searchContent)*/
+                                
                                 if (!searchContent.includes(toBeSearch)) {
-                                    // Hide if it doesn't contain the search string
+                                    
                                 } else {
                                     newarr.push(contme[sub])
                                 }
@@ -653,11 +652,11 @@
                 }
                 else if (recButton.style.color == "white") {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",  // Django view URL
+                        url: "../emailmanagement/emailList/sent",  
                         type: 'POST',
-                        data: JSON.stringify({ "sentNum": 3 }),  // JSON-encoded data
-                        contentType: 'application/json',  // Set content type to JSON
-                        headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                        data: JSON.stringify({ "sentNum": 3 }),  
+                        contentType: 'application/json',  
+                        headers: { 'X-CSRFToken': getCookie('csrftoken') },  
                         success: function (response) {
                             var allButton = document.querySelector(".allBut")
                             allButton.style.backgroundColor = ""
@@ -719,9 +718,9 @@
                             var newarr = []
                             for (var sub in contme) {
                                 searchContent = contme[sub].firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.innerText.toLowerCase()
-                                /*console.log(searchContent)*/
+                                
                                 if (!searchContent.includes(toBeSearch)) {
-                                    // Hide if it doesn't contain the search string
+                                    
                                 } else {
                                     newarr.push(contme[sub])
                                 }
@@ -758,11 +757,11 @@
                 }
                 else {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",  // Django view URL
+                        url: "../emailmanagement/emailList/sent",  
                         type: 'POST',
-                        data: JSON.stringify({ "sentNum": 2 }),  // JSON-encoded data
-                        contentType: 'application/json',  // Set content type to JSON
-                        headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                        data: JSON.stringify({ "sentNum": 2 }),  
+                        contentType: 'application/json',  
+                        headers: { 'X-CSRFToken': getCookie('csrftoken') }, 
                         success: function (response) {
                             var allButton = document.querySelector(".allBut")
                             allButton.style.backgroundColor = ""
@@ -824,9 +823,9 @@
                             var newarr = []
                             for (var sub in contme) {
                                 searchContent = contme[sub].firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.innerText.toLowerCase()
-                                /*console.log(searchContent)*/
+                                
                                 if (!searchContent.includes(toBeSearch)) {
-                                    // Hide if it doesn't contain the search string
+                                    
                                 } else {
                                     newarr.push(contme[sub])
                                 }

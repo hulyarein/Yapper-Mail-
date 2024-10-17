@@ -303,7 +303,6 @@
 </body>
 <script>
 
-    // Helper to create a new FileList
     function FileListItems(files) {
         var b = new ClipboardEvent('').clipboardData || new DataTransfer();
         for (var i = 0; i < files.length; i++) {
@@ -319,7 +318,6 @@
             window.location.href = "../../emailmanagement/emailList"
         })
 
-        // Check if there is an error message
         var errorme = document.querySelector(".error").innerText;
         if (errorme === "Invalid email" || errorme === "User Not Found") {
             const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
@@ -332,61 +330,61 @@
             $('#fileInput').click();
         });
 
-        // Handle the file selection
+        
         $('#fileInput').on('change', function () {
-            var fileInput = this; // Get the input element
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var fileInput = this; 
+            var files = Array.from(fileInput.files); 
             console.log(files);
 
             if (files.length > 0) {
-                $('#fileList').empty(); // Clear existing file list
+                $('#fileList').empty(); 
 
-                // Create an array to hold modified files
+                
                 var modifiedFiles = [];
 
-                // Loop through selected files
+                
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
-                    var uniqueString = new Date().getTime(); // Create a unique string using the current timestamp
+                    var uniqueString = new Date().getTime(); 
                     var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
 
-                    // Create a new File object with the unique name
+                    
                     var newFile = new File([files[i]], uniqueName, { type: files[i].type });
 
-                    // Push the new file to the modifiedFiles array
+                    
                     modifiedFiles.push(newFile);
 
-                    // Create and display the file item
+                
                     var fileItem = $('<div class="file-item"></div>');
-                    fileItem.append($('<span></span>').text(uniqueName)); // Display the unique name
-                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
+                    fileItem.append($('<span></span>').text(uniqueName)); 
+                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); 
 
                     $('#fileList').append(fileItem);
                 }
 
-                // Update the input element with the modified files using FileListItems
+            
                 fileInput.files = FileListItems(modifiedFiles);
                 console.log(Array.from(fileInput.files))
             }
         });
 
 
-        // Handle delete button click
+        
         $(document).on('click', '.delete-button', function () {
-            var index = $(this).data('index'); // Get index of file to delete
+            var index = $(this).data('index'); 
             var fileInput = $('#fileInput')[0];
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var files = Array.from(fileInput.files); 
 
-            // Remove the selected file
+            
             files.splice(index, 1);
-            fileInput.files = new FileListItems(files); // Update file input
+            fileInput.files = new FileListItems(files); 
 
-            // Refresh the file list
+            
             $('#fileList').empty();
             files.forEach(function (file, i) {
                 var fileItem = $('<div class="file-item"></div>');
                 fileItem.append($('<span></span>').text(file.name));
-                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
+                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); 
 
                 $('#fileList').append(fileItem);
             });

@@ -286,7 +286,7 @@
     </div>
 </body>
 <script>
-    // Helper to create a new FileList
+    
     function FileListItems(files) {
         var b = new ClipboardEvent('').clipboardData || new DataTransfer();
         for (var i = 0; i < files.length; i++) {
@@ -328,23 +328,21 @@
             $('#fileInput').click();
         });
 
-        // Handle the file selection
-        // Handle the file selection
         $('#fileInput').on('change', function () {
-            var fileInput = this; // Get the input element
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var fileInput = this; 
+            var files = Array.from(fileInput.files); 
             console.log(files);
 
             if (files.length > 0) {
-                $('#fileList').empty(); // Clear existing file list
+                $('#fileList').empty(); 
 
-                // Create an array to hold modified files
+                
                 var modifiedFiles = [];
 
-                // Loop through selected files
+                
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
-                    var uniqueString = new Date().getTime(); // Create a unique string using the current timestamp
+                    var uniqueString = new Date().getTime(); 
                     var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
 
                     // Create a new File object with the unique name
