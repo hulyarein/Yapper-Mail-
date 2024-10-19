@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'UserProfile',
     'landing',
     'EmailCompositionAndManagement',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Flobite
+
+COMPRESS_ROOT = BASE_DIR / 'static'
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+
+# ari ra kutob flowbite
 
 ROOT_URLCONF = 'YapperMail.urls'
 
