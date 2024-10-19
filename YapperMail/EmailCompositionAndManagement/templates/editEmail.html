@@ -6,8 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Email</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             background-color: #F4F4F4;
@@ -25,7 +30,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            
+
         }
 
         .emailCompose {
@@ -163,7 +168,7 @@
             background-color: #F37D84;
             color: white;
             padding: 15px 30px;
-            border-radius: 1000px;
+            border-radius: 10px;
             border-style: none;
         }
 
@@ -176,20 +181,23 @@
             width: 30px;
             height: 30px;
         }
-        .file-item{
+
+        .file-item {
             background-color: #F0F0F0;
             padding: 10px 15px;
             margin-bottom: 10px;
             border-radius: 10px;
             color: #F69BA0;
         }
-        .delete-button{
+
+        .delete-button {
             color: #F69BA0;
             margin-left: 10px;
         }
-        .backEmailComp{
+
+        .backEmailComp {
             font-size: 30px;
-            color:#F69BA0 ;
+            color: #F69BA0;
             margin-left: 10%;
         }
 
@@ -226,11 +234,13 @@
     <div>
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
-    <div class = "backEmailComp">←</div>
+    <div class="backEmailComp">←</div>
+    <div class = "userPK" style="display: none;">{{userRep}}</div>
     <div class="bodyContent">
-        <form method="POST" class="emailCompose">
+        <form method="POST" class="emailCompose" enctype="multipart/form-data">
             {%csrf_token%}
             <div class=UsertoClass>
+                <div style="display: none;" class="emailSentId">{{emailSent.id}}</div>
                 <div class="toDesign">
                     To
                 </div>
@@ -252,29 +262,31 @@
                 {{form.description}}
             </div>
             <div style="height: 130px; margin-bottom: 30px; margin-left: 60px ;
-                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;" id="fileList">
+                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;">
+                {% for files in emailFilesSent %}
                 <div class="file-item">
-                    <span>Hello world.png</span>
-                    <span class="delete-button">🗑️</span>
+                    <span>{{files.file}}</span>
+                    <span class="delete-button-none">🗑️</span>
                 </div>
-                <div class="file-item">
-                    <span>Hello world.png</span>
-                    <span class="delete-button">🗑️</span>'
+                {% endfor %}
+                <div id="fileList">
+
                 </div>
             </div>
 
-            <div class="ButtonClass">
+            <div class="ButtonClass" style="margin-bottom: 20px;">
+                <input type="file" id="fileInput" name="file" multiple style="display:none;">
                 <button class="SubmitBut" type="submit">
                     Save
                 </button>
                 <img src="{% static 'images/Attach.png' %}" class="attachCls">
-                <input type="file" id="fileInput" name="file" multiple style="display:none;">
             </div>
         </form>
+        <div class="clickImage" style="display: none;">Image</div>
     </div>
 </body>
 <script>
-    // Helper to create a new FileList
+    
     function FileListItems(files) {
         var b = new ClipboardEvent('').clipboardData || new DataTransfer();
         for (var i = 0; i < files.length; i++) {
@@ -283,31 +295,73 @@
         return b.files;
     }
 
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
     $(document).ready(function () {
-        $(".userToForm").val("Mary Angel")
-        $(".subjectForm").val("2024 Most Handsome man")
-        $(".descriptionForm").val("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+        $(".backEmailComp").click(function(e){
+            ukid = parseInt($(".userPK").text())
+            okid = parseInt($(".emailSentId").text())
+            window.location.href = `../../emailSentView/${ukid}/${okid}`
+        })
+        var delList = document.querySelectorAll(".delete-button-none")
+        for (n of delList) {
+            n.addEventListener("click", function (e) {
+                e.target.parentElement.remove()
+            })
+            console.log(n.parentElement)
+        }
         $('.attachCls').on('click', function () {
             $('#fileInput').click();
         });
 
-        // Handle the file selection
         $('#fileInput').on('change', function () {
-            var files = this.files; // Get the selected files
-            console.log(files)
-            if (files.length > 0) {
-                $('#fileList').empty(); // Clear existing file list
-                //$('#uploadButton').show(); // Show the upload button
+            var fileInput = this; 
+            var files = Array.from(fileInput.files); 
+            console.log(files);
 
-                // Loop through selected files
+            if (files.length > 0) {
+                $('#fileList').empty(); 
+
+                
+                var modifiedFiles = [];
+
+                
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
+                    var uniqueString = new Date().getTime(); 
+                    var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
+
+                    // Create a new File object with the unique name
+                    var newFile = new File([files[i]], uniqueName, { type: files[i].type });
+
+                    // Push the new file to the modifiedFiles array
+                    modifiedFiles.push(newFile);
+
+                    // Create and display the file item
                     var fileItem = $('<div class="file-item"></div>');
-                    fileItem.append($('<span></span>').text(fileName));
+                    fileItem.append($('<span></span>').text(uniqueName)); // Display the unique name
                     fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
 
                     $('#fileList').append(fileItem);
                 }
+
+                // Update the input element with the modified files using FileListItems
+                fileInput.files = FileListItems(modifiedFiles);
+                console.log(Array.from(fileInput.files))
             }
         });
 
@@ -338,6 +392,35 @@
                 $('#uploadButton').hide();
             }*/
         });
+
+        $(".SubmitBut").click(function (e) {
+            e.preventDefault()
+            $(".emailCompose").submit();
+            $(".clickImage").click()
+        })
+        $(".clickImage").click(function (e) {
+            var delList = document.querySelectorAll(".delete-button-none");
+            var listDel = [];
+            delList.forEach(nn => listDel.push(nn.parentElement.firstElementChild.innerText));  // Push inner text to array
+
+            const emailId = parseInt($(".emailSentId").text());  // Extract email ID
+
+            $.ajax({
+                url: `/emailmanagement/changeImage/${emailId}`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "listme": listDel }),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("Email updated successfully:", response);
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+
+        })
     })
 </script>
 

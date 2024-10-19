@@ -6,8 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compose Email</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         body {
             background-color: #F4F4F4;
@@ -25,7 +31,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            
+
         }
 
         .emailCompose {
@@ -163,8 +169,9 @@
             background-color: #F37D84;
             color: white;
             padding: 15px 30px;
-            border-radius: 1000px;
+            border-radius: 10px;
             border-style: none;
+            margin-bottom: 20px;
         }
 
         .attachCls {
@@ -176,20 +183,23 @@
             width: 30px;
             height: 30px;
         }
-        .file-item{
+
+        .file-item {
             background-color: #F0F0F0;
             padding: 10px 15px;
             margin-bottom: 10px;
             border-radius: 10px;
             color: #F69BA0;
         }
-        .delete-button{
+
+        .delete-button {
             color: #F69BA0;
             margin-left: 10px;
         }
-        .backEmailComp{
+
+        .backEmailComp {
             font-size: 30px;
-            color:#F69BA0 ;
+            color: #F69BA0;
             margin-left: 10%;
         }
 
@@ -226,7 +236,7 @@
     <div>
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
-    <div class = "backEmailComp">←</div>
+    <div class="backEmailComp">←</div>
     <div class="bodyContent">
         <form method="post" class="emailCompose" enctype="multipart/form-data">
             {%csrf_token%}
@@ -240,7 +250,11 @@
             </div>
             <div style="margin-left: 60px; color: rgb(255, 64, 118);">
                 {% if form.toUser.errors %}
-                    <div class="error">Invalid email</div> 
+                <div class="error" style="display: none;">Invalid email</div>
+                {% elif errormessage %}
+                <div class="error" style="display: none;">User Not Found</div>
+                {% else %}
+                <div class="error" style="display: none;"></div>
                 {% endif %}
             </div>
 
@@ -257,7 +271,8 @@
                 {{form.description}}
             </div>
             <div style="height: 130px; margin-bottom: 30px; margin-left: 60px ;
-                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;" id="fileList">
+                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;"
+                id="fileList">
 
             </div>
 
@@ -270,9 +285,24 @@
             </div>
         </form>
     </div>
+
+    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">UserError</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body toastPut">
+                
+            </div>
+        </div>
+    </div>
+
+
 </body>
 <script>
-    // Helper to create a new FileList
+
     function FileListItems(files) {
         var b = new ClipboardEvent('').clipboardData || new DataTransfer();
         for (var i = 0; i < files.length; i++) {
@@ -282,46 +312,79 @@
     }
 
     $(document).ready(function () {
+        const toastLiveExample = document.getElementById('liveToast');
+
+        $(".backEmailComp").click(function(e){
+            window.location.href = "../../emailmanagement/emailList"
+        })
+
+        var errorme = document.querySelector(".error").innerText;
+        if (errorme === "Invalid email" || errorme === "User Not Found") {
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+            $(".toastPut").text(errorme)
+            toastBootstrap.show();
+        }
+        else{
+        }
         $('.attachCls').on('click', function () {
             $('#fileInput').click();
         });
 
-        // Handle the file selection
+        
         $('#fileInput').on('change', function () {
-            var files = this.files; // Get the selected files
-            console.log(files)
-            if (files.length > 0) {
-                $('#fileList').empty(); // Clear existing file list
-                //$('#uploadButton').show(); // Show the upload button
+            var fileInput = this; 
+            var files = Array.from(fileInput.files); 
+            console.log(files);
 
-                // Loop through selected files
+            if (files.length > 0) {
+                $('#fileList').empty(); 
+
+                
+                var modifiedFiles = [];
+
+                
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
+                    var uniqueString = new Date().getTime(); 
+                    var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
+
+                    
+                    var newFile = new File([files[i]], uniqueName, { type: files[i].type });
+
+                    
+                    modifiedFiles.push(newFile);
+
+                
                     var fileItem = $('<div class="file-item"></div>');
-                    fileItem.append($('<span></span>').text(fileName));
-                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
+                    fileItem.append($('<span></span>').text(uniqueName)); 
+                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); 
 
                     $('#fileList').append(fileItem);
                 }
+
+            
+                fileInput.files = FileListItems(modifiedFiles);
+                console.log(Array.from(fileInput.files))
             }
         });
 
-        // Handle delete button click
+
+        
         $(document).on('click', '.delete-button', function () {
-            var index = $(this).data('index'); // Get index of file to delete
+            var index = $(this).data('index'); 
             var fileInput = $('#fileInput')[0];
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var files = Array.from(fileInput.files); 
 
-            // Remove the selected file
+            
             files.splice(index, 1);
-            fileInput.files = new FileListItems(files); // Update file input
+            fileInput.files = new FileListItems(files); 
 
-            // Refresh the file list
+            
             $('#fileList').empty();
             files.forEach(function (file, i) {
                 var fileItem = $('<div class="file-item"></div>');
                 fileItem.append($('<span></span>').text(file.name));
-                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
+                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); 
 
                 $('#fileList').append(fileItem);
             });
