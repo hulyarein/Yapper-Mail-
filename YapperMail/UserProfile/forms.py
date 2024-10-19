@@ -12,9 +12,17 @@ class ProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'id': 'firstName'
             }),
+            'middle_initial': forms.TextInput(attrs={
+                'class': 'form-control',
+                'id': 'middleInitial'
+            }),
             'last_name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'id': 'lastName'
+            }),
+            'pass_verification': forms.TextInput(attrs={
+                'class': 'form-control',
+                'id': 'passVerify'
             })
         }
 

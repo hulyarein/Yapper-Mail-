@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from .forms import ProfileForm
 from django.contrib import messages
 
-
 @login_required
 def profilePage(request):
     profile = get_object_or_404(Profile, user=request.user)
@@ -43,6 +42,35 @@ def profilePage(request):
 #    work
 
     return render(request, "profilePage.html", context)
+
+# @login_required
+# def profilePage(request):
+    # profile = request.user
+
+    # first_name = profile.first_name or ""
+    # last_name = profile.last_name or ""
+    # middle_name = profile.middle_name or ""
+    # birthday = profile.birthday or ""
+    # gender = profile.gender or ""
+    # phone_number = profile.phone_number or ""
+    # email_address = profile.username or ""
+    # home = profile.home_address or ""
+    # work = profile.work_address or ""
+
+    # context = {
+    #     'profilepic': "yawa",
+    #     'first_name': ' '.join(word.capitalize() for word in first_name.split()),
+    #     'middle_initial': ' '.join(word.capitalize() for word in middle_name.split())[:1] + "." if middle_name else "",
+    #     'last_name': ' '.join(word.capitalize() for word in last_name.split()),
+    #     'bday': birthday,
+    #     'gender': gender,
+    #     'phone_number': phone_number,
+    #     'email_address': email_address + '@yapper.com',
+    #     'home_address': home,
+    #     'work_address': work
+    # }
+
+    # return render(request, "profilePage.html", context)
 
 
 @login_required
