@@ -315,7 +315,7 @@ def download_file(request, filename):
 def emailListView(request):
     form = SearchForm()
 
-    userVar = TemporaryUser.objects.get(id = 2)
+    userVar = TemporaryUser.objects.get(id = 1)
     emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
     return render(request,'emailList.html',{'form':form,'emails':emailsVar})
 
@@ -325,7 +325,7 @@ def sentEmailList(request):
             data = json.loads(request.body)
 
             if data.get('sentNum') == 2:
-                userVar = TemporaryUser.objects.get(id=2)
+                userVar = TemporaryUser.objects.get(id=1)
                 emailsVar = Email.objects.filter(Q(fromUser=userVar) & Q(isDeleted = False))
 
                 email_data = [
@@ -342,7 +342,7 @@ def sentEmailList(request):
                 return JsonResponse({'emails': email_data}, status=200)
             
             elif data.get('sentNum') == 3:
-                userVar = TemporaryUser.objects.get(id=2)
+                userVar = TemporaryUser.objects.get(id=1)
                 emailsVar = Email.objects.filter(Q(toUser=userVar) & Q(isDeleted = False))
 
                 email_data = [
@@ -358,7 +358,7 @@ def sentEmailList(request):
                 # Send the response back as JSON
                 return JsonResponse({'emails': email_data}, status=200)
             elif data.get('sentNum') == 4:
-                userVar = TemporaryUser.objects.get(id=2)
+                userVar = TemporaryUser.objects.get(id=1)
                 emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
 
                 email_data = [
