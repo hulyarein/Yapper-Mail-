@@ -25,7 +25,7 @@ def email_composition(request,pk):
 
 
             try:
-                fromUser = User.objects.get(id = pk)
+                fromUser = request.user
                 toUserDatabase = User.objects.get(email = toUser)
                 email = Email(
                     fromUser=fromUser,
@@ -336,7 +336,7 @@ def sentEmailList(request):
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
-                        "fromUser": email.fromUser.userEmail,
+                        "fromUser": email.fromUser.email,
                     }
                     for email in emailsVar
                 ]
@@ -354,7 +354,7 @@ def sentEmailList(request):
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
-                        "fromUser": email.fromUser.userEmail,
+                        "fromUser": email.fromUser.email,
                     }
                     for email in emailsVar
                 ]
@@ -371,7 +371,7 @@ def sentEmailList(request):
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
-                        "fromUser": email.fromUser.userEmail,
+                        "fromUser": email.fromUser.email,
                     }
                     for email in emailsVar
                 ]
