@@ -145,6 +145,8 @@
         .descriptionForm {
             width: 100%;
             font-size: 15px;
+            padding: 10px;
+            border-radius: 10px;
         }
 
         .descriptionDiv {
@@ -183,6 +185,8 @@
             padding: 10px 15px;
             margin-bottom: 10px;
             border-radius: 10px;
+            display: flex;
+            flex-direction: row;
             color: #F69BA0;
         }
         .delete-button{
@@ -233,7 +237,7 @@
     <div class = "backEmailComp">←</div>
     <div class="bodyContent">
         <div class = "replyIdCont" style="display: none;">{{reply.id}}</div>
-        <form method="POST" class="emailCompose" enctype="multipart/form-data">
+        <form method="POST" class="emailCompose" enctype="multipart/form-data" style="padding: 10px;">
             {%csrf_token%}
             <div class="descriptionDiv">
                 {{form.description}}
