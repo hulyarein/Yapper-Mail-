@@ -238,7 +238,9 @@
     <div>
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
-    <div class="backEmailComp">←</div>
+    <div class="backEmailComp">
+        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+    </div>
     <div class = "userPK" style="display: none;">{{userRep}}</div>
     <div class="bodyContent">
         <form method="POST" class="emailCompose" enctype="multipart/form-data">
