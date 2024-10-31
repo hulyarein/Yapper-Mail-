@@ -38,7 +38,7 @@ class EmailFiles(models.Model):
     
 
 class Reply(models.Model):
-    fromUser = models.ForeignKey(TemporaryUser,on_delete=models.CASCADE,related_name="reply_to_email")
+    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name="reply_to_email")
     emailId = models.ForeignKey(Email,on_delete=models.CASCADE,related_name="emialReply")
     content = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)   
@@ -48,7 +48,7 @@ class Reply(models.Model):
     
 
 class ReplyFiles(models.Model):
-    fromUser = models.ForeignKey(TemporaryUser,on_delete=models.CASCADE,related_name="reply_files_user")
+    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name="reply_files_user")
     emailId = models.ForeignKey(Email,on_delete=models.CASCADE,related_name="emialReplyFiles",null=True,blank=True)
     replyid = models.ForeignKey(Reply,on_delete=models.CASCADE,related_name="reply_file_replyid")
     file = models.FileField(upload_to='uploads/')

@@ -211,8 +211,8 @@
                                     {{emailCont.fromUser.first_name|slice:":1"}}
                                 </div>
                                 <div>
-                                    <div class=fromName>{{emailCont.fromUser.first_name}}</div>
-                                    <div class=toName>to {{emailCont.toUser.first_name}}</div>
+                                    <div class=fromName style="font-size: 18px;">{{emailCont.fromUser.username}}</div>
+                                    <div class=toName style="font-size: 13px;">{{emailCont.fromUser.first_name}} {{emailCont.fromUser.last_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{emailCont.date_sent}}</div>
                                 </div>
@@ -246,8 +246,8 @@
                                     {{rep.fromUser.first_name|slice:":1"}}
                                 </div>
                                 <div>
-                                    <div class=fromName>{{rep.fromUser.first_name}}</div>
-                                    <div class=toName>{{rep.toUser.first_name}}</div>
+                                    <div class=fromName style="font-size: 18px;">{{rep.fromUser.username}}</div>
+                                    <div class=toName style="font-size: 13px;">{{rep.fromUser.first_name}} {{rep.fromUser.last_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{rep.date_sent}}</div>
                                 </div>
