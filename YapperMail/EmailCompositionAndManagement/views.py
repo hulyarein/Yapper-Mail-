@@ -184,7 +184,7 @@ def edit_email(request,pk,uk):
 
     else:
         initialValue = {
-            'toUser':getEmail.toUser,
+            'toUser':getEmail.toUser.email,
             'subject':getEmail.subject,
             'description':getEmail.content,
         }
