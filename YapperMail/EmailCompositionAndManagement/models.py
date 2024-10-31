@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -13,8 +14,8 @@ class TemporaryUser(models.Model):
     
 
 class Email(models.Model):
-    fromUser = models.ForeignKey(TemporaryUser,on_delete=models.CASCADE,related_name='sent_emails')
-    toUser = models.ForeignKey(TemporaryUser,on_delete=models.CASCADE,related_name='receive_emails')
+    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name='sent_emails')
+    toUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name='receive_emails')
     subject = models.CharField(max_length=500)
     content = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)
@@ -26,8 +27,8 @@ class Email(models.Model):
 
 
 class EmailFiles(models.Model):
-    fromUser = models.ForeignKey(TemporaryUser,on_delete=models.CASCADE,related_name='sent_emailFiles')
-    toUser = models.ForeignKey(TemporaryUser,on_delete=models.CASCADE,related_name='receive_emailFiles')
+    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name='sent_emailFiles')
+    toUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name='receive_emailFiles')
     emailId = models.ForeignKey(Email,on_delete=models.CASCADE)
     file = models.FileField(upload_to='uploads/')
 
