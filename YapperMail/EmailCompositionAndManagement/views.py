@@ -66,7 +66,8 @@ def email_sent_view(request,pk,ok):
 
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
 
-    userRep = TemporaryUser.objects.get(id = pk)
+    #userRep = TemporaryUser.objects.get(id = pk)
+    userRep = User.objects.get(id = pk)
 
 
     if request.method == "POST":

@@ -195,7 +195,7 @@
         <img src="{%static 'images/Edit.png'%}" class="editPost">
         {% endif %}
         <div style="display: none;" class="numEmail">{{emailCont.id}}</div>
-        <div class="userRephold" style="display: none;">{{userRep.id}}</div>
+        <div class="userRephold" style="">{{userRep.id}}{{userRep.email}}</div>
     </div>
     <div class="bodyContent">
         <form method="POST" class=viewEmail enctype="multipart/form-data">
