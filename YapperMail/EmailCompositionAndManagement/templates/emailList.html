@@ -17,7 +17,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #F4F4F4;
+            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
+            min-height: 100vh;
         }
 
         .logoImage {
@@ -78,14 +79,15 @@
             margin-left: 50px;
             display: flex;
             flex-direction: row;
+            justify-content: space-between;
             margin-top: 20px;
+            margin-bottom: 30px;
         }
 
         .allBut {
             border-style: solid;
             border-radius: 10px;
             border-color: #F69BA0;
-            font-weight: bold;
             padding: 10px 30px;
             margin-right: 20px;
         }
@@ -94,7 +96,6 @@
             border-style: solid;
             border-radius: 10px;
             border-color: #F69BA0;
-            font-weight: bold;
             padding: 10px 30px;
             margin-right: 20px;
         }
@@ -103,7 +104,6 @@
             border-style: solid;
             border-radius: 10px;
             border-color: #F69BA0;
-            font-weight: bold;
             padding: 10px 30px;
             margin-right: 20px;
         }
@@ -113,15 +113,17 @@
             color: white;
             padding: 20px 20px;
             border-radius: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
 
         }
 
         .composeDiv {
             display: flex;
             flex-direction: row;
-            margin-left: 50px;
-            margin-top: 30px;
-            margin-bottom: 30px;
+            margin-right: 50px;
+
         }
 
         .profDiv {
@@ -169,7 +171,6 @@
                 border-style: solid;
                 border-radius: 10px;
                 border-color: #F69BA0;
-                font-weight: bold;
                 padding: 5px 15px;
                 margin-right: 10px;
             }
@@ -178,7 +179,6 @@
                 border-style: solid;
                 border-radius: 10px;
                 border-color: #F69BA0;
-                font-weight: bold;
                 padding: 5px 15px;
                 margin-right: 10px;
             }
@@ -187,7 +187,6 @@
                 border-style: solid;
                 border-radius: 10px;
                 border-color: #F69BA0;
-                font-weight: bold;
                 padding: 5px 15px;
                 margin-right: 10px;
             }
@@ -224,6 +223,19 @@
             .emailGrid {
                 grid-template-columns: repeat(1, 300px);
             }
+            .arrangeCont {
+                margin-left: 50px;
+                display: flex;
+                flex-direction: column;
+                margin-top: 20px;
+                margin-bottom: 30px;
+            }
+            .composeDiv {
+                display: flex;
+                flex-direction: row;
+                margin-right: 50px;
+                margin-top: 20px;
+            }
         }
     </style>
 </head>
@@ -234,21 +246,30 @@
         <input type="text" placeholder="Search" class="searchCont">
         <img src="{% static 'images/profSample.png' %}" class="profPic">
     </div>
-    <div class=backBut>←</div>
-    <div class=arrangeCont>
-        <div class="allBut">All</div>
-        <div class="sentBut">Sent</div>
-        <div class="recBut">Received</div>
-        <div class="userId" style="display: none;">1</div>
+    <div class=backBut>
+        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
     </div>
-    <div class=composeDiv>
-        <div class="composeButton">Compose</div>
+    <div class=arrangeCont>
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <div class="allBut">All</div>
+            <div class="sentBut">Sent</div>
+            <div class="recBut">Received</div>
+            <div class="userId" style="display: none;">1</div>
+        </div>
+        <div class=composeDiv>
+            <div class="composeButton">
+                <img src = "{% static 'images/Plus for compose.png' %}" style="height: 20px; width: 20px; margin-right: 10px;">
+                <div class = "hideCompose">
+                    Compose
+                </div>
+            </div>
+        </div>
     </div>
     <div style="display: flex; flex-direction: row; justify-content: center;">
         <div class=emailGrid>
             {% for email in emails %}
-            <div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-            box-shadow: 7px 7px 5px #d5d5d5; border-radius: 10px;">
+            <div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+            box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">{{email.id}}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
                     style="width: 50px; height: 50px; margin-right: 15px;">
@@ -348,8 +369,8 @@
                         var divAdd = document.createElement("div")
                         emailGrid.append(divAdd)
                         divAdd.innerHTML =
-                            `<div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-            box-shadow: 7px 7px 5px #d5d5d5; border-radius: 10px;">
+                            `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+            box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
                     style="width: 50px; height: 50px; margin-right: 15px;">
@@ -422,8 +443,8 @@
                         var divAdd = document.createElement("div")
                         emailGrid.append(divAdd)
                         divAdd.innerHTML =
-                            `<div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-            box-shadow: 7px 7px 5px #d5d5d5; border-radius: 10px;">
+                            `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+            box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
                     style="width: 50px; height: 50px; margin-right: 15px;">
@@ -496,8 +517,8 @@
                         var divAdd = document.createElement("div")
                         emailGrid.append(divAdd)
                         divAdd.innerHTML =
-                            `<div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-            box-shadow: 7px 7px 5px #d5d5d5; border-radius: 10px;">
+                            `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+            box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
                     style="width: 50px; height: 50px; margin-right: 15px;">
@@ -576,8 +597,8 @@
                                 var divAdd = document.createElement("div")
                                 emailGrid.append(divAdd)
                                 divAdd.innerHTML =
-                                    `<div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-            box-shadow: 7px 7px 5px #d5d5d5; border-radius: 10px;">
+                                    `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+            box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
                     style="width: 50px; height: 50px; margin-right: 15px;">
@@ -680,8 +701,8 @@
                                 var divAdd = document.createElement("div")
                                 emailGrid.append(divAdd)
                                 divAdd.innerHTML =
-                                    `<div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-            box-shadow: 7px 7px 5px #d5d5d5; border-radius: 10px;">
+                                    `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+            box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
                     style="width: 50px; height: 50px; margin-right: 15px;">
@@ -785,8 +806,8 @@
                                 var divAdd = document.createElement("div")
                                 emailGrid.append(divAdd)
                                 divAdd.innerHTML =
-                                    `<div style="background-color: #EAEAEA; padding: 20px; display: flex; flex-direction: row;
-            box-shadow: 7px 7px 5px #d5d5d5; border-radius: 10px;">
+                                    `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+            box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
                     style="width: 50px; height: 50px; margin-right: 15px;">
