@@ -891,6 +891,10 @@
             var usermeid = parseInt($(".userId").text()) 
             window.location.href = `http://127.0.0.1:8000/emailmanagement/composeEmail/${usermeid}`
         })
+
+        $(".backBut").click(function(e){
+            window.location.href = `http://127.0.0.1:8000/home/`
+        })
     })
 </script>
 
