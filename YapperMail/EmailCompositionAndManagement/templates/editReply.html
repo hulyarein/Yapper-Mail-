@@ -237,7 +237,9 @@
     </div>
     <div class = "userIdh" style="display: none;"> {{userRep}}</div>
     <div class = "emailIdh" style="display: none;">{{reply.emailId.id}}</div>
-    <div class = "backEmailComp">←</div>
+    <div class = "backEmailComp">
+        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+    </div>
     <div class="bodyContent">
         <div class = "replyIdCont" style="display: none;">{{reply.id}}</div>
         <form method="POST" class="emailCompose" enctype="multipart/form-data" style="padding: 10px;">
