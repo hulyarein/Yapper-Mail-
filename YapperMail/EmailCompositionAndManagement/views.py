@@ -338,6 +338,7 @@ def sentEmailList(request):
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
+                        "toUser":email.toUser.email
                     }
                     for email in emailsVar
                 ]
@@ -356,6 +357,7 @@ def sentEmailList(request):
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
+                        "toUser":email.toUser.email
                     }
                     for email in emailsVar
                 ]
@@ -373,6 +375,7 @@ def sentEmailList(request):
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
+                        "toUser":email.toUser.email
                     }
                     for email in emailsVar
                 ]
