@@ -195,7 +195,7 @@
         <img src="{%static 'images/Edit.png'%}" class="editPost">
         {% endif %}
         <div style="display: none;" class="numEmail">{{emailCont.id}}</div>
-        <div class="userRephold" style="">{{userRep.id}}{{userRep.email}}</div>
+        <div class="userRephold" style="display: none;">{{userRep.id}}</div>
     </div>
     <div class="bodyContent">
         <form method="POST" class=viewEmail enctype="multipart/form-data">
@@ -208,11 +208,11 @@
                         <div class="accountContain">
                             <div class="profCont">
                                 <div class="profShow">
-                                    {{emailCont.fromUser.firstname|slice:":1"}}
+                                    {{emailCont.fromUser.first_name|slice:":1"}}
                                 </div>
                                 <div>
-                                    <div class=fromName>{{emailCont.fromUser.firstname}}</div>
-                                    <div class=toName>{{emailCont.fromUser.lastname}}</div>
+                                    <div class=fromName>{{emailCont.fromUser.first_name}}</div>
+                                    <div class=toName>to {{emailCont.toUser.first_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{emailCont.date_sent}}</div>
                                 </div>
@@ -243,11 +243,11 @@
                             <div class="profCont">
                                 <div class="repId" style="display: none;">{{rep.id}}</div>
                                 <div class="profShow">
-                                    {{rep.fromUser.firstname|slice:":1"}}
+                                    {{rep.fromUser.first_name|slice:":1"}}
                                 </div>
                                 <div>
-                                    <div class=fromName>{{rep.fromUser.firstname}}</div>
-                                    <div class=toName>{{rep.fromUser.lastname}}</div>
+                                    <div class=fromName>{{rep.fromUser.first_name}}</div>
+                                    <div class=toName>{{rep.toUser.first_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{rep.date_sent}}</div>
                                 </div>
