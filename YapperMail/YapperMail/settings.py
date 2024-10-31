@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'EmailCompositionAndManagement',
     'compressor',
     'phonenumber_field',
+    'TeamEmails',
 ]
 
 MIDDLEWARE = [
