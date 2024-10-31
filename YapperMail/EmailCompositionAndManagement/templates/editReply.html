@@ -185,9 +185,12 @@
             padding: 10px 15px;
             margin-bottom: 10px;
             border-radius: 10px;
-            display: flex;
-            flex-direction: row;
             color: #F69BA0;
+        }
+        #fileList{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
         }
         .delete-button{
             color: #F69BA0;
@@ -243,7 +246,7 @@
                 {{form.description}}
             </div>
             <div style="height: 130px; margin-bottom: 30px; margin-left: 60px ;
-                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;" >
+                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items:start;" >
 
                 {% for files in myfiles %}
                     <div class="file-item">
