@@ -6,7 +6,8 @@ urlpatterns = [
     path('composeEmail/<int:pk>',views.team_email_composition,name='team_email_composition'), 
     path('composeEmaildetails',views.compose_email_details,name = "compose_email_details"),
     path('emailList',views.team_emailListView,name='team_emailListView'),
-    path('emailList/sent',views.team_sentEmailList,name = "team_sentEmailList")
+    path('emailList/sent',views.team_sentEmailList,name = "team_sentEmailList"),
+    path('emailSentView/<int:pk>/<int:ok>',views.team_email_sent_view,name='team_emailSentView')
 ]
 
 '''path('emailSentView/<int:pk>/<int:ok>',views.email_sent_view,name='emailSentView'),

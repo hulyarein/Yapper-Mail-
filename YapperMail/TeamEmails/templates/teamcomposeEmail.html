@@ -389,7 +389,7 @@
         const toastLiveExample = document.getElementById('liveToast');
 
         $(".backEmailComp").click(function (e) {
-            window.location.href = "../../emailmanagement/emailList"
+            window.location.href = "../../teamemailmanagement/emailList"
         })
 
         var errorme = document.querySelector(".error").innerText;
@@ -515,6 +515,9 @@
                             const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
                             $(".toastPut").text(response.message)
                             toastBootstrap.show();
+                        }
+                        else{
+                            window.location.href = "../emailList"
                         }
 
                     },

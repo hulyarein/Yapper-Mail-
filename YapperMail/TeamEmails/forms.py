@@ -19,7 +19,7 @@ class TeamEmailComposeForm(forms.Form):
             'placeholder': 'Enter Description here',
         }))
     
-class ReplyComposeForm(forms.Form):
+class TeamReplyComposeForm(forms.Form):
     message = forms.CharField(
         widget=forms.Textarea(attrs={
             'rows':2,

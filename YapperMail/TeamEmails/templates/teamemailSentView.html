@@ -190,7 +190,7 @@
         <div class="backEmailComp">
             <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
         </div>
-        {% if userRep.id == emailCont.fromUser.id %}
+        {% if userRep in emailCont.adminUsers.all %}
         <div class="deletePost">🗑</div>
         <img src="{%static 'images/Edit.png'%}" class="editPost">
         {% endif %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .forms import TeamEmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm,TeamSearchForm
+from .forms import TeamEmailComposeForm,TeamReplyComposeForm,EditEmailForm,EditReplyForm,TeamSearchForm
 from .models import TeamEmail,TeamEmailFiles,TeamReply,TeamReplyFiles
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
@@ -203,3 +203,53 @@ def team_sentEmailList(request):
 
     # If the request is not POST
     return JsonResponse({'emails': "not Post"}, status=400)
+
+def team_email_sent_view(request,pk,ok):
+    getEmail = TeamEmail.objects.get(id = ok)
+
+    getFiles = TeamEmailFiles.objects.filter(emailId = getEmail)
+
+    #userRep = TemporaryUser.objects.get(id = pk)
+    userRep = User.objects.get(id = pk)
+
+
+    if request.method == "POST":
+        form = TeamReplyComposeForm(request.POST,request.FILES)
+
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            try:
+                replyModel = TeamReply(
+                    fromUser = userRep,
+                    emailId = getEmail,
+                    content = message
+                )
+
+                replyModel.save()
+
+
+                uploaded_files = request.FILES.getlist('file')
+                if uploaded_files:
+                    for uploaded_file in uploaded_files:
+                        email_file = TeamReplyFiles(
+                            fromUser=userRep,
+                            emailId = getEmail,
+                            replyid=replyModel, 
+                            file=uploaded_file
+                        )
+                        email_file.save()  
+                else:
+                    print("No files were uploaded.")
+
+                return redirect(f"../../emailSentView/{pk}/{ok}")
+            
+            except ObjectDoesNotExist:
+                print("Does not Exists")
+
+    else:
+        form = TeamReplyComposeForm()
+    
+    allRep = TeamReply.objects.filter(emailId = getEmail)
+    allRepFiles = TeamReplyFiles.objects.filter(emailId = getEmail)
+        
+    return render(request,"teamemailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep})
