@@ -253,7 +253,11 @@
                                 </div>
                             </div>
                             <div style="display: flex; flex-direction: row; align-items: center;">
-                                {% if userRep.id == rep.fromUser.id %}
+                                {% if userRep in emailCont.adminUsers.all %}
+                                <div class="deleteReply" style="color: #F37D84; margin-right: 10px; font-size: 20px;">🗑
+                                </div>
+                                <img src="{%static 'images/Edit.png'%}" class="editReply" style="height: 15px;">
+                                {% elif userRep.id == rep.fromUser.id %}
                                 <div class="deleteReply" style="color: #F37D84; margin-right: 10px; font-size: 20px;">🗑
                                 </div>
                                 <img src="{%static 'images/Edit.png'%}" class="editReply" style="height: 15px;">
@@ -325,7 +329,7 @@
     }
     console.log($(".userRephold").text())
     $(".backEmailComp").click(function (e) {
-        window.location.href = `../../../emailmanagement/emailList`
+        window.location.href = `../../../teamemailmanagement/emailList`
     })
 
     $(document).ready(function () {
