@@ -1,0 +1,184 @@
+{% load static %}
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    const exampleModal = document.getElementById("exampleModal");
+
+    if (exampleModal) {
+      exampleModal.addEventListener("shown.bs.modal", function () {
+        const removePhotoBtn = document.getElementById("RemovePhotoBtn");
+        const profilePic = document.getElementById("profilepic");
+        const profileInput = document.getElementById("profile-picture");
+        const saveProfile = document.getElementById("saveProfile");
+        const profileForm = document.getElementById("ChangeProfileForm");
+
+        // Resets modal if opened previously
+        {% if profilepic %}
+          profilePic.src = "{{profilepic.url}}";
+        {% else %}
+          profilePic.src = "{% static "images/default_profile.jpg" %}";
+        {% endif %}
+        saveProfile.style.display = "none";
+        removePhotoBtn.style.display = "block";
+        profileInput.value = "";
+
+        // check button if alive (kay modal)
+        if (removePhotoBtn) {
+          const profilePic = document.getElementById("profilepic");
+          if (profilePic.src === profilePic.getAttribute("data-default-src")) {
+            removePhotoBtn.disabled = true;
+          }
+        }
+
+        document
+          .getElementById("RemovePhotoBtn")
+          .addEventListener("click", function () {
+            if (
+              confirm("Are you sure you want to remove your profile picture?")
+            ) {
+              document.getElementById("removePhotoInput").value = "1";
+            }
+          });
+
+        profileInput.addEventListener("change", function () {
+          if (profileInput.files && profileInput.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+              profilePic.src = e.target.result;
+              saveProfile.style.display = "block";
+              removePhotoBtn.style.display = "none";
+              // add save button later and remove "remove profile button" maybe press chage photo to cancel idk?
+            };
+
+            reader.readAsDataURL(profileInput.files[0]);
+          }
+        });
+
+        profileForm.addEventListener("submit", (event) => {
+          event.preventDefault(); // Prevent default form submission
+
+          const formData = new FormData(profileForm); // Use FormData to handle files
+
+          console.log(formData.get("remove_photo"));
+
+          fetch(profileForm.action, {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": document.querySelector(
+                "[name=csrfmiddlewaretoken]"
+              ).value,
+            },
+            body: formData,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                return response.json().then((data) => {
+                  const errorMessage =
+                    data.error || "An error occurred. Please try again.";
+                  document.querySelector(".error-message").textContent =
+                    errorMessage;
+                  console.error("Server response error:", data);
+                });
+              } else {
+                alert("Changes saved successfully!");
+                location.reload(); // Optionally reload the page to reflect the change
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+      });
+    } else {
+      console.error("exampleModal element not found.");
+    }
+  });
+</script>
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="model-header flex flex-col justify-between mt-8 mx-5 mb-5">
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-bold">Profile Picture</h1>
+          <a class="" data-bs-dismiss="modal">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              fill="currentColor"
+              class="bi bi-x"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+              />
+            </svg>
+          </a>
+        </div>
+        <p class="text-s font-light">
+          A picture helps people recognize you and lets you know when you’re
+          signed in to your account
+        </p>
+      </div>
+
+      <div class="flex flex-col justify-center items-center mb-10 mt-2 gap-3">
+        <img {% if profilepic %} src="{{ profilepic.url }} {% else %} src="{%
+        static "images/default_profile.jpg" %}" {% endif %} alt="profilepic"
+        id="profilepic" class="rounded-full h-96 w-96 border-2 border-[#f37d84]"
+        data-default-src="{% static "images/default_profile.jpg" %}" />
+      </div>
+
+      <form
+        action="{% url 'profile' %}"
+        method="POST"
+        enctype="multipart/form-data"
+        id="ChangeProfileForm"
+        s
+      >
+        {% csrf_token %}
+        <div class="modal-end flex justify-evenly items-center mb-3 mx-5 gap-5">
+          <label
+            for="profile-picture"
+            class="btn btn-primary font-semibold rounded-3xl bg-[#f37d84] border-[#f37d84] hover:bg-[#f66f78] hover:border-[#f66f78] py-3 px-4"
+          >
+            Change Photo
+          </label>
+          <input
+            id="profile-picture"
+            name="profile_picture"
+            type="file"
+            style="display: none"
+            accept="image/*"
+          />
+          <button
+            type="submit"
+            id="RemovePhotoBtn"
+            class="btn btn-primary font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] disabled:bg-gray-400 disabled:border-[#BDBDBD] py-3 px-4"
+          >
+            Remove Photo
+          </button>
+          <button
+            type="submit"
+            id="saveProfile"
+            style="display: none"
+            class="btn btn-primary font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] disabled:bg-gray-400 disabled:border-[#BDBDBD] py-3 px-4"
+          >
+            Save Changes
+          </button>
+          <input
+            type="hidden"
+            name="remove_photo"
+            id="removePhotoInput"
+            value="0"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

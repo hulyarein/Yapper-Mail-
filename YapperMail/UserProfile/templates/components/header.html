@@ -1,5 +1,5 @@
 {% load static %}
-<div class="flex flex-row justify-between mx-24 mt-12">
+<div class="flex flex-row justify-between mx-24 p-6">
   <a href="{% url 'profile' %}">
     <div class="left flex flex-row justify-evenly items-center gap-3">
       <img src="{% static 'images/logo2.png' %}" alt="pic" class="h-14 w-14" />
@@ -23,6 +23,15 @@
           </a>
       </div>
   </div>
-    <p>Profile</p>
+    <img
+    {% if profilepic %}
+    src="{{ profilepic.url }}"
+    {% else %}
+    src="{% static "images/default_profile.jpg" %}"
+    {% endif %}
+    alt="nayeon"
+    class="rounded-full h-12 w-12"
+  />
+   
   </div>
 </div>

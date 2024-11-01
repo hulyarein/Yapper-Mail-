@@ -13,46 +13,63 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Yapper | Profile</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'images/logo2.png' %}">
   </head>
   <body class="bg-[#F4F4F4]">
     {% include 'components/header.html' %}
     <div class="header">{% block header %}{% endblock %}</div>
 
-    <div class="title flex flex-row gap-10 justify-center items-center flex-wrap-reverse">
+    <div
+      class="title flex flex-row gap-10 justify-center items-center flex-wrap-reverse"
+    >
       <div class="">
         <label class="font-mono font-bold text-7xl">Personal Info</label>
         <h3>Manage how the world sees you</h3>
       </div>
-      <img src="{% static 'images/cuteImage.png' %}" alt="">
+      <img src="{% static 'images/cuteImage.png' %}" alt="" />
     </div>
 
     <div class="content pb-20 flex flex-col items-center">
-      <div class="personalInfo border-2 border-[#F37D84] my-10 flex flex-col w-3/5 rounded-3xl">
+      <div
+        class="personalInfo border-2 border-[#F37D84] my-10 flex flex-col w-3/5 rounded-3xl"
+      >
         <div class="flex items-center m-6">
           <label class="font-sans text-3xl mx-10">Personal Info</label>
         </div>
         <hr class="border-[#F37D84] border-2" />
-          <div class="hover:bg-[#e9e7e7]">
+        <div class="hover:bg-[#e9e7e7]">
+          <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <div class="profilePic p-6 flex justify-between items-center">
-                <label class="mx-10 font-medium">Profile Picture</label>
-                  <img
-                    src="https://iv1.lisimg.com/image/25565557/740full-im-nayeon.jpg"
-                    alt="nayeon"
-                    class="rounded-full h-16 w-16 mx-10"
-                  />
+              <label class="mx-10 font-medium">Profile Picture</label>
+              <img {% if profilepic %} src="{{ profilepic.url }}" {% else %}
+              src="{% static "images/default_profile.jpg" %}" {% endif %}
+              alt="nayeon" class="rounded-full h-16 w-16 mx-10" />
             </div>
-          </div>
+          </a>
+        </div>
         <hr class="border-[#F37D84] border-2" />
         <a href="{% url 'changeName' %}">
           <div class="hover:bg-[#e9e7e7]">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Name</label></div>
-                <label class="font-medium">{{ first_name }} {{ last_name }}</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Name</label>
+                </div>
+                <label class="font-medium"
+                  >{{ first_name }} {{ middle_name }} {{ last_name }}</label
+                >
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
@@ -62,33 +79,59 @@
           <div class="hover:bg-[#e9e7e7]">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Birthday</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Birthday</label>
+                </div>
+                <label class="font-medium">{{ birthday }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
-        
+
         <hr class="border-[#F37D84] border-2" />
         <a href="{% url 'changeGender' %}">
           <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Gender</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Gender</label>
+                </div>
+                <label class="font-medium">{{ gender }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
       </div>
 
-      <div class="contactInfo border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
+      <div
+        class="contactInfo border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl"
+      >
         <div class="flex items-center m-6">
           <label class="font-sans text-3xl mx-10">Contact Information</label>
         </div>
@@ -97,32 +140,56 @@
           <div class="hover:bg-[#e9e7e7]">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Phone Number</label></div>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Phone Number</label>
+                </div>
                 <label class="font-medium">{{ phone_number }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
-        
+
         <hr class="border-[#F37D84] border-2" />
         <a href="{% url 'changeEmail' %}">
           <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40  "><label class="font-medium">Email Address</label></div>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Email Address</label>
+                </div>
                 <label class="font-medium">{{ email_address }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
       </div>
-     
+
       <div class="addresses border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
         <div class="flex items-center m-6">
           <label class="font-sans text-3xl mx-10">Addresses</label>
@@ -132,52 +199,89 @@
           <div class="hover:bg-[#e9e7e7]">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Home</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Home</label>
+                </div>
+                <label class="font-medium">{{ home_address }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
-        
+
         <hr class="border-[#F37D84] border-2" />
         <a href="{% url 'changeWork' %}">
           <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Work</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Work</label>
+                </div>
+                <label class="font-medium">{{ work_address }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
       </div>
 
-       <div class="addresses border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
+      <div class="addresses border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
         <div class="flex items-center m-6">
           <label class="font-sans text-3xl mx-10">Security</label>
         </div>
-                <hr class="border-[#F37D84] border-2" />
-        <a href="{% url 'changeWork' %}">
+        <hr class="border-[#F37D84] border-2" />
+        <a href="{% url 'changePassword' %}">
           <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Password</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Password</label>
+                </div>
+                <label class="font-medium"></label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
       </div>
 
+      {% include 'components/changeProfilePic.html' %}
     </div>
     <!-- bootstrapshiz-->
     <script

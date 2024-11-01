@@ -15,35 +15,90 @@
     <title>I miss you</title>
   </head>
   <body class="bg-[#F4F4F4]">
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('myForm');
-      const submitButton = document.getElementById('openModal');
-    
-      // Capture initial values
-      const initialValues = {
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('myForm');
+    const submitButton = document.getElementById('openModal');
+    const passBtn = document.getElementById('passVerifyBtn');
+
+    let initialPass = document.getElementById('passVerify').value;
+
+    // Capture initial values
+    let initialValues = {
+      firstName: document.getElementById('firstName').value,
+      middle_name: document.getElementById('middleName').value,
+      lastName: document.getElementById('lastName').value
+    };
+
+    const checkChanges = () => {
+      const currentValues = {
         firstName: document.getElementById('firstName').value,
+        middle_name: document.getElementById('middleName').value,
         lastName: document.getElementById('lastName').value
       };
 
-      const checkChanges = () => {
-        const currentValues = {
+      const currPass = document.getElementById('passVerify').value;
+
+      // Check if values have changed
+      const hasChanges = 
+        currentValues.firstName !== initialValues.firstName ||
+        currentValues.lastName !== initialValues.lastName ||
+        currentValues.middle_name !== initialValues.middle_name;
+
+      const hasPass = currPass !== initialPass;
+
+      passBtn.disabled = !hasPass;
+      submitButton.disabled = !hasChanges; 
+    };
+
+    form.addEventListener('input', checkChanges);
+
+    let modalElement, modalInstance;
+
+    submitButton.addEventListener('click', () => {
+      modalElement = document.getElementById('exampleModal');
+      modalInstance = bootstrap.Modal.getInstance(modalElement);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent default form submission
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: new URLSearchParams(new FormData(form)),
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(data => {
+            const errorMessage = data.error || "An error occurred. Please try again.";
+            document.querySelector('.error-message').textContent = errorMessage;
+          });
+        } else {
+          modalInstance.hide();
+          alert('Changes saved successfully!'); 
+
+          // Update initial values to the current ones after successful submission
+          initialValues = {
             firstName: document.getElementById('firstName').value,
+            middle_name: document.getElementById('middleName').value,
             lastName: document.getElementById('lastName').value
-        };
+          };
+          initialPass = document.getElementById('passVerify').value;
 
-        // Check if values have changed
-        const hasChanges = 
-            currentValues.firstName !== initialValues.firstName ||
-            currentValues.lastName !== initialValues.lastName;
-
-        submitButton.disabled = !hasChanges; // Enable/Disable the button
-      };
-
-      // Attach input event listener
-      form.addEventListener('input', checkChanges);
-});
-    </script>
+          // Recheck to disable buttons if no changes detected
+          checkChanges();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  });
+</script>
     {% include 'components/header.html' %}
     <div class="header">{% block header %}{% endblock %}</div>
       <a href="{% url 'profile' %}">
@@ -64,14 +119,14 @@
             <div class="flex flex-col gap-10">
               <div class="flex flex-col">
                 <label class="mx-16 text-lg font-semibold">First Name</label>
-                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" value="{{ form.first_name.value }}" name="first_name" id="firstName">
+                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84] active:border:-[#f37d84]" value="{{ form.first_name.value }}" name="first_name" id="firstName">
               </div>
             </div>
 
             <div class="flex flex-col gap-10">
               <div class="flex flex-col">
                 <label class="mx-16 text-lg font-semibold">Middle Initial</label>
-                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" value="" name="middle_initial" id="middleInitial">
+                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" value="{{ form.middle_name.value }}" name="middle_name" id="middleName">
               </div>
             </div>
 
@@ -84,7 +139,6 @@
 
             <div class="flex justify-end gap-10 mr-16 items-center">
               <a href="{% url 'profile' %}" class="font-semibold hover:font-medium"><label>Cancel</label></a>
-              {% comment %} <input class="btn btn-primary w-1/6 font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]" type="submit" id="submitButton" value="Save" disabled> {% endcomment %}
               <button type="button" 
                       class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]" 
                       data-bs-toggle="modal" 
@@ -96,22 +150,8 @@
               </button>
             </div>
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="model header flex justify-between mt-8 ml-5 mr-5">
-                    <h1 class="text-2xl">Confirm Changes?</h1>
-                  </div>
-                  <div class="">
-                  <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" name="pass_verification" id="passVerify">
-                  </div>
-                  <div class="modal-end flex justify-end items-center mb-2 mx-3 gap-5">
-                    <a data-bs-dismiss="modal" class="font-semibold hover:font-medium"><label>Cancel</label></a>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                  </div>
-                </div>
-              </div>
-          </div>
+            {% include 'components/pass_verify.html' %}
+
           </form>
         </div>
       </div>

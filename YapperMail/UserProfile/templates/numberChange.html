@@ -4,7 +4,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- bootstrapshiz -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -13,9 +12,28 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>I miss you</title>
+    <link rel="stylesheet" href="{% static 'css/phonenum.css' %}">
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
   </head>
   <body class="bg-[#F4F4F4]">
     {% include 'components/header.html' %}
+
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.4/firebase-auth.js"></script>
+    
+    <!-- Load your firebaseconfig.js as a module -->
+    <script type="module" src="{% static 'Script/fbconfig.js' %}"></script>
+    <script type="module">
+      import { sendVerificationCode } from '{% static "Script/fbconfig.js" %}';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById("krazy").onclick = () => {
+          const phoneNumber = "+639959783274"; // Example number
+          sendVerificationCode(phoneNumber);
+        };
+      });
+    </script>
+
     <div class="header">{% block header %}{% endblock %}</div>
       <a href="{% url 'profile' %}">
         <div class="w-3/5 flex justify-center items-center gap-2 mb-2">
@@ -29,28 +47,54 @@
       <div class="content pb-20 flex flex-col items-center">
         <div class="fields border-2 border-[#F37D84] my-10 w-1/2 rounded-lg">
           <form action="" class="flex flex-col m-12 gap-3">
+            <p class="">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <div class="flex flex-col">
 
-          <p class="ml-16">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+              <div class="select-box w-full">
+                <div class="selected-option">
+                    <div class="flex items-center">
+                        <span class="iconify" data-icon="flag:ph-4x3"></span>
+                        <strong>+63</strong>
+                    </div>
+                    <input type="tel" name="tel" placeholder="Phone Number">
+                </div>
+                <div class="options">
+                    <input type="text" class="search-box" placeholder="Search Country Name">
+                    <ol></ol>
+                </div>
+              </div>
+
             <div class="flex flex-col gap-10">
               <div class="flex flex-col">
-                <label class="mx-16 text-lg font-semibold">Number</label>
-                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" placeholder="092123456789">
+                <label class="text-lg font-semibold">Verification Code</label>
+                <input type="text" class="p-3 border-1 border-[#f37d84]" value="{{ form.middle_name.value }}" name="middle_name" id="middleName">
               </div>
+              <button id="krazy" class="btn-primary" type="button">Krazy button</button>
+              <div id="recaptcha-container"></div>
             </div>
-            <div class="flex justify-end gap-10 mr-16 items-center">
+
+              <div class="flex justify-end gap-10 mt-8 items-center">
               <a href="{% url 'profile' %}" class="font-semibold hover:font-medium"><label>Cancel</label></a>
-              <input class="btn btn-primary w-1/6 font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12" type="submit" value="Save">
+              <button type="button" 
+                      class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#exampleModal"
+                      disabled
+                      id="openModal"
+                      >
+                      Save
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
-    <!-- bootstrapshiz-->
+    <script src="{% static "Script/phonenum.js" %}"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
-    ></script>
+      ></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 
   </body>
