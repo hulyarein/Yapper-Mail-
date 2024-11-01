@@ -91,25 +91,31 @@ body {
 }
 
 .signup-container{
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr;
     align-items: center;
     width: 100dvw;
     height: 100dvh;
+    
 }
 
 .signup-form {
+    grid-column: 1/2;
     display: flex;
-    width: 45%;
-    height: 100%;
+    /* width: 45%;*/
+    height: 100%; 
+    
+
 }
 
 .signup-bg{
+    grid-column: 2/-1;
     height: 100%;
     background-image: url("/static/img/LandingBG.png"), url("/static/img/Design1.png");
     background-size: cover, contain;
     background-repeat: no-repeat;
-    width: 55%;    
-    height: 100%;
+    /* width: 55%;    
+    height: 100%; */
     background-position: left, right;
     display: flex;
     flex-direction: column;
@@ -122,18 +128,22 @@ body {
 }
 
 .login-container {
-    display: flex;
+    display: grid;
     align-items: center;
+    grid-template-columns: 1.5fr 1fr;
     width: 100dvw;
     height: 100dvh;
+    /* gap: 50px; */
+    gap:50px;
 }
 .login-bg {
+    grid-column: 1/2;
     height: 100%;
     background-image: url("/static/img/LoginBG.png");
     background-size: cover;
     background-repeat: no-repeat;
-    width: 55%;    
-    height: 100%;
+    /* width: 55%;    
+    height: 100%; */
     background-position: center;
     flex-shrink: 0;
     border-top-right-radius: 150px;
@@ -141,13 +151,13 @@ body {
 }
 
 .login-form{
+    grid-column: 2/-1;
     padding-right: 70px;
-    padding-left: 10px;
     align-self: left;
     display: flex;
     flex-direction: column;
-    width: 45%;
-    height: 100%;
+    /* width: 45%;
+    height: 100%; */
     align-items: center;
     justify-content: center;
     
@@ -303,20 +313,15 @@ a {
 
 .home-body-2{
     display: grid;
-    
     gap: 2em;
-
     grid-template-areas: 
     "welcome taskboard"
     "schedule taskboard";
-
     grid-template-columns: 1fr 0.5fr;
     grid-template-rows: 0.45fr 0.55fr;
-
     width: 69%;
     height: 98%;
     background-color: #F37D84;
-    opacity: 20%;
     border-radius: 20px;
     padding: 1em;
     color: #1A1A1A;
