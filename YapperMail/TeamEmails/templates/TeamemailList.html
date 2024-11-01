@@ -17,7 +17,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
+            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1, #fff7f7);
             min-height: 100vh;
         }
 
@@ -148,11 +148,49 @@
             white-space: nowrap;
         }
 
+        .collaboratortDiv {
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .collaboratortDiv::-webkit-scrollbar {
+            width: 3px;
+            height: 3px;
+        }
+
+        .collaboratortDiv::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .collaboratortDiv::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+
+        .collaboratortDiv::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
         .emailGrid {
             display: grid;
             grid-template-columns: 300px 300px 300px 300px;
             gap: 30px;
             margin-bottom: 30px;
+        }
+
+        .profShow {
+            min-height: 30px;
+            min-width: 30px;
+            background-color: #DE3F2A;
+            border-radius: 1000px;
+            color: white;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            margin-right: 5px;
         }
 
 
@@ -223,6 +261,7 @@
             .emailGrid {
                 grid-template-columns: repeat(1, 300px);
             }
+
             .arrangeCont {
                 margin-left: 50px;
                 display: flex;
@@ -230,6 +269,7 @@
                 margin-top: 20px;
                 margin-bottom: 30px;
             }
+
             .composeDiv {
                 display: flex;
                 flex-direction: row;
@@ -247,19 +287,20 @@
         <img src="{% static 'images/profSample.png' %}" class="profPic">
     </div>
     <div class=backBut>
-        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+        <img src="{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
     </div>
     <div class=arrangeCont>
         <div style="display: flex; flex-direction: row; align-items: center;">
             <div class="allBut">All</div>
-            <div class="sentBut">Sent</div>
-            <div class="recBut">Received</div>
+            <div class="sentBut">Admin</div>
+            <div class="recBut">Member</div>
             <div class="userId" style="">{{LogUser.id}}</div>
         </div>
         <div class=composeDiv>
             <div class="composeButton">
-                <img src = "{% static 'images/Plus for compose.png' %}" style="height: 20px; width: 20px; margin-right: 10px;">
-                <div class = "hideCompose">
+                <img src="{% static 'images/Plus for compose.png' %}"
+                    style="height: 20px; width: 20px; margin-right: 10px;">
+                <div class="hideCompose">
                     Compose
                 </div>
             </div>
@@ -282,13 +323,36 @@
                     </div>
 
                     <div class="nameDiv"
-                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                        {{email.fromUser.email}}
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px;">
+                        Creator: {{email.fromUser.email}}
                     </div>
 
                     <div class="contentDiv"
                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                        To: {{email.toUser.email}}
+                        {% if LogUser in email.adminUsers.all %}
+                        Status: Admin
+                        {% elif LogUser in email.memberUsers.all %}
+                        Status: Member
+                        {% endif %}
+                    </div>
+
+                    <div class="collaboratortDiv"
+                        style="white-space: nowrap; overflow: auto; text-overflow: ellipsis;font-size: 15px; color: rgb(0, 0, 0);">
+                        <div>Collaborators</div>
+                        <div style="display: flex; flex-direction: row;">
+                            {% for nn in email.adminUsers.all %}
+                            <div class="profShow">
+                                {{ nn.first_name|slice:":1" }}
+                            </div>
+                            {% endfor %}
+
+                            {% for nn in email.memberUsers.all %}
+                            <div class="profShow">
+                                {{ nn.first_name|slice:":1" }}
+                            </div>
+                            {% endfor %}
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -341,11 +405,11 @@
 
         allButton.addEventListener("click", function (e) {
             $.ajax({
-                url: "../emailmanagement/emailList/sent",  
+                url: "../teamemailmanagement/emailList/sent",
                 type: 'POST',
-                data: JSON.stringify({ "sentNum": 4 }),  
-                contentType: 'application/json',  
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  
+                data: JSON.stringify({ "sentNum": 4 }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 success: function (response) {
                     var allButton = document.querySelector(".allBut")
                     allButton.style.backgroundColor = "#F69BA0"
@@ -365,6 +429,22 @@
                     emailGrid.innerText = ""
 
                     for (var nn of response.emails) {
+                        var statusme;
+                        if (nn["adminUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Admin"
+                        }
+                        else if (nn["memberUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Member"
+                        }
+
+                        let collaboratorsHTML = '';
+
+                        nn["adminUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+                        nn["memberUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
 
                         var divAdd = document.createElement("div")
                         emailGrid.append(divAdd)
@@ -383,13 +463,22 @@
                     </div>
 
                     <div class="nameDiv"
-                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                        ${nn.fromUser}
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;font-size: 15px;">
+                        Creator: ${nn.fromUser}
                     </div>
 
                     <div class="contentDiv"
                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                        To: ${nn.toUser}
+                        Status: ${statusme}
+                    </div>
+
+                    <div class="collaboratortDiv"
+                        style="white-space: nowrap; overflow: auto; text-overflow: ellipsis;font-size: 15px; color: rgb(0, 0, 0);">
+                        <div>Collaborators</div>
+                        <div style="display: flex; flex-direction: row;">
+                            ${collaboratorsHTML}
+
+                        </div>
                     </div>
                 </div>
             </div>`
@@ -415,11 +504,11 @@
 
         $(".sentBut").click(function (e) {
             $.ajax({
-                url: "../emailmanagement/emailList/sent",  
+                url: "../teamemailmanagement/emailList/sent",
                 type: 'POST',
-                data: JSON.stringify({ "sentNum": 2 }),  
-                contentType: 'application/json',  
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  
+                data: JSON.stringify({ "sentNum": 2 }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 success: function (response) {
                     var allButton = document.querySelector(".allBut")
                     allButton.style.backgroundColor = ""
@@ -439,6 +528,22 @@
                     emailGrid.innerText = ""
 
                     for (var nn of response.emails) {
+                        var statusme;
+                        if (nn["adminUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Admin"
+                        }
+                        else if (nn["memberUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Member"
+                        }
+
+                        let collaboratorsHTML = '';
+
+                        nn["adminUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+                        nn["memberUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
 
                         var divAdd = document.createElement("div")
                         emailGrid.append(divAdd)
@@ -457,13 +562,22 @@
                     </div>
 
                     <div class="nameDiv"
-                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                        ${nn.fromUser}
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;font-size: 15px;">
+                        Creator: ${nn.fromUser}
                     </div>
 
                     <div class="contentDiv"
                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                        To: ${nn.toUser}
+                        Status: ${statusme}
+                    </div>
+
+                    <div class="collaboratortDiv"
+                        style="white-space: nowrap; overflow: auto; text-overflow: ellipsis;font-size: 15px; color: rgb(0, 0, 0);">
+                        <div>Collaborators</div>
+                        <div style="display: flex; flex-direction: row;">
+                            ${collaboratorsHTML}
+
+                        </div>
                     </div>
                 </div>
             </div>`
@@ -489,11 +603,11 @@
 
         $(".recBut").click(function (e) {
             $.ajax({
-                url: "../emailmanagement/emailList/sent",  
+                url: "../teamemailmanagement/emailList/sent",
                 type: 'POST',
-                data: JSON.stringify({ "sentNum": 3 }),  
-                contentType: 'application/json',  
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  
+                data: JSON.stringify({ "sentNum": 3 }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 success: function (response) {
                     var allButton = document.querySelector(".allBut")
                     allButton.style.backgroundColor = ""
@@ -513,6 +627,22 @@
                     emailGrid.innerText = ""
 
                     for (var nn of response.emails) {
+                        var statusme;
+                        if (nn["adminUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Admin"
+                        }
+                        else if (nn["memberUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Member"
+                        }
+
+                        let collaboratorsHTML = '';
+
+                        nn["adminUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+                        nn["memberUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
 
                         var divAdd = document.createElement("div")
                         emailGrid.append(divAdd)
@@ -531,13 +661,22 @@
                     </div>
 
                     <div class="nameDiv"
-                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                        ${nn.fromUser}
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;font-size: 15px;">
+                        Creator: ${nn.fromUser}
                     </div>
 
                     <div class="contentDiv"
                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                        To: ${nn.toUser}
+                        Status: ${statusme}
+                    </div>
+
+                    <div class="collaboratortDiv"
+                        style="white-space: nowrap; overflow: auto; text-overflow: ellipsis;font-size: 15px; color: rgb(0, 0, 0);">
+                        <div>Collaborators</div>
+                        <div style="display: flex; flex-direction: row;">
+                            ${collaboratorsHTML}
+
+                        </div>
                     </div>
                 </div>
             </div>`
@@ -569,11 +708,11 @@
 
                 if (allButton.style.color == "white") {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",  
+                        url: "../emailmanagement/emailList/sent",
                         type: 'POST',
-                        data: JSON.stringify({ "sentNum": 4 }),  
-                        contentType: 'application/json',  
-                        headers: { 'X-CSRFToken': getCookie('csrftoken') },  
+                        data: JSON.stringify({ "sentNum": 4 }),
+                        contentType: 'application/json',
+                        headers: { 'X-CSRFToken': getCookie('csrftoken') },
                         success: function (response) {
                             var allButton = document.querySelector(".allBut")
                             allButton.style.backgroundColor = "#F69BA0"
@@ -635,9 +774,9 @@
                             var newarr = []
                             for (var sub in contme) {
                                 searchContent = contme[sub].firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.innerText.toLowerCase()
-                                
+
                                 if (!searchContent.includes(toBeSearch)) {
-                                    
+
                                 } else {
                                     newarr.push(contme[sub])
                                 }
@@ -673,11 +812,11 @@
                 }
                 else if (recButton.style.color == "white") {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",  
+                        url: "../emailmanagement/emailList/sent",
                         type: 'POST',
-                        data: JSON.stringify({ "sentNum": 3 }),  
-                        contentType: 'application/json',  
-                        headers: { 'X-CSRFToken': getCookie('csrftoken') },  
+                        data: JSON.stringify({ "sentNum": 3 }),
+                        contentType: 'application/json',
+                        headers: { 'X-CSRFToken': getCookie('csrftoken') },
                         success: function (response) {
                             var allButton = document.querySelector(".allBut")
                             allButton.style.backgroundColor = ""
@@ -739,9 +878,9 @@
                             var newarr = []
                             for (var sub in contme) {
                                 searchContent = contme[sub].firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.innerText.toLowerCase()
-                                
+
                                 if (!searchContent.includes(toBeSearch)) {
-                                    
+
                                 } else {
                                     newarr.push(contme[sub])
                                 }
@@ -778,11 +917,11 @@
                 }
                 else {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",  
+                        url: "../emailmanagement/emailList/sent",
                         type: 'POST',
-                        data: JSON.stringify({ "sentNum": 2 }),  
-                        contentType: 'application/json',  
-                        headers: { 'X-CSRFToken': getCookie('csrftoken') }, 
+                        data: JSON.stringify({ "sentNum": 2 }),
+                        contentType: 'application/json',
+                        headers: { 'X-CSRFToken': getCookie('csrftoken') },
                         success: function (response) {
                             var allButton = document.querySelector(".allBut")
                             allButton.style.backgroundColor = ""
@@ -844,9 +983,9 @@
                             var newarr = []
                             for (var sub in contme) {
                                 searchContent = contme[sub].firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.innerText.toLowerCase()
-                                
+
                                 if (!searchContent.includes(toBeSearch)) {
-                                    
+
                                 } else {
                                     newarr.push(contme[sub])
                                 }
@@ -888,11 +1027,11 @@
 
 
         $(".composeButton").click(function (e) {
-            var usermeid = parseInt($(".userId").text()) 
+            var usermeid = parseInt($(".userId").text())
             window.location.href = `http://127.0.0.1:8000/emailmanagement/composeEmail/${usermeid}`
         })
 
-        $(".backBut").click(function(e){
+        $(".backBut").click(function (e) {
             window.location.href = `http://127.0.0.1:8000/home/`
         })
     })

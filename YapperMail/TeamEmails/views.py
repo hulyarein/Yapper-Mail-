@@ -117,3 +117,89 @@ def team_emailListView(request):
 
     combined_emails = emailsVar.union(emailsVarMe)
     return render(request,'TeamemailList.html',{'form':form,'emails':combined_emails,'LogUser':userVar})
+
+def team_sentEmailList(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+
+            if data.get('sentNum') == 2:
+                #userVar = TemporaryUser.objects.get(id=1)
+                userVar = request.user
+                emailsVar = TeamEmail.objects.filter(adminUsers=userVar)
+
+                email_data = [
+                    {
+                        "id": email.id,
+                        "subject": email.subject,
+                        "content": email.content,
+                        "fromUser": email.fromUser.email,
+                        "fromUserId": email.fromUser.id,
+                        "adminUsers":[admin.id for admin in email.adminUsers.all()],
+                        "memberUsers":[member.id for member in email.memberUsers.all()],
+                        "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
+                        "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                    }
+                    for email in emailsVar
+                ]
+
+                # Send the response back as JSON
+                return JsonResponse({'emails': email_data}, status=200)
+            
+            elif data.get('sentNum') == 3:
+                #userVar = TemporaryUser.objects.get(id=1)
+                userVar = request.user
+                emailsVar = TeamEmail.objects.filter(memberUsers=userVar)
+
+                email_data = [
+                    {
+                        "id": email.id,
+                        "subject": email.subject,
+                        "content": email.content,
+                        "fromUser": email.fromUser.email,
+                        "fromUserId": email.fromUser.id,
+                        "adminUsers":[admin.id for admin in email.adminUsers.all()],
+                        "memberUsers":[member.id for member in email.memberUsers.all()],
+                        "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
+                        "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                    }
+                    for email in emailsVar
+                ]
+
+                # Send the response back as JSON
+                return JsonResponse({'emails': email_data}, status=200)
+            elif data.get('sentNum') == 4:
+                #userVar = TemporaryUser.objects.get(id=1)
+                userVar = request.user
+                emailsVar = TeamEmail.objects.filter(adminUsers=userVar)
+                emailsVarMe = TeamEmail.objects.filter(memberUsers=userVar)
+
+                combined_emails = emailsVar.union(emailsVarMe)
+
+                email_data = [
+                    {
+                        "id": email.id,
+                        "subject": email.subject,
+                        "content": email.content,
+                        "fromUser": email.fromUser.email,
+                        "fromUserId": email.fromUser.id,
+                        "adminUsers":[admin.id for admin in email.adminUsers.all()],
+                        "memberUsers":[member.id for member in email.memberUsers.all()],
+                        "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
+                        "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                    }
+                    for email in combined_emails
+                ]
+
+                # Send the response back as JSON
+                return JsonResponse({'emails': email_data}, status=200)
+            
+            else:
+                return JsonResponse({'emails': "none"}, status=200)
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
+
+    # If the request is not POST
+    return JsonResponse({'emails': "not Post"}, status=400)
