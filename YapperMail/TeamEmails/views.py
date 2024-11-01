@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .forms import TeamEmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm,SearchForm
+from .forms import TeamEmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm,TeamSearchForm
 from .models import TeamEmail,TeamEmailFiles,TeamReply,TeamReplyFiles
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
@@ -66,8 +66,10 @@ def compose_email_details(request):
             subject = request.POST.get('subject', None)
             description = request.POST.get('description', None)
 
+            list_members = json.loads(list_members)
+
             for email in list_members:
-                if not User.objects.get(email=email).exists():
+                if not User.objects.filter(email=email).exists():
                     return JsonResponse({"message": "Some Users do not exist"}, status=201)
             
             team_email = TeamEmail.objects.create(
@@ -104,3 +106,14 @@ def compose_email_details(request):
             return JsonResponse({"error": str(e)}, status=400)
         
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+def team_emailListView(request):
+    form = TeamSearchForm()
+
+    #userVar = TemporaryUser.objects.get(id = 1)
+    userVar = request.user
+    emailsVar = TeamEmail.objects.filter(adminUsers=userVar)
+    emailsVarMe = TeamEmail.objects.filter(memberUsers=userVar)
+
+    combined_emails = emailsVar.union(emailsVarMe)
+    return render(request,'TeamemailList.html',{'form':form,'emails':combined_emails,'LogUser':userVar})

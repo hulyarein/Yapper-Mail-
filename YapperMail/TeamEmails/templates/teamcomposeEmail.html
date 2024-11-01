@@ -486,17 +486,12 @@
                 for (var mem22 of memberList2) {
                     allmemebers.push(mem22.firstElementChild.innerText)
                 }
-                var listMember = {
-                    "listMembers": allmemebers,
-                    "subject": $(".subjectForm").val().trim(),
-                    "description": $(".descriptionForm").val().trim()
-                }
 
 
                 var formData = new FormData();
-                formData.append('listMembers', JSON.stringify(listMembers)); // Pass listMembers as a JSON string
-                formData.append('subject', subject);
-                formData.append('description', description);
+                formData.append('listMembers', JSON.stringify(allmemebers)); // Pass listMembers as a JSON string
+                formData.append('subject', $(".subjectForm").val().trim());
+                formData.append('description', $(".descriptionForm").val().trim());
 
                 var fileInput = document.getElementById('fileInput');
 
@@ -516,7 +511,7 @@
                     success: function (response) {
                         console.log("Email updated successfully:", response);
 
-                        if (response.message == "Some Users does not exist") {
+                        if (response.message == "Some Users do not exist") {
                             const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
                             $(".toastPut").text(response.message)
                             toastBootstrap.show();

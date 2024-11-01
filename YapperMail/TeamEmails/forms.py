@@ -58,7 +58,7 @@ class EditReplyForm(forms.Form):
             'placeholder': 'Enter Description here',
         }))
     
-class SearchForm(forms.Form):
+class TeamSearchForm(forms.Form):
     searchContent = forms.CharField(widget=forms.TextInput(attrs={
             'class': 'searchCont',
             'placeholder': 'Search',
