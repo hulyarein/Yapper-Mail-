@@ -253,3 +253,23 @@ def team_email_sent_view(request,pk,ok):
     allRepFiles = TeamReplyFiles.objects.filter(emailId = getEmail)
         
     return render(request,"teamemailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep})
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
+
+def team_download_file(request, filename):
+    filename = unquote(filename)
+
+    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY, filename))
+
+    print("Requested filename:", filename)
+    print("Full file path:", file_path)
+    print("UPLOAD_DIRECTORY:", UPLOAD_DIRECTORY)
+
+    if not file_path.startswith(os.path.abspath(UPLOAD_DIRECTORY)):
+        raise Http404("Invalid file path")
+
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True)
+    else:
+        raise Http404(f"File not found: {filename}")
