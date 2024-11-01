@@ -33,9 +33,9 @@
     </div>
     <div class = "home-body">
       <div class = "home-body-1">
-        <h3 style="color:#DE3F2A"><span style="font-weight: bold;">WELCOME</span> Julia Laine Segundo</h3>
+        <h3 style="color:#DE3F2A"><span style="font-weight: bold;">WELCOME</span>  {{ user.username|safe|escape }}</h3>
        <div class = "navigation">
-        <div class = "navigation-item" style="background-color: #FF0000;color:#f4f4f4">
+        <div class = "navigation-item">
           <i class="bi bi-house-door-fill"></i>
           <a href = "{% url 'login' %}">Dashboard</a>
         </div>
@@ -89,7 +89,7 @@
       <div class = "home-body-2">
         <div class = "welcome">
           <span>Friday, October 24 • 10:00 PM</span>
-          <p style="font-size: 3em;font-weight: bold;">Daily Meeting With Product Development</p>
+          <h1 class = "notification-msg">Daily Meeting With Product Development</h1>
           <span style="font-size: 1em;font-weight: bold;"><i class="bi bi-reply"></i>Reply</span>
         </div>
         <div class = "schedule">
@@ -97,6 +97,29 @@
         </div>
         <div class = "taskboard">
           <h1>Task board</h1>
+          <div class = "taskboard-container">
+            <div class = "task-title">Event Request</div>
+            <div class = "task-email">userone@101.com</div>
+            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div>
+
+          <div class = "taskboard-container">
+            <div class = "task-title">Event Request</div>
+            <div class = "task-email">userone@101.com</div>
+            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div>
+
+          <div class = "taskboard-container">
+            <div class = "task-title">Event Request</div>
+            <div class = "task-email">userone@101.com</div>
+            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div>
+
+          <div class = "taskboard-container">
+            <div class = "task-title">Event Request</div>
+            <div class = "task-email">userone@101.com</div>
+            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div>
         </div>
       </div>
 
