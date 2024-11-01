@@ -56,7 +56,7 @@ MIDDLEWARE = [
 
 # Flobite
 
-# COMPRESS_ROOT = BASE_DIR / 'static'
+# COMPRESS_ROOT = BASE_DIR / '/static/'
 
 # COMPRESS_ENABLED = True
 
@@ -135,7 +135,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),
                     '../YapperMail/EmailCompositionAndManagement/static'
                     ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 MEDIA = 'images/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
