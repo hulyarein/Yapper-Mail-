@@ -92,25 +92,25 @@ body {
 }
 
 .signup-container{
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr;
     align-items: center;
     width: 100dvw;
     height: 100dvh;
 }
 
 .signup-form {
+    grid-column: 1/2;
     display: flex;
-    width: 45%;
     height: 100%;
 }
 
 .signup-bg{
     height: 100%;
+    grid-column: 2/-1;
     background-image: url("/static/img/LandingBG.png"), url("/static/img/Design1.png");
     background-size: cover, contain;
     background-repeat: no-repeat;
-    width: 55%;    
-    height: 100%;
     background-position: left, right;
     display: flex;
     flex-direction: column;
@@ -123,18 +123,19 @@ body {
 }
 
 .login-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
     align-items: center;
     width: 100dvw;
     height: 100dvh;
+    gap: 50px;
 }
 .login-bg {
+    grid-column: 1/2;
     height: 100%;
     background-image: url("/static/img/LoginBG.png");
     background-size: cover;
     background-repeat: no-repeat;
-    width: 55%;    
-    height: 100%;
     background-position: center;
     flex-shrink: 0;
     border-top-right-radius: 150px;
@@ -142,13 +143,12 @@ body {
 }
 
 .login-form{
+    grid-column: 2/-1;
     padding-right: 70px;
     padding-left: 10px;
     align-self: left;
     display: flex;
     flex-direction: column;
-    width: 45%;
-    height: 100%;
     align-items: center;
     justify-content: center;
     
