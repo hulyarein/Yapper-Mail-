@@ -1,0 +1,454 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailView</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
+            background-color: #fff7f7;
+            background-repeat: no-repeat;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Helvetica;
+        }
+
+        .logoImage {
+            width: 250px;
+        }
+
+        .bodyContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .backEmailComp {
+            font-size: 30px;
+            color: #F69BA0;
+        }
+
+        .viewEmail {
+            height: 600px;
+            width: 80%;
+            background-color: white;
+            border-style: solid;
+            border-width: 3px;
+            border-color: #F37D84;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .postHeader {
+            font-size: 25px;
+            margin-left: 70px;
+            margin-top: 25px;
+            word-break: break-all;
+            margin-right: 70px;
+        }
+
+        .accountContain {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-left: 10px;
+            align-items: center;
+            margin-right: 70px;
+            margin-top: 20px;
+        }
+
+        .profShow {
+            min-height: 50px;
+            min-width: 50px;
+            background-color: #DE3F2A;
+            border-radius: 1000px;
+            color: white;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .fromName {
+            font-weight: bold;
+        }
+
+        .profCont {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .returnImage {
+            height: 25px;
+            width: 25px;
+        }
+
+        .descriptionDiv {
+            word-break: break-all;
+            margin-left: 70px;
+            margin-right: 70px;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+
+        .imageContain {
+            display: flex;
+            flex-direction: row;
+            overflow-y: auto;
+            margin-left: 70px;
+            margin-right: 70px;
+            margin-bottom: 25px;
+        }
+
+        .filePostItem {
+            background-color: #F0F0F0;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+            color: #F69BA0;
+            white-space: nowrap;
+            margin-right: 20px;
+        }
+
+        .file-item {
+            background-color: #DE3F2A;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+            color: #F0F0F0;
+            white-space: nowrap;
+            margin-right: 20px;
+            font-size: 13px;
+        }
+
+        .postSection {}
+
+        .aboveReply {
+            flex: 1;
+            overflow-x: auto;
+        }
+
+        .messageForm {
+            width: 90%;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .sendReply {
+            height: 25px;
+            width: 25px;
+            margin-left: 10px;
+        }
+
+        .sendImage {
+            height: 25px;
+            width: 25px;
+        }
+
+        #fileList {
+            display: flex;
+            flex-direction: row;
+            overflow-y: auto;
+            margin-left: 10px;
+        }
+
+        .deletePost {
+            color: #F37D84;
+            font-size: 20px;
+            margin-left: 10px;
+        }
+
+        .editPost {
+            height: 15px;
+            width: 15px;
+            margin-left: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div>
+        <img src="{% static 'images/logo.png' %}" class="logoImage">
+    </div>
+    <div style="display: flex; flex-direction: row; margin-left: 10%; align-items: center;">
+        <div class="backEmailComp">
+            <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+        </div>
+        {% if userRep.id == emailCont.fromUser.id %}
+        <div class="deletePost">🗑</div>
+        <img src="{%static 'images/Edit.png'%}" class="editPost">
+        {% endif %}
+        <div style="display: none;" class="numEmail">{{emailCont.id}}</div>
+        <div class="userRephold" style="display: none;">{{userRep.id}}</div>
+    </div>
+    <div class="bodyContent">
+        <form method="POST" class=viewEmail enctype="multipart/form-data">
+            {%csrf_token%}
+            <div class="aboveReply">
+                <div class="postSection">
+                    <div class="postHeader">{{emailCont.subject}}
+                    </div>
+                    <div class="postContent">
+                        <div class="accountContain">
+                            <div class="profCont">
+                                <div class="profShow">
+                                    {{emailCont.fromUser.first_name|slice:":1"}}
+                                </div>
+                                <div>
+                                    <div class=fromName style="font-size: 18px;">{{emailCont.fromUser.username}}</div>
+                                    <div class=toName style="font-size: 13px;">{{emailCont.fromUser.first_name}} {{emailCont.fromUser.last_name}}</div>
+                                    <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
+                                        {{emailCont.date_sent}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=descriptionDiv>{{emailCont.content}}
+                        </div>
+                        <div class="imageContain">
+                            {% for files in filesCont %}
+                            <div class="filePostItem">
+                                <a href="{% url 'download_file' files.file %}"
+                                    style="color: #F69BA0; text-decoration: none;">
+                                    {{files.file}}
+                                </a>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ReplySection">
+                    <div class="postContent"></div>
+
+                    {% for rep in allRep %}
+                    <div style="border-top-style: solid;border-color: rgb(113, 113, 113);border-width: 2px;">
+                        <div class="accountContain">
+                            <div class="profCont">
+                                <div class="repId" style="display: none;">{{rep.id}}</div>
+                                <div class="profShow">
+                                    {{rep.fromUser.first_name|slice:":1"}}
+                                </div>
+                                <div>
+                                    <div class=fromName style="font-size: 18px;">{{rep.fromUser.username}}</div>
+                                    <div class=toName style="font-size: 13px;">{{rep.fromUser.first_name}} {{rep.fromUser.last_name}}</div>
+                                    <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
+                                        {{rep.date_sent}}</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: row; align-items: center;">
+                                {% if userRep.id == rep.fromUser.id %}
+                                <div class="deleteReply" style="color: #F37D84; margin-right: 10px; font-size: 20px;">🗑
+                                </div>
+                                <img src="{%static 'images/Edit.png'%}" class="editReply" style="height: 15px;">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class=descriptionDiv>{{rep.content}}
+                        </div>
+                        <div class="imageContain">
+                            {% for repfiles in allRepFiles %}
+                            {% if rep.id == repfiles.replyid.id %}
+                            <div class="filePostItem">
+                                <a href="{% url 'download_file' repfiles.file %}"
+                                    style="color: #F69BA0; text-decoration: none;">
+                                    {{repfiles.file}}
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+
+
+            <div id="fileList">
+            </div>
+            <div
+                style="display: flex; flex-direction: row; justify-content: center; margin-bottom: 10px; margin-left: 10px;">
+                {{form.message}}
+                <button type=submit style="border: none; background-color:#f0f0f000;">
+                    <span><img src="{% static 'images/send.png' %}" class="sendReply"></span>
+                </button>
+                <button type="button" style="border: none; background-color:#f0f0f000;">
+                    <span><img src="{% static 'images/Attach.png' %}" class="sendImage"></span>
+                </button>
+                <input type="file" id="fileInput" name="file" multiple style="display:none;">
+            </div>
+    </div>
+    </form>
+
+    </div>
+</body>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    // Helper to create a new FileList
+    function FileListItems(files) {
+        var b = new ClipboardEvent('').clipboardData || new DataTransfer();
+        for (var i = 0; i < files.length; i++) {
+            b.items.add(files[i]);
+        }
+        return b.files;
+    }
+    console.log($(".userRephold").text())
+    $(".backEmailComp").click(function (e) {
+        window.location.href = `../../../emailmanagement/emailList`
+    })
+
+    $(document).ready(function () {
+
+        var delrep = document.querySelectorAll(".deleteReply")
+
+        for (dr of delrep) {
+            dr.addEventListener("click", function (e) {
+                $.ajax({
+                    url: `/emailmanagement/deleteReply`,
+                    type: 'POST',
+                    data: JSON.stringify({ "delId": parseInt(e.target.parentElement.parentElement.firstElementChild.firstElementChild.innerText) }),
+                    contentType: 'application/json',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    success: function (response) {
+                        console.log("Reply Deleted successfully:", response);
+                        window.location.reload()
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred:', error.responseJSON);
+                    }
+                })
+            })
+        }
+        $(".deletePost").click(function (e) {
+            $.ajax({
+                url: `/emailmanagement/deleteEmail`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "delId": parseInt($(".numEmail").text()) }),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("Email updated successfully:", response);
+                    if (response.message = 'Email deleted successfully.') {
+                        window.location.href = `../../../emailmanagement/emailList`
+                    }
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+
+        })
+        var repedit = document.querySelectorAll(".editReply")
+
+        for (a of repedit) {
+            a.addEventListener("click", function (e) {
+                ff = e.target.parentElement.parentElement.firstElementChild.firstElementChild.innerText
+                window.location.href = `http://127.0.0.1:8000/emailmanagement/editReply/${parseInt(ff)}/${parseInt($(".userRephold").text())}`
+            })
+        }
+
+        $(".editPost").click(function (e) {
+            console.log("Hello")
+            window.location.href = `http://127.0.0.1:8000/emailmanagement/editEmail/${parseInt($(".numEmail").text())}/${parseInt($(".userRephold").text())}`
+        })
+        $('.sendImage').on('click', function () {
+            $('#fileInput').click();
+        });
+
+        // Handle the file selection
+        $('#fileInput').on('change', function () {
+            var fileInput = this; // Get the input element
+            var files = Array.from(fileInput.files); // Convert FileList to array
+            console.log(files);
+
+            if (files.length > 0) {
+                $('#fileList').empty(); // Clear existing file list
+
+                // Create an array to hold modified files
+                var modifiedFiles = [];
+
+                // Loop through selected files
+                for (var i = 0; i < files.length; i++) {
+                    var fileName = files[i].name;
+                    var uniqueString = new Date().getTime(); // Create a unique string using the current timestamp
+                    var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
+
+
+                    // Create a new File object with the unique name
+                    var newFile = new File([files[i]], uniqueName, { type: files[i].type });
+
+                    // Push the new file to the modifiedFiles array
+                    modifiedFiles.push(newFile);
+
+                    // Create and display the file item
+                    var fileItem = $('<div class="file-item"></div>');
+                    fileItem.append($('<span></span>').text(uniqueName)); // Display the unique name
+                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i));
+
+                    $('#fileList').append(fileItem);
+                }
+
+                // Update the input element with the modified files using FileListItems
+                fileInput.files = FileListItems(modifiedFiles);
+                console.log(Array.from(fileInput.files))
+            }
+        });
+
+        // Handle delete button click
+        $(document).on('click', '.delete-button', function () {
+            var index = $(this).data('index'); // Get index of file to delete
+            var fileInput = $('#fileInput')[0];
+            var files = Array.from(fileInput.files); // Convert FileList to array
+
+            // Remove the selected file
+            files.splice(index, 1);
+            fileInput.files = new FileListItems(files); // Update file input
+
+            // Refresh the file list
+            $('#fileList').empty();
+            files.forEach(function (file, i) {
+                var fileItem = $('<div class="file-item"></div>');
+                fileItem.append($('<span></span>').text(file.name));
+                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i));
+
+
+                $('#fileList').append(fileItem);
+            });
+
+            console.log(files)
+        });
+    })
+</script>
