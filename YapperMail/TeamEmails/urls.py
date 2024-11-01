@@ -3,7 +3,8 @@ from . import views
 
 
 urlpatterns = [
-    path('composeEmail/<int:pk>',views.team_email_composition,name='team_email_composition'),
+    path('composeEmail/<int:pk>',views.team_email_composition,name='team_email_composition'), 
+    path('composeEmaildetails',views.compose_email_details,name = "compose_email_details")
 ]
 
 '''path('emailSentView/<int:pk>/<int:ok>',views.email_sent_view,name='emailSentView'),
@@ -16,4 +17,8 @@ urlpatterns = [
     path('emailList',views.emailListView,name='emailListView'),
     path('emailList/sent',views.sentEmailList,name = "sentEmailList"),
     path('deleteEmail',views.deleteEmailFunc,name = "deleteEmailFunc"),
-    path('deleteReply',views.deleteReplyFunc,name = "deleteReplyFunc")'''
+    path('deleteReply',views.deleteReplyFunc,name = "deleteReplyFunc")
+    
+    
+    
+    '''

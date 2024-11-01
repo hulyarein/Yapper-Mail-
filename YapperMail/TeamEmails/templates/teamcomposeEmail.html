@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compose Email</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    
+
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
@@ -16,7 +16,7 @@
 
     <style>
         body {
-            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
+            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1, #fff7f7);
             background-color: #fff7f7;
             background-repeat: no-repeat;
             height: 100%;
@@ -208,13 +208,15 @@
             color: #F69BA0;
             margin-left: 10%;
         }
-        .memberList{
+
+        .memberList {
             display: flex;
             flex-direction: row;
             overflow-x: auto;
             margin-left: 20px;
         }
-        .trashMember{
+
+        .trashMember {
             margin-left: 5px;
         }
 
@@ -251,26 +253,26 @@
     <!--Modal-->
     <div class="modal fade" id="inputModal" tabindex="-1" aria-labelledby="inputModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="inputModalLabel">Enter Text</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inputModalLabel">Enter Text</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control memberEmailInp" placeholder="Enter email">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary SubmitModal">Submit</button>
+                </div>
             </div>
-            <div class="modal-body">
-              <input type="text" class="form-control memberEmailInp" placeholder="Enter email">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary SubmitModal">Submit</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
     <div>
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
     <div class="backEmailComp">
-        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+        <img src="{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
     </div>
     <div class="bodyContent">
         <form method="post" class="emailCompose" enctype="multipart/form-data">
@@ -279,7 +281,7 @@
                 <div class="toDesign" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inputModal">
                     Add
                 </div>
-                <div class = "memberList">
+                <div class="memberList">
                 </div>
             </div>
             <div style="margin-left: 60px; color: rgb(255, 64, 118);">
@@ -328,7 +330,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body toastPut">
-                
+
             </div>
         </div>
     </div>
@@ -346,12 +348,27 @@
         return b.files;
     }
 
-    $(document).ready(function () {
-        $(".SubmitModal").click(function(e){
-            if (!$(".memberEmailInp").val().trim()){
-                
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
-            else{
+        }
+        return cookieValue;
+    }
+
+    $(document).ready(function () {
+        $(".SubmitModal").click(function (e) {
+            if (!$(".memberEmailInp").val().trim()) {
+
+            }
+            else {
                 var memberList = document.querySelector(".memberList");
                 var holdemail = document.createElement("div")
 
@@ -363,7 +380,7 @@
 
                 memberList.append(holdemail)
 
-                holdemail.firstElementChild.lastElementChild.addEventListener("click",function(e){
+                holdemail.firstElementChild.lastElementChild.addEventListener("click", function (e) {
                     holdemail.remove()
                 })
                 $('#inputModal').modal('hide');
@@ -371,7 +388,7 @@
         })
         const toastLiveExample = document.getElementById('liveToast');
 
-        $(".backEmailComp").click(function(e){
+        $(".backEmailComp").click(function (e) {
             window.location.href = "../../emailmanagement/emailList"
         })
 
@@ -381,67 +398,67 @@
             $(".toastPut").text(errorme)
             toastBootstrap.show();
         }
-        else{
+        else {
         }
         $('.attachCls').on('click', function () {
             $('#fileInput').click();
         });
 
-        
+
         $('#fileInput').on('change', function () {
-            var fileInput = this; 
-            var files = Array.from(fileInput.files); 
+            var fileInput = this;
+            var files = Array.from(fileInput.files);
             console.log(files);
 
             if (files.length > 0) {
-                $('#fileList').empty(); 
+                $('#fileList').empty();
 
-                
+
                 var modifiedFiles = [];
 
-                
+
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
-                    var uniqueString = new Date().getTime(); 
+                    var uniqueString = new Date().getTime();
                     var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
 
-                    
+
                     var newFile = new File([files[i]], uniqueName, { type: files[i].type });
 
-                    
+
                     modifiedFiles.push(newFile);
 
-                
+
                     var fileItem = $('<div class="file-item"></div>');
-                    fileItem.append($('<span></span>').text(uniqueName)); 
-                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); 
+                    fileItem.append($('<span></span>').text(uniqueName));
+                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i));
 
                     $('#fileList').append(fileItem);
                 }
 
-            
+
                 fileInput.files = FileListItems(modifiedFiles);
                 console.log(Array.from(fileInput.files))
             }
         });
 
 
-        
+
         $(document).on('click', '.delete-button', function () {
-            var index = $(this).data('index'); 
+            var index = $(this).data('index');
             var fileInput = $('#fileInput')[0];
-            var files = Array.from(fileInput.files); 
+            var files = Array.from(fileInput.files);
 
-            
+
             files.splice(index, 1);
-            fileInput.files = new FileListItems(files); 
+            fileInput.files = new FileListItems(files);
 
-            
+
             $('#fileList').empty();
             files.forEach(function (file, i) {
                 var fileItem = $('<div class="file-item"></div>');
                 fileItem.append($('<span></span>').text(file.name));
-                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); 
+                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i));
 
                 $('#fileList').append(fileItem);
             });
@@ -454,16 +471,62 @@
             }*/
         });
 
-        $(".SubmitBut").click(function(e){
+        $(".SubmitBut").click(function (e) {
             var memberList2 = document.querySelectorAll(".memberCont")
-             
-            if(memberList2.length == 0 || !$(".subjectForm").val().trim() || !$(".descriptionForm").val().trim()){
+
+            if (memberList2.length == 0 || !$(".subjectForm").val().trim() || !$(".descriptionForm").val().trim()) {
                 const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
                 $(".toastPut").text("Invalid Credentials")
                 toastBootstrap.show();
             }
-            for(var mem2 of memberList2){
-                console.log(mem2)
+            else {
+
+                var allmemebers = []
+
+                for (var mem22 of memberList2) {
+                    allmemebers.push(mem22.firstElementChild.innerText)
+                }
+                var listMember = {
+                    "listMembers": allmemebers,
+                    "subject": $(".subjectForm").val().trim(),
+                    "description": $(".descriptionForm").val().trim()
+                }
+
+
+                var formData = new FormData();
+                formData.append('listMembers', JSON.stringify(listMembers)); // Pass listMembers as a JSON string
+                formData.append('subject', subject);
+                formData.append('description', description);
+
+                var fileInput = document.getElementById('fileInput');
+
+                if (fileInput.files.length > 0) {
+                    for (var i = 0; i < fileInput.files.length; i++) {
+                        formData.append('file', fileInput.files[i]);
+                    }
+                }
+
+                $.ajax({
+                    url: '../composeEmaildetails',  // Django view URL
+                    type: 'POST',
+                    data: formData,  // Use FormData
+                    contentType: false,  // Set content type to false to let jQuery set it correctly
+                    processData: false,  // Prevent jQuery from automatically transforming the data into a query string
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },   // CSRF token
+                    success: function (response) {
+                        console.log("Email updated successfully:", response);
+
+                        if (response.message == "Some Users does not exist") {
+                            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                            $(".toastPut").text(response.message)
+                            toastBootstrap.show();
+                        }
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred:', error.responseJSON);
+                    }
+                });
             }
         })
     })
