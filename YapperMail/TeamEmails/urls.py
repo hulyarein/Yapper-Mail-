@@ -8,7 +8,11 @@ urlpatterns = [
     path('emailList',views.team_emailListView,name='team_emailListView'),
     path('emailList/sent',views.team_sentEmailList,name = "team_sentEmailList"),
     path('emailSentView/<int:pk>/<int:ok>',views.team_email_sent_view,name='team_emailSentView'),
-    path('download/<path:filename>/', views.team_download_file, name='download_file')
+    path('download/<path:filename>/', views.team_download_file, name='download_file'),
+    path('editEmail/<int:pk>/<int:uk>',views.team_edit_email,name='team_editEmail'),
+    path('changeImage/<int:pk>',views.team_editExistingImage,name = "team_editExistingImage"),
+    path('editReply/<int:pk>/<int:uk>',views.team_edit_reply,name='team_editReply'),
+    path('changeImageReply/<int:pk>',views.team_existingReplyFile,name = "team_existingReplyFile"),
 ]
 
 '''path('emailSentView/<int:pk>/<int:ok>',views.email_sent_view,name='emailSentView'),

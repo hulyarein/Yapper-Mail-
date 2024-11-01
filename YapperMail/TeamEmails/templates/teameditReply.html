@@ -302,7 +302,7 @@
         $(".backEmailComp").click(function(e){
             ukid = parseInt($(".userIdh").text())
             okkid = parseInt($(".emailIdh").text())
-            window.location.href = `http://127.0.0.1:8000/emailmanagement/emailSentView/${ukid}/${okkid}`
+            window.location.href = `http://127.0.0.1:8000/teamemailmanagement/emailSentView/${ukid}/${okkid}`
         })
         var delMyfile = document.querySelectorAll(".delete-button-myfile")
         for(delmf of delMyfile){
@@ -396,7 +396,7 @@
             const emailId = parseInt($(".replyIdCont").text());  // Extract email ID
 
             $.ajax({
-                url: `/emailmanagement/changeImageReply/${emailId}`,  // Django view URL
+                url: `/teamemailmanagement/changeImageReply/${emailId}`,  // Django view URL
                 type: 'POST',
                 data: JSON.stringify({ "listme": listDel }),  // JSON-encoded data
                 contentType: 'application/json',  // Set content type to JSON

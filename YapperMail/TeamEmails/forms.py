@@ -29,12 +29,7 @@ class TeamReplyComposeForm(forms.Form):
         })
     )
 
-class EditEmailForm(forms.Form):
-    toUser = forms.EmailField(widget=forms.TextInput(attrs={
-            'class': 'userToForm',
-            'placeholder': 'Enter User here',
-            'readonly':True
-        }))
+class TeamEditEmailForm(forms.Form):
     subject = forms.CharField(
         max_length=500,
         widget=forms.TextInput(attrs={
@@ -49,7 +44,7 @@ class EditEmailForm(forms.Form):
             'placeholder': 'Enter Description here',
         }))
     
-class EditReplyForm(forms.Form):
+class TeamEditReplyForm(forms.Form):
     description = forms.CharField(
         widget=forms.Textarea(attrs={
             'rows':20,

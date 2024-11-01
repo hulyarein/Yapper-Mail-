@@ -380,13 +380,13 @@
         for (a of repedit) {
             a.addEventListener("click", function (e) {
                 ff = e.target.parentElement.parentElement.firstElementChild.firstElementChild.innerText
-                window.location.href = `http://127.0.0.1:8000/emailmanagement/editReply/${parseInt(ff)}/${parseInt($(".userRephold").text())}`
+                window.location.href = `http://127.0.0.1:8000/teamemailmanagement/editReply/${parseInt(ff)}/${parseInt($(".userRephold").text())}`
             })
         }
 
         $(".editPost").click(function (e) {
             console.log("Hello")
-            window.location.href = `http://127.0.0.1:8000/emailmanagement/editEmail/${parseInt($(".numEmail").text())}/${parseInt($(".userRephold").text())}`
+            window.location.href = `http://127.0.0.1:8000/teamemailmanagement/editEmail/${parseInt($(".numEmail").text())}/${parseInt($(".userRephold").text())}`
         })
         $('.sendImage').on('click', function () {
             $('#fileInput').click();

@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .forms import TeamEmailComposeForm,TeamReplyComposeForm,EditEmailForm,EditReplyForm,TeamSearchForm
+from .forms import TeamEmailComposeForm,TeamReplyComposeForm,TeamEditEmailForm,TeamEditReplyForm,TeamSearchForm
 from .models import TeamEmail,TeamEmailFiles,TeamReply,TeamReplyFiles
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
@@ -273,3 +273,147 @@ def team_download_file(request, filename):
         return FileResponse(open(file_path, 'rb'), as_attachment=True)
     else:
         raise Http404(f"File not found: {filename}")
+    
+
+
+def team_edit_email(request,pk,uk):
+    getEmail = TeamEmail.objects.get(id = pk)
+    getFiles = TeamEmailFiles.objects.filter(emailId = getEmail)
+    
+    if request.method == "POST":
+        form = TeamEditEmailForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            description = form.cleaned_data['description']
+
+            try:
+                getEmail.subject = subject
+                getEmail.content = description
+
+                getEmail.save()
+
+                uploaded_files = request.FILES.getlist('file')
+                if uploaded_files:
+                    for uploaded_file in uploaded_files:
+                        email_file = TeamEmailFiles(
+                            emailId=getEmail, 
+                            file=uploaded_file
+                        )
+                        email_file.save()  
+                else:
+                    print("No files were uploaded.")
+
+                return redirect(f'../../emailSentView/{uk}/{pk}')
+            except ObjectDoesNotExist:
+                error_message = True
+        else:
+            print("not valid")
+
+
+
+
+    else:
+        initialValue = {
+            'subject':getEmail.subject,
+            'description':getEmail.content,
+        }
+        form = TeamEditEmailForm(initial = initialValue)
+
+    return render(request,"teameditEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk})
+
+def team_editExistingImage(request,pk):
+    '''getEmail = Email.objects.get(id = pk)
+    getFiles = EmailFiles.objects.filter(emailId = getEmail)
+
+    print(getFiles)
+    return JsonResponse({"ok":"OK"})'''
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  # Parse JSON data
+            list_to_delete = data.get('listme', [])  # Get list of filenames to delete
+            print(list_to_delete)
+
+            # Get the email instance by primary key (pk)
+            email_instance = get_object_or_404(TeamEmail, id=pk)
+
+            # Query files linked to the email instance and filter by filenames
+            files_to_delete = TeamEmailFiles.objects.filter(emailId=email_instance).exclude(file__in=list_to_delete)
+            deleted_files_count = files_to_delete.delete()
+
+            response = {
+                'message': 'Files deleted successfully',
+                'deleted_files_count': deleted_files_count[0]  # Number of deleted files
+            }
+            return JsonResponse(response, status=200)
+
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': f'Invalid JSON: {str(e)}'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+def team_edit_reply(request,pk,uk):
+    getReply = TeamReply.objects.get(id = pk)
+    getReplyFiles = TeamReplyFiles.objects.filter(replyid = getReply)
+    if request.method == "POST":
+        form = TeamEditReplyForm(request.POST)
+        if form.is_valid():
+            description = form.cleaned_data["description"]
+
+            try:
+                getReply.content = description
+                getReply.save()
+
+                uploaded_files = request.FILES.getlist('file')
+                if uploaded_files:
+                    for uploaded_file in uploaded_files:
+                        email_file = TeamReplyFiles(
+                            fromUser=getReply.fromUser,
+                            emailId = getReply.emailId,
+                            replyid= getReply, 
+                            file=uploaded_file
+                        )
+                        email_file.save()  
+                else:
+                    print("No files were uploaded.")
+
+                return redirect(f"../../emailSentView/{uk}/{getReply.emailId.id}")
+
+            except ObjectDoesNotExist:
+                print("Does Not exist")
+
+
+
+    else:
+        initialValue = {
+            'description':getReply.content
+        }
+        form = TeamEditReplyForm(initial=initialValue)
+
+    return render(request,"teameditReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk})
+
+def team_existingReplyFile(request, pk):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  # Parse JSON data
+            list_to_delete = data.get('listme', [])  # Get list of filenames to delete
+            print(list_to_delete)
+
+            # Get the email instance by primary key (pk)
+            reply_instance = get_object_or_404(TeamReply, id=pk)
+
+            # Query files linked to the email instance and filter by filenames
+            files_to_delete = TeamReplyFiles.objects.filter(replyid=reply_instance).exclude(file__in=list_to_delete)
+            deleted_files_count = files_to_delete.delete()
+
+            response = {
+                'message': 'Files deleted successfully',
+                'deleted_files_count': deleted_files_count[0]  # Number of deleted files
+            }
+            return JsonResponse(response, status=200)
+
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': f'Invalid JSON: {str(e)}'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+

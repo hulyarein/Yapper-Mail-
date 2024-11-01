@@ -252,12 +252,6 @@
             {%csrf_token%}
             <div class=UsertoClass>
                 <div style="display: none;" class="emailSentId">{{emailSent.id}}</div>
-                <div class="toDesign">
-                    To
-                </div>
-                <div class=formUserDiv>
-                    {{form.toUser}}
-                </div>
             </div>
 
             <div class=SubjectClass>
@@ -417,7 +411,7 @@
             const emailId = parseInt($(".emailSentId").text());  // Extract email ID
 
             $.ajax({
-                url: `/emailmanagement/changeImage/${emailId}`,  // Django view URL
+                url: `/teamemailmanagement/changeImage/${emailId}`,  // Django view URL
                 type: 'POST',
                 data: JSON.stringify({ "listme": listDel }),  // JSON-encoded data
                 contentType: 'application/json',  // Set content type to JSON
