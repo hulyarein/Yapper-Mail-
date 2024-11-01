@@ -339,7 +339,7 @@
         for (dr of delrep) {
             dr.addEventListener("click", function (e) {
                 $.ajax({
-                    url: `/emailmanagement/deleteReply`,
+                    url: `/teamemailmanagement/deleteReply`,
                     type: 'POST',
                     data: JSON.stringify({ "delId": parseInt(e.target.parentElement.parentElement.firstElementChild.firstElementChild.innerText) }),
                     contentType: 'application/json',
@@ -357,7 +357,7 @@
         }
         $(".deletePost").click(function (e) {
             $.ajax({
-                url: `/emailmanagement/deleteEmail`,  // Django view URL
+                url: `/teamemailmanagement/deleteEmail`,  // Django view URL
                 type: 'POST',
                 data: JSON.stringify({ "delId": parseInt($(".numEmail").text()) }),  // JSON-encoded data
                 contentType: 'application/json',  // Set content type to JSON
@@ -365,7 +365,7 @@
                 success: function (response) {
                     console.log("Email updated successfully:", response);
                     if (response.message = 'Email deleted successfully.') {
-                        window.location.href = `../../../emailmanagement/emailList`
+                        window.location.href = `../../../teamemailmanagement/emailList`
                     }
 
                 },

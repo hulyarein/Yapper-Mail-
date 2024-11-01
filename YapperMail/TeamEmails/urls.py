@@ -13,7 +13,10 @@ urlpatterns = [
     path('changeImage/<int:pk>',views.team_editExistingImage,name = "team_editExistingImage"),
     path('editReply/<int:pk>/<int:uk>',views.team_edit_reply,name='team_editReply'),
     path('changeImageReply/<int:pk>',views.team_existingReplyFile,name = "team_existingReplyFile"),
+    path('deleteReply',views.teams_deleteReplyFunc,name = "team_deleteReplyFunc"),
+    path('deleteEmail',views.team_deleteEmailFunc,name = "team_deleteEmailFunc")
 ]
+
 
 '''path('emailSentView/<int:pk>/<int:ok>',views.email_sent_view,name='emailSentView'),
     path('emailReceiveView/',views.email_reply_view,name='emailReceiveView'),

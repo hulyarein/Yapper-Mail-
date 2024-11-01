@@ -112,8 +112,8 @@ def team_emailListView(request):
 
     #userVar = TemporaryUser.objects.get(id = 1)
     userVar = request.user
-    emailsVar = TeamEmail.objects.filter(adminUsers=userVar)
-    emailsVarMe = TeamEmail.objects.filter(memberUsers=userVar)
+    emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
+    emailsVarMe = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
 
     combined_emails = emailsVar.union(emailsVarMe)
     return render(request,'TeamemailList.html',{'form':form,'emails':combined_emails,'LogUser':userVar})
@@ -126,7 +126,7 @@ def team_sentEmailList(request):
             if data.get('sentNum') == 2:
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
-                emailsVar = TeamEmail.objects.filter(adminUsers=userVar)
+                emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
 
                 email_data = [
                     {
@@ -149,7 +149,7 @@ def team_sentEmailList(request):
             elif data.get('sentNum') == 3:
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
-                emailsVar = TeamEmail.objects.filter(memberUsers=userVar)
+                emailsVar = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
 
                 email_data = [
                     {
@@ -171,8 +171,8 @@ def team_sentEmailList(request):
             elif data.get('sentNum') == 4:
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
-                emailsVar = TeamEmail.objects.filter(adminUsers=userVar)
-                emailsVarMe = TeamEmail.objects.filter(memberUsers=userVar)
+                emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
+                emailsVarMe = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
 
                 combined_emails = emailsVar.union(emailsVarMe)
 
@@ -416,4 +416,57 @@ def team_existingReplyFile(request, pk):
             return JsonResponse({'error': f'Invalid JSON: {str(e)}'}, status=400)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+def teams_deleteReplyFunc(request):
+    try:
+        data = json.loads(request.body)
+        reply_id = data.get('delId')
+
+        if not reply_id:
+            return JsonResponse({'message': 'Reply ID is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        replyVar = TeamReply.objects.get(id=reply_id)
+        replyVar.delete()
+
+        return JsonResponse({'message': 'Reply deleted successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'Reply not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)
+    
+
+def team_deleteEmailFunc(request):
+    try:
+        data = json.loads(request.body)
+        email_id = data.get('delId')
+
+        if not email_id:
+            return JsonResponse({'message': 'Email ID is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        emailsVar = TeamEmail.objects.get(id=email_id)
+        emailsVar.isDeleted = True
+        emailsVar.save()
+
+        return JsonResponse({'message': 'Email deleted successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'Email not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
 
