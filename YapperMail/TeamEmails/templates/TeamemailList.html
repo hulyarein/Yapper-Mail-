@@ -708,7 +708,7 @@
 
                 if (allButton.style.color == "white") {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",
+                        url: "../teamemailmanagement/emailList/sent",
                         type: 'POST',
                         data: JSON.stringify({ "sentNum": 4 }),
                         contentType: 'application/json',
@@ -733,10 +733,27 @@
 
                             for (var nn of response.emails) {
 
-                                var divAdd = document.createElement("div")
-                                emailGrid.append(divAdd)
-                                divAdd.innerHTML =
-                                    `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+                                var statusme;
+                        if (nn["adminUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Admin"
+                        }
+                        else if (nn["memberUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Member"
+                        }
+
+                        let collaboratorsHTML = '';
+
+                        nn["adminUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+                        nn["memberUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+
+                        var divAdd = document.createElement("div")
+                        emailGrid.append(divAdd)
+                        divAdd.innerHTML =
+                            `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
             box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
@@ -750,13 +767,22 @@
                     </div>
 
                     <div class="nameDiv"
-                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                        ${nn.fromUser}
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;font-size: 15px;">
+                        Creator: ${nn.fromUser}
                     </div>
 
                     <div class="contentDiv"
                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                        To: ${nn.toUser}
+                        Status: ${statusme}
+                    </div>
+
+                    <div class="collaboratortDiv"
+                        style="white-space: nowrap; overflow: auto; text-overflow: ellipsis;font-size: 15px; color: rgb(0, 0, 0);">
+                        <div>Collaborators</div>
+                        <div style="display: flex; flex-direction: row;">
+                            ${collaboratorsHTML}
+
+                        </div>
                     </div>
                 </div>
             </div>`
@@ -812,7 +838,7 @@
                 }
                 else if (recButton.style.color == "white") {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",
+                        url: "../teamemailmanagement/emailList/sent",
                         type: 'POST',
                         data: JSON.stringify({ "sentNum": 3 }),
                         contentType: 'application/json',
@@ -837,10 +863,27 @@
 
                             for (var nn of response.emails) {
 
-                                var divAdd = document.createElement("div")
-                                emailGrid.append(divAdd)
-                                divAdd.innerHTML =
-                                    `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+                                var statusme;
+                        if (nn["adminUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Admin"
+                        }
+                        else if (nn["memberUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Member"
+                        }
+
+                        let collaboratorsHTML = '';
+
+                        nn["adminUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+                        nn["memberUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+
+                        var divAdd = document.createElement("div")
+                        emailGrid.append(divAdd)
+                        divAdd.innerHTML =
+                            `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
             box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
@@ -854,13 +897,22 @@
                     </div>
 
                     <div class="nameDiv"
-                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                        ${nn.fromUser}
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;font-size: 15px;">
+                        Creator: ${nn.fromUser}
                     </div>
 
                     <div class="contentDiv"
                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                        To: ${nn.toUser}
+                        Status: ${statusme}
+                    </div>
+
+                    <div class="collaboratortDiv"
+                        style="white-space: nowrap; overflow: auto; text-overflow: ellipsis;font-size: 15px; color: rgb(0, 0, 0);">
+                        <div>Collaborators</div>
+                        <div style="display: flex; flex-direction: row;">
+                            ${collaboratorsHTML}
+
+                        </div>
                     </div>
                 </div>
             </div>`
@@ -917,7 +969,7 @@
                 }
                 else {
                     $.ajax({
-                        url: "../emailmanagement/emailList/sent",
+                        url: "../teamemailmanagement/emailList/sent",
                         type: 'POST',
                         data: JSON.stringify({ "sentNum": 2 }),
                         contentType: 'application/json',
@@ -942,10 +994,27 @@
 
                             for (var nn of response.emails) {
 
-                                var divAdd = document.createElement("div")
-                                emailGrid.append(divAdd)
-                                divAdd.innerHTML =
-                                    `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
+                                var statusme;
+                        if (nn["adminUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Admin"
+                        }
+                        else if (nn["memberUsers"].includes(parseInt($(".userId").text()))) {
+                            statusme = "Member"
+                        }
+
+                        let collaboratorsHTML = '';
+
+                        nn["adminUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+                        nn["memberUsersF"].forEach(collaborator => {
+                            collaboratorsHTML += `<div class="profShow">${collaborator[0]}</div>`;
+                        });
+
+                        var divAdd = document.createElement("div")
+                        emailGrid.append(divAdd)
+                        divAdd.innerHTML =
+                            `<div style="background-color: #fff6f6; padding: 20px; display: flex; flex-direction: row;
             box-shadow: 5px 5px 3px #878181; border-radius: 10px;">
                 <div class=emailIdDiv style="display: none;">${nn.id}</div>
                 <img src="{% static 'images/profSample.png' %}" class="profDiv"
@@ -959,13 +1028,22 @@
                     </div>
 
                     <div class="nameDiv"
-                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; font-size: 15px;">
-                        ${nn.fromUser}
+                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;font-size: 15px;">
+                        Creator: ${nn.fromUser}
                     </div>
 
                     <div class="contentDiv"
                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; color: rgb(115, 115, 115);">
-                        To: ${nn.toUser}
+                        Status: ${statusme}
+                    </div>
+
+                    <div class="collaboratortDiv"
+                        style="white-space: nowrap; overflow: auto; text-overflow: ellipsis;font-size: 15px; color: rgb(0, 0, 0);">
+                        <div>Collaborators</div>
+                        <div style="display: flex; flex-direction: row;">
+                            ${collaboratorsHTML}
+
+                        </div>
                     </div>
                 </div>
             </div>`
@@ -1028,7 +1106,7 @@
 
         $(".composeButton").click(function (e) {
             var usermeid = parseInt($(".userId").text())
-            window.location.href = `http://127.0.0.1:8000/emailmanagement/composeEmail/${usermeid}`
+            window.location.href = `http://127.0.0.1:8000/teamemailmanagement/composeEmail/${usermeid}`
         })
 
         $(".backBut").click(function (e) {
