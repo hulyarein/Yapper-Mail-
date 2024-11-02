@@ -178,13 +178,21 @@
             width: 15px;
             margin-left: 10px;
         }
+        .teamManage{
+            margin-right: 60px;
+            border-style: solid;
+            padding: 5px;
+            border-radius: 1000px;
+            border-color:#DE3F2A;
+        }
     </style>
 
 </head>
 
 <body>
-    <div>
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
         <img src="{% static 'images/logo.png' %}" class="logoImage">
+        <img src="{% static 'images/manageTeam.png' %}" class = "teamManage" data-bs-toggle="modal" data-bs-target="#imageModal">
     </div>
     <div style="display: flex; flex-direction: row; margin-left: 10%; align-items: center;">
         <div class="backEmailComp">
@@ -303,6 +311,90 @@
     </form>
 
     </div>
+
+
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="imageModalLabel">Collaborators</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: 550px; overflow-y: auto;">
+                <div>
+                    <div>Creator</div>
+                    <div>
+                        <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
+                            <div style="display: flex; flex-direction: row; align-items: center;">
+                                <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
+                                    {{emailCont.fromUser.first_name|slice:":1"}}
+                                </div>
+                                <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    {{emailCont.fromUser.email}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div>Admin</div>
+                    <div>
+                        {% for admins in emailCont.adminUsers.all %}
+                        <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
+                            <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
+                                <div style="display: none;">{{admins.id}}</div>
+                                <div style="display: flex; flex-direction: row; align-items: center;">
+                                    <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
+                                        {{admins.first_name|slice:":1"}}
+                                    </div>
+                                    <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        {{admins.email}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; flex-direction: row; margin-left: 10px;">
+                                {% if userRep in emailCont.adminUsers.all and admins != emailCont.fromUser and userRep != admins%}
+                                    <img src="{% static 'images/removeAccess.png' %}" class = "removeAcc" style="height: 20px; width: 20px; margin-right: 5px;">
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor%}
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        Members
+                    </div>
+                    <div>
+                        {% for members in emailCont.memberUsers.all %}
+                        <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
+                            <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
+                                <div style="display: none;">{{members.id}}</div>
+                                <div style="display: flex; flex-direction: row; align-items: center;">
+                                    <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
+                                        {{members.first_name|slice:":1"}}
+                                    </div>
+                                    <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        {{members.email}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; flex-direction: row; margin-left: 10px;">
+                                {% if userRep in emailCont.adminUsers.all%}
+                                    <img src="{% static 'images/upgrade.png' %}" style="height: 20px; width: 20px; margin-right: 5px;">
+                                    <img src="{% static 'images/removeAccess.png' %}" class = "removeAcc" style="height: 20px; width: 20px; margin-right: 5px;">
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor%} 
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
 </body>
 <script>
     function getCookie(name) {
@@ -333,6 +425,10 @@
     })
 
     $(document).ready(function () {
+        $(".removeAcc").click(function(e){
+            var removeId = parseInt(this.parentElement.parentElement.firstElementChild.firstElementChild.innerText)
+            console.log(removeId)
+        })
 
         var delrep = document.querySelectorAll(".deleteReply")
 
