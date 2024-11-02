@@ -9,11 +9,10 @@ from django.utils import timezone
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    middle_name = models.CharField(max_length=50) 
+    middle_name = models.CharField(max_length=50,blank=True, null=True, default=' ') 
     pnumber = PhoneNumberField(unique=True)
     birthday = models.DateField(default=date(2000,1,1))
     gender = models.CharField(max_length=50, default='PNS')
-    email_address = models.EmailField(max_length=254, unique=True)
     home_address = models.CharField(max_length=200, blank=True, null=True)
     work_address = models.CharField(max_length=200, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True,default='default_profile.jpg')

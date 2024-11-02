@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,JsonResponse
 from landing.models import Profile
 from django.contrib.auth.decorators import login_required
-from .forms import ChangeNameForm, ChangeHomeAddressForm, ChangeWorkAddressForm, ChangeBirthdayForm, ChangeGenderForm, ChangePasswordForm
+from .forms import ChangeNameForm, ChangeHomeAddressForm, ChangeWorkAddressForm, ChangeBirthdayForm, ChangeGenderForm, ChangePasswordForm, ChangePhoneNumberForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, update_session_auth_hash
 
@@ -133,12 +133,33 @@ def changeGender(request):
 
     return render(request, 'genderChange.html', {'form': form})
 
+@login_required
 def changeNumber(request):
-    session_check = checkSession(request)
-    if isinstance(session_check, HttpResponse):
-        return session_check
+    profile = get_object_or_404(Profile, user=request.user)
 
-    return render(request, "numberChange.html")
+    if request.method == 'POST':
+        form = ChangePhoneNumberForm(request.POST, user=profile.user)
+
+        if form.is_valid():
+            password = form.cleaned_data['pass_verification']
+            if authenticate(username=profile.user.username, password=password):
+                # update changes murag git commit
+                profile.pnumber = form.cleaned_data['pnumber']
+                # confirm changes murag git push hahahaha
+                profile.save(update_fields=['pnumber'])
+
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Invalid password please try again.'}, status=400)
+        else:
+            errors = form.errors.as_json()  
+            return JsonResponse({'success': False, 'errors': errors}, status=400)
+    else:
+        form = ChangePhoneNumberForm(initial={
+            'phone_number': profile.pnumber
+        }, user=profile.user)
+
+    return render(request, "numberChange.html", {'form': form})
 
 
 def changeEmail(request):

@@ -261,3 +261,37 @@ class ChangePasswordForm(forms.Form):
             raise forms.ValidationError("New passwords do not match.")
         
         return cleaned_data
+    
+class ChangePhoneNumberForm(forms.ModelForm):
+    pass_verification = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'id': 'passVerify'
+        }),
+        required=True
+    )
+
+    class Meta:
+        model = Profile
+        fields = ['pnumber']
+
+        widgets = {
+            'pnumber': forms.TextInput(attrs={
+                'class': 'form-control',
+                'id': 'pnumber'
+            })
+        }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        profile = Profile.objects.filter(user=user).first()
+        if profile:
+            self.fields['pnumber'].initial = profile.pnumber    
+
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        if commit:
+            profile.save()
+        return profile

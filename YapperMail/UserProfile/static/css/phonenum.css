@@ -79,7 +79,7 @@ input[type="tel"] {
 .select-box .options {
   position: absolute;
   top: 4rem;
-
+  z-index: 10;
   width: 100%;
   background-color: #fff;
   border-radius: 0.5rem;
