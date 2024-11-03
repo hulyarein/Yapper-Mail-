@@ -594,7 +594,13 @@ def team_addCollaborator(request,pk):
             return JsonResponse({'message': 'User Not Found.'}, status=200)
         
         userCollab = User.objects.get(email=user_email)
+            
         emailsVar = TeamEmail.objects.get(id = pk)
+        if userCollab in emailsVar.memberUsers.all():
+            return JsonResponse({'message': 'User already exists.'}, status=200)
+        if userCollab in emailsVar.adminUsers.all():
+            return JsonResponse({'message': 'User already exists.'}, status=200)
+        
         emailsVar.memberUsers.add(userCollab)
 
         return JsonResponse({'message': 'User added successfully.'}, status=200)

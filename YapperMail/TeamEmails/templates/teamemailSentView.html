@@ -422,6 +422,19 @@
             </div>
         </div>
     </div>
+
+    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">UserError</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body toastPut">
+
+            </div>
+        </div>
+    </div>
 </body>
 <script>
     function getCookie(name) {
@@ -452,6 +465,43 @@
     })
 
     $(document).ready(function () {
+        const toastLiveExample = document.getElementById('liveToast');
+        $(".SubmitModal").click(function(e){
+
+            if($(".memberEmailInp").val().trim() == ""){
+                console.log("none")
+            }
+            else{
+                $.ajax({
+                url: `/teamemailmanagement/addCollab/${parseInt($(".numEmail").text())}`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "adduser": $(".memberEmailInp").val().trim()}),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("Email updated successfully:", response);
+
+                    if(response.message == "User added successfully."){
+                        location.reload()
+                        $("#inputModal").modal('hide')
+                        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                            $(".toastPut").text(response.message)
+                        toastBootstrap.show();
+                    }
+                    else{
+                        $("#inputModal").modal('hide')
+                        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                            $(".toastPut").text(response.message)
+                        toastBootstrap.show();
+                    }
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+            }
+        })
         
         $(".removeAccMember").click(function(e){
             let removeId = parseInt(this.parentElement.parentElement.firstElementChild.firstElementChild.innerText)
