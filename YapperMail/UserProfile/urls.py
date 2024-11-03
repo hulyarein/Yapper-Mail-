@@ -7,7 +7,6 @@ urlpatterns = [
     path('profilePage/Birthday', views.changeBday, name='changeBday'),
     path('profilePage/Gender', views.changeGender, name='changeGender'),
     path('profilePage/Number', views.changeNumber, name='changeNumber'),
-    path('profilePage/EmailAddress', views.changeEmail, name='changeEmail'),
     path('profilePage/Home', views.changeHome, name='changeHome'),
     path('profilePage/Work', views.changeWork, name='changeWork'),
     path('profilePage/Password', views.changePassword, name='changePassword')

@@ -3,15 +3,13 @@ from django.contrib.auth.models import User,AbstractUser
 # from django.db.models.signals import post_save
 # from django.dispatch import receiver
 from phonenumber_field.modelfields import PhoneNumberField
-from datetime import date, timedelta
-import uuid
-from django.utils import timezone
+from datetime import date
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     middle_name = models.CharField(max_length=50,blank=True, null=True, default=' ') 
     pnumber = PhoneNumberField(unique=True)
-    birthday = models.DateField(default=date(2000,1,1))
+    birthday = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=50, default='PNS')
     home_address = models.CharField(max_length=200, blank=True, null=True)
     work_address = models.CharField(max_length=200, blank=True, null=True)

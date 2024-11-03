@@ -27,6 +27,15 @@
 
     let initialPass = document.getElementById('passVerify').value;
 
+    // Get today's date
+    const today = new Date();
+    // Subtract 13 years from the current date
+    const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+    // Format the date to YYYY-MM-DD format
+    const formattedDate = minDate.toISOString().split('T')[0];
+    // Set the max attribute on the input field
+    document.getElementById("birthday").max = formattedDate;
+
     // Capture initial values
     let initialValues = {
       birthday: document.getElementById('birthday').value
@@ -77,14 +86,12 @@
             console.error('Server response error:', data);
           });
         } else {
+          document.getElementById('passVerify').value = '';
           modalInstance.hide();
           alert('Changes saved successfully!'); 
 
           // Update initial values to the current ones after successful submission
-          initialValues = {
-            birthday: document.getElementById('birthday').value
-          };
-          initialPass = document.getElementById('passVerify').value;
+          initialValues.birthday = document.getElementById('birthday').value;
 
           // Recheck to disable buttons if no changes detected
           checkChanges();

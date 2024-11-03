@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from landing.models import Profile
 from django.contrib.auth.hashers import check_password
+from datetime import date
+from django.core.exceptions import ValidationError
 
 class ChangeNameForm(forms.ModelForm):
     # Fields from the User model
@@ -163,6 +165,19 @@ class ChangeBirthdayForm(forms.ModelForm):
         if profile:
             self.fields['birthday'].initial = profile.birthday
 
+    def clean_birthday(self):
+        birthday = self.cleaned_data.get('birthday')
+        if birthday:
+            # Calculate age based on birthday
+            today = date.today()
+            age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+            
+            # Validate age
+            if age < 13:
+                raise ValidationError("You must be at least 13 years old to set this date.")
+        
+        return birthday
+
     def save(self, commit=True):
         profile = super().save(commit=False)
         if commit:
@@ -202,11 +217,14 @@ class ChangeGenderForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         profile = Profile.objects.filter(user=user).first()
         
-        # Set default gender if none exists
-        if profile and not profile.gender.strip():  # Checking for empty or whitespace-only gender
-            self.fields['gender'].initial = 'PNS'  # Default to 'Prefer not to say'
-        else:
-            self.fields['gender'].initial = profile.gender
+        if profile:
+            # Check if gender matches a predefined option or is a custom value
+            if profile.gender in ['Male', 'Female', 'PNS']:
+                self.fields['gender'].initial = profile.gender
+            else:
+                # If it's a custom gender, set 'Other' as the selected radio button
+                self.fields['gender'].initial = 'Other'
+                self.fields['other_gender'].initial = profile.gender  # Populate `other_gender` field with the custom value
 
     def save(self, commit=True):
         profile = super().save(commit=False)

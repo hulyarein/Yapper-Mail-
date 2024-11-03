@@ -78,16 +78,15 @@
             document.querySelector('.error-message').textContent = errorMessage;
           });
         } else {
+          document.getElementById('passVerify').value = '';
           modalInstance.hide();
           alert('Changes saved successfully!'); 
-
+          
           // Update initial values to the current ones after successful submission
-          initialValues = {
-            firstName: document.getElementById('firstName').value,
-            middle_name: document.getElementById('middleName').value,
-            lastName: document.getElementById('lastName').value
-          };
-          initialPass = document.getElementById('passVerify').value;
+          initialValues.firstName = document.getElementById('firstName').value;
+          initialValues.middle_name = document.getElementById('middleName').value;
+          initialValues.lastName = document.getElementById('lastName').value;
+
 
           // Recheck to disable buttons if no changes detected
           checkChanges();

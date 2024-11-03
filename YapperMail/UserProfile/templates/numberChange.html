@@ -54,7 +54,11 @@
             startCooldown();
           })
           .catch((error) => {
+            const errorMessagesDiv = document.getElementById('errorMessages');
+            errorMessagesDiv.textContent = error.message;
+            errorMessagesDiv.style.display = "block"; // Show the error message
             console.error("Error during verification:", error);
+
             // Optionally show an error message to the user
           });
       }
@@ -85,7 +89,7 @@
         // Ensure the fields are reset to initial values on page load
         document.getElementById('pnumber').value = '{{ form.pnumber.value }}';
         document.getElementById('verificationCode').value = '';
-        //document.getElementById('openModal').disabled = true;
+        document.getElementById('openModal').disabled = true;
       };
 
       document.addEventListener('DOMContentLoaded', () => {
@@ -111,7 +115,7 @@
           // Check if values have changed
           const hasChanges = 
             currentValues.phone_number !== initialValues.phone_number &&
-            currentValues.verification_code !== initialValues.verification_code;  
+            currentValues.verification_code !==  initialValues.verification_code; 
     
           const hasPass = currPass !== initialPass;
 
@@ -184,19 +188,18 @@
           .then(response => {
             if (!response.ok) {
               return response.json().then(data => {
-                const errorMessage = data.error || "An error occurred. Please try again.";
+                const errorMessage = data.errors ? JSON.parse(data.errors).pnumber[0].message : "An error occurred. Please try again.";
                 document.querySelector('.error-message').textContent = errorMessage;
                 console.error('Server response error:', data);
               });
             } else {
+              document.getElementById('passVerify').value = '';
               modalInstance.hide();
               alert('Changes saved successfully!'); 
 
               // Update initial values to the current ones after successful submission
-              initialValues = {
-                phone_number: document.getElementById('pnumber').value,
-                verification_code: ''
-              };
+              initialValues.phone_number = document.getElementById('pnumber').value;
+              document.getElementById('verificationCode').value = "";
 
               // Recheck to disable buttons if no changes detected
               checkChanges();

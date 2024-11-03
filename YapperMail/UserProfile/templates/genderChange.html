@@ -80,10 +80,10 @@
                   console.error("Server response error:", data);
                 });
               } else {
+                document.getElementById("passVerify").value = "";
                 modalInstance.hide();
                 alert("Changes saved successfully!");
                 initialValues.gender = findSelectedRadio();
-                initialPass = document.getElementById("passVerify").value;
                 checkChanges();
               }
             })
