@@ -355,7 +355,8 @@
 
                             <div style="display: flex; flex-direction: row; margin-left: 10px;">
                                 {% if userRep in emailCont.adminUsers.all and admins != emailCont.fromUser and userRep != admins%}
-                                    <img src="{% static 'images/removeAccess.png' %}" class = "removeAcc" style="height: 20px; width: 20px; margin-right: 5px;">
+                                    <img src="{% static 'images/upgrade.png' %}" class = "downgradeMember" style="height: 20px; width: 20px; margin-right: 5px; transform: rotate(180deg);">
+                                    <img src="{% static 'images/removeAccess.png' %}" class = "removeAccAdmin" style="height: 20px; width: 20px; margin-right: 5px;">
                                 {% endif %}
                             </div>
                         </div>
@@ -383,8 +384,8 @@
 
                             <div style="display: flex; flex-direction: row; margin-left: 10px;">
                                 {% if userRep in emailCont.adminUsers.all%}
-                                    <img src="{% static 'images/upgrade.png' %}" style="height: 20px; width: 20px; margin-right: 5px;">
-                                    <img src="{% static 'images/removeAccess.png' %}" class = "removeAcc" style="height: 20px; width: 20px; margin-right: 5px;">
+                                    <img src="{% static 'images/upgrade.png' %}" class = "upgradeMember" style="height: 20px; width: 20px; margin-right: 5px;">
+                                    <img src="{% static 'images/removeAccess.png' %}" class = "removeAccMember" style="height: 20px; width: 20px; margin-right: 5px;">
                                 {% endif %}
                             </div>
                         </div>
@@ -425,9 +426,60 @@
     })
 
     $(document).ready(function () {
-        $(".removeAcc").click(function(e){
-            var removeId = parseInt(this.parentElement.parentElement.firstElementChild.firstElementChild.innerText)
-            console.log(removeId)
+        $(".removeAccMember").click(function(e){
+            let removeId = parseInt(this.parentElement.parentElement.firstElementChild.firstElementChild.innerText)
+            $.ajax({
+                url: `/teamemailmanagement/removeMember/${parseInt($(".numEmail").text())}`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "delId": removeId}),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("Email updated successfully:", response);
+                    location.reload()
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+        })
+        $(".removeAccAdmin").click(function(e){
+            let removeId = parseInt(this.parentElement.parentElement.firstElementChild.firstElementChild.innerText)
+            $.ajax({
+                url: `/teamemailmanagement/removeAdmin/${parseInt($(".numEmail").text())}`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "delId": removeId}),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("Email updated successfully:", response);
+                    location.reload()
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+        })
+        $(".upgradeMember").click(function(e){
+            let addId = parseInt(this.parentElement.parentElement.firstElementChild.firstElementChild.innerText)
+            $.ajax({
+                url: `/teamemailmanagement/addAdmin/${parseInt($(".numEmail").text())}`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "addId": addId}),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("user added successfully:", response);
+                    location.reload()
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+            
         })
 
         var delrep = document.querySelectorAll(".deleteReply")

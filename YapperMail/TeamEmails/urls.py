@@ -14,7 +14,10 @@ urlpatterns = [
     path('editReply/<int:pk>/<int:uk>',views.team_edit_reply,name='team_editReply'),
     path('changeImageReply/<int:pk>',views.team_existingReplyFile,name = "team_existingReplyFile"),
     path('deleteReply',views.teams_deleteReplyFunc,name = "team_deleteReplyFunc"),
-    path('deleteEmail',views.team_deleteEmailFunc,name = "team_deleteEmailFunc")
+    path('deleteEmail',views.team_deleteEmailFunc,name = "team_deleteEmailFunc"),
+    path('removeMember/<int:pk>',views.team_removeAccessMember,name = "team_removeAccessMember"),
+    path('removeAdmin/<int:pk>',views.team_removeAccessAdmin,name = "team_removeAccessAdmin"),
+    path('addAdmin/<int:pk>',views.team_addAdmin,name = "team_addAdmin")
 ]
 
 

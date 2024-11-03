@@ -469,4 +469,88 @@ def team_deleteEmailFunc(request):
         # Log unexpected errors and return a generic error message
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
+    
+
+
+def team_removeAccessMember(request,pk):
+    try:
+        data = json.loads(request.body)
+        user_id = data.get('delId')
+
+        if not user_id:
+            return JsonResponse({'message': 'User ID is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        teamVar = TeamEmail.objects.get(id=pk)
+        teamVar.memberUsers.remove(user_id)
+
+        return JsonResponse({'message': 'User deleted successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'User not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while deleting the User.'}, status=500)
+    
+def team_removeAccessAdmin(request,pk):
+    try:
+        data = json.loads(request.body)
+        user_id = data.get('delId')
+
+        if not user_id:
+            return JsonResponse({'message': 'User ID is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        teamVar = TeamEmail.objects.get(id=pk)
+        teamVar.adminUsers.remove(user_id)
+
+        return JsonResponse({'message': 'User deleted successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'User not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while deleting the User.'}, status=500)
+    
+
+
+def team_addAdmin(request,pk):
+    try:
+        data = json.loads(request.body)
+        user_id = data.get('addId')
+
+        if not user_id:
+            return JsonResponse({'message': 'User ID is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        userHold = User.objects.get(id = user_id)
+        teamVar = TeamEmail.objects.get(id=pk)
+        teamVar.adminUsers.add(userHold)
+        teamVar.memberUsers.remove(userHold)
+
+        return JsonResponse({'message': 'User added successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'User not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
+    
+
+
 
