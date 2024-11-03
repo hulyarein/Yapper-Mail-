@@ -17,7 +17,9 @@ urlpatterns = [
     path('deleteEmail',views.team_deleteEmailFunc,name = "team_deleteEmailFunc"),
     path('removeMember/<int:pk>',views.team_removeAccessMember,name = "team_removeAccessMember"),
     path('removeAdmin/<int:pk>',views.team_removeAccessAdmin,name = "team_removeAccessAdmin"),
-    path('addAdmin/<int:pk>',views.team_addAdmin,name = "team_addAdmin")
+    path('addAdmin/<int:pk>',views.team_addAdmin,name = "team_addAdmin"),
+    path('downgradeMember/<int:pk>',views.team_downgradeMember,name = "team_downgradeMember"),
+    path('addCollab/<int:pk>',views.team_addCollaborator,name = "team_addCollaborator")
 ]
 
 

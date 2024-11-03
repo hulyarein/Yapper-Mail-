@@ -181,7 +181,7 @@
         .teamManage{
             margin-right: 60px;
             border-style: solid;
-            padding: 5px;
+            padding: 7px;
             border-radius: 1000px;
             border-color:#DE3F2A;
         }
@@ -192,7 +192,14 @@
 <body>
     <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
         <img src="{% static 'images/logo.png' %}" class="logoImage">
-        <img src="{% static 'images/manageTeam.png' %}" class = "teamManage" data-bs-toggle="modal" data-bs-target="#imageModal">
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            {% if userRep in emailCont.adminUsers.all %}
+            <img src="{% static 'images/memberadd.png' %}" style="height: 20px; width: 20px; margin-right: 10px;" 
+            class = "addCollab" data-bs-toggle="modal" data-bs-target="#inputModal">
+            {% endif %}
+            <img src="{% static 'images/manageTeam.png' %}" class = "teamManage" data-bs-toggle="modal" data-bs-target="#imageModal">
+        </div>
+        
     </div>
     <div style="display: flex; flex-direction: row; margin-left: 10%; align-items: center;">
         <div class="backEmailComp">
@@ -396,6 +403,25 @@
           </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="inputModal" tabindex="-1" aria-labelledby="inputModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inputModalLabel">Add Member</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control memberEmailInp" placeholder="Enter email">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary SubmitModal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
     function getCookie(name) {
@@ -426,6 +452,7 @@
     })
 
     $(document).ready(function () {
+        
         $(".removeAccMember").click(function(e){
             let removeId = parseInt(this.parentElement.parentElement.firstElementChild.firstElementChild.innerText)
             $.ajax({
@@ -480,6 +507,24 @@
                 }
             });
             
+        })
+        $(".downgradeMember").click(function(e){
+            let addId = parseInt(this.parentElement.parentElement.firstElementChild.firstElementChild.innerText)
+            $.ajax({
+                url: `/teamemailmanagement/downgradeMember/${parseInt($(".numEmail").text())}`,  // Django view URL
+                type: 'POST',
+                data: JSON.stringify({ "addId": addId}),  // JSON-encoded data
+                contentType: 'application/json',  // Set content type to JSON
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                success: function (response) {
+                    console.log("user added successfully:", response);
+                    location.reload()
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
         })
 
         var delrep = document.querySelectorAll(".deleteReply")

@@ -552,5 +552,63 @@ def team_addAdmin(request,pk):
         return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
     
 
+def team_downgradeMember(request,pk):
+    try:
+        data = json.loads(request.body)
+        user_id = data.get('addId')
+
+        if not user_id:
+            return JsonResponse({'message': 'User ID is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        userHold = User.objects.get(id = user_id)
+        teamVar = TeamEmail.objects.get(id=pk)
+        teamVar.memberUsers.add(userHold)
+        teamVar.adminUsers.remove(userHold)
+
+        return JsonResponse({'message': 'User added successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'User not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
+
+
+def team_addCollaborator(request,pk):
+
+    try:
+        data = json.loads(request.body)
+        user_email = data.get('adduser')
+
+        if not user_email:
+            return JsonResponse({'message': 'User is required.'}, status=400)
+
+        # Attempt to get the email by ID
+        if not User.objects.filter(email=user_email).exists():
+            return JsonResponse({'message': 'User Not Found.'}, status=200)
+        
+        userCollab = User.objects.get(email=user_email)
+        emailsVar = TeamEmail.objects.get(id = pk)
+        emailsVar.memberUsers.add(userCollab)
+
+        return JsonResponse({'message': 'User added successfully.'}, status=200)
+
+    except ObjectDoesNotExist:
+        return JsonResponse({'message': 'User not found.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # Log unexpected errors and return a generic error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while adding the user.'}, status=500)
+
 
 
