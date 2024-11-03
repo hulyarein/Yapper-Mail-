@@ -260,7 +260,7 @@
     </div>
 </body>
 <script>
-        // Helper to create a new FileList
+        // 
     function FileListItems(files) {
         var b = new ClipboardEvent('').clipboardData || new DataTransfer();
         for (var i = 0; i < files.length; i++) {
@@ -276,15 +276,15 @@
             $('#fileInput').click();
         });
 
-       // Handle the file selection
+       // 
        $('#fileInput').on('change', function () {
-            var files = this.files; // Get the selected files
+            var files = this.files; // 
             console.log(files)
             if (files.length > 0) {
-                $('#fileList').empty(); // Clear existing file list
+                $('#fileList').empty(); // 
                 //$('#uploadButton').show(); // Show the upload button
 
-                // Loop through selected files
+                // 
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
                     var fileItem = $('<div class="file-item"></div>');
@@ -296,17 +296,17 @@
             }
         });
 
-        // Handle delete button click
+        // 
         $(document).on('click', '.delete-button', function () {
-            var index = $(this).data('index'); // Get index of file to delete
+            var index = $(this).data('index'); // 
             var fileInput = $('#fileInput')[0];
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var files = Array.from(fileInput.files); // 
 
-            // Remove the selected file
+            //
             files.splice(index, 1);
-            fileInput.files = new FileListItems(files); // Update file input
+            fileInput.files = new FileListItems(files); // 
 
-            // Refresh the file list
+            // 
             $('#fileList').empty();
             files.forEach(function (file, i) {
                 var fileItem = $('<div class="file-item"></div>');

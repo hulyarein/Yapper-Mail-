@@ -62,7 +62,7 @@ def team_email_composition(request,pk):
 def compose_email_details(request):
     if request.method == 'POST':
         try:
-            list_members = request.POST.get('listMembers', None)  # Get listMembers from POST data
+            list_members = request.POST.get('listMembers', None)  # 
             subject = request.POST.get('subject', None)
             description = request.POST.get('description', None)
 
@@ -78,24 +78,24 @@ def compose_email_details(request):
                 content=description
             )
 
-            # Add the sender as an admin user
+            # 
             team_email.adminUsers.add(request.user)
 
-            # Add other users as member users
+            # 
             for email in list_members:
                 user_now = User.objects.get(email=email)
                 if user_now != request.user:
                     team_email.memberUsers.add(user_now)
 
 
-            uploaded_files = request.FILES.getlist('file')  # Get the list of uploaded files
+            uploaded_files = request.FILES.getlist('file')  # 
             if uploaded_files:
                 for uploaded_file in uploaded_files:
                     email_file = TeamEmailFiles(
-                        emailId=team_email,  # Link the file to the email created
+                        emailId=team_email,  # 
                         file=uploaded_file
                     )
-                    email_file.save()  # Save the file record
+                    email_file.save()  # 
 
             return JsonResponse({"message": "Email details saved successfully"}, status=201)
     
@@ -143,7 +143,7 @@ def team_sentEmailList(request):
                     for email in emailsVar
                 ]
 
-                # Send the response back as JSON
+                # 
                 return JsonResponse({'emails': email_data}, status=200)
             
             elif data.get('sentNum') == 3:
@@ -166,7 +166,7 @@ def team_sentEmailList(request):
                     for email in emailsVar
                 ]
 
-                # Send the response back as JSON
+                # 
                 return JsonResponse({'emails': email_data}, status=200)
             elif data.get('sentNum') == 4:
                 #userVar = TemporaryUser.objects.get(id=1)
@@ -191,7 +191,7 @@ def team_sentEmailList(request):
                     for email in combined_emails
                 ]
 
-                # Send the response back as JSON
+                # 
                 return JsonResponse({'emails': email_data}, status=200)
             
             else:
@@ -201,7 +201,7 @@ def team_sentEmailList(request):
             print(f"Error: {str(e)}")
             return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
-    # If the request is not POST
+    # 
     return JsonResponse({'emails': "not Post"}, status=400)
 
 def team_email_sent_view(request,pk,ok):
@@ -329,20 +329,20 @@ def team_editExistingImage(request,pk):
     return JsonResponse({"ok":"OK"})'''
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)  # Parse JSON data
-            list_to_delete = data.get('listme', [])  # Get list of filenames to delete
+            data = json.loads(request.body)  # 
+            list_to_delete = data.get('listme', [])  # 
             print(list_to_delete)
 
-            # Get the email instance by primary key (pk)
+            # 
             email_instance = get_object_or_404(TeamEmail, id=pk)
 
-            # Query files linked to the email instance and filter by filenames
+            # 
             files_to_delete = TeamEmailFiles.objects.filter(emailId=email_instance).exclude(file__in=list_to_delete)
             deleted_files_count = files_to_delete.delete()
 
             response = {
                 'message': 'Files deleted successfully',
-                'deleted_files_count': deleted_files_count[0]  # Number of deleted files
+                'deleted_files_count': deleted_files_count[0]  # 
             }
             return JsonResponse(response, status=200)
 
@@ -395,20 +395,20 @@ def team_edit_reply(request,pk,uk):
 def team_existingReplyFile(request, pk):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)  # Parse JSON data
-            list_to_delete = data.get('listme', [])  # Get list of filenames to delete
+            data = json.loads(request.body)  
+            list_to_delete = data.get('listme', [])  
             print(list_to_delete)
 
-            # Get the email instance by primary key (pk)
+            
             reply_instance = get_object_or_404(TeamReply, id=pk)
 
-            # Query files linked to the email instance and filter by filenames
+            
             files_to_delete = TeamReplyFiles.objects.filter(replyid=reply_instance).exclude(file__in=list_to_delete)
             deleted_files_count = files_to_delete.delete()
 
             response = {
                 'message': 'Files deleted successfully',
-                'deleted_files_count': deleted_files_count[0]  # Number of deleted files
+                'deleted_files_count': deleted_files_count[0]  # 
             }
             return JsonResponse(response, status=200)
 
@@ -426,7 +426,7 @@ def teams_deleteReplyFunc(request):
         if not reply_id:
             return JsonResponse({'message': 'Reply ID is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        # 
         replyVar = TeamReply.objects.get(id=reply_id)
         replyVar.delete()
 
@@ -439,7 +439,7 @@ def teams_deleteReplyFunc(request):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)
     
@@ -452,7 +452,7 @@ def team_deleteEmailFunc(request):
         if not email_id:
             return JsonResponse({'message': 'Email ID is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        # 
         emailsVar = TeamEmail.objects.get(id=email_id)
         emailsVar.isDeleted = True
         emailsVar.save()
@@ -466,7 +466,7 @@ def team_deleteEmailFunc(request):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
     
@@ -480,7 +480,7 @@ def team_removeAccessMember(request,pk):
         if not user_id:
             return JsonResponse({'message': 'User ID is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        # 
         teamVar = TeamEmail.objects.get(id=pk)
         teamVar.memberUsers.remove(user_id)
 
@@ -493,7 +493,7 @@ def team_removeAccessMember(request,pk):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        #
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the User.'}, status=500)
     
@@ -505,7 +505,7 @@ def team_removeAccessAdmin(request,pk):
         if not user_id:
             return JsonResponse({'message': 'User ID is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        # 
         teamVar = TeamEmail.objects.get(id=pk)
         teamVar.adminUsers.remove(user_id)
 
@@ -518,7 +518,7 @@ def team_removeAccessAdmin(request,pk):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the User.'}, status=500)
     
@@ -532,7 +532,7 @@ def team_addAdmin(request,pk):
         if not user_id:
             return JsonResponse({'message': 'User ID is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        # 
         userHold = User.objects.get(id = user_id)
         teamVar = TeamEmail.objects.get(id=pk)
         teamVar.adminUsers.add(userHold)
@@ -547,7 +547,7 @@ def team_addAdmin(request,pk):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
     
@@ -560,7 +560,7 @@ def team_downgradeMember(request,pk):
         if not user_id:
             return JsonResponse({'message': 'User ID is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        # 
         userHold = User.objects.get(id = user_id)
         teamVar = TeamEmail.objects.get(id=pk)
         teamVar.memberUsers.add(userHold)
@@ -575,7 +575,7 @@ def team_downgradeMember(request,pk):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
 
@@ -589,7 +589,7 @@ def team_addCollaborator(request,pk):
         if not user_email:
             return JsonResponse({'message': 'User is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        # 
         if not User.objects.filter(email=user_email).exists():
             return JsonResponse({'message': 'User Not Found.'}, status=200)
         
@@ -612,7 +612,7 @@ def team_addCollaborator(request,pk):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the user.'}, status=500)
 

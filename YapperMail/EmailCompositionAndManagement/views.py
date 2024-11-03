@@ -200,20 +200,20 @@ def editExistingImage(request,pk):
     return JsonResponse({"ok":"OK"})'''
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)  # Parse JSON data
-            list_to_delete = data.get('listme', [])  # Get list of filenames to delete
+            data = json.loads(request.body)  # 
+            list_to_delete = data.get('listme', [])  # 
             print(list_to_delete)
 
-            # Get the email instance by primary key (pk)
+            #
             email_instance = get_object_or_404(Email, id=pk)
 
-            # Query files linked to the email instance and filter by filenames
+            
             files_to_delete = EmailFiles.objects.filter(emailId=email_instance).exclude(file__in=list_to_delete)
             deleted_files_count = files_to_delete.delete()
 
             response = {
                 'message': 'Files deleted successfully',
-                'deleted_files_count': deleted_files_count[0]  # Number of deleted files
+                'deleted_files_count': deleted_files_count[0]  # 
             }
             return JsonResponse(response, status=200)
 
@@ -268,20 +268,20 @@ def edit_reply(request,pk,uk):
 def existingReplyFile(request, pk):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)  # Parse JSON data
-            list_to_delete = data.get('listme', [])  # Get list of filenames to delete
+            data = json.loads(request.body)  #
+            list_to_delete = data.get('listme', [])  # 
             print(list_to_delete)
 
-            # Get the email instance by primary key (pk)
+            # 
             reply_instance = get_object_or_404(Reply, id=pk)
 
-            # Query files linked to the email instance and filter by filenames
+            # 
             files_to_delete = ReplyFiles.objects.filter(replyid=reply_instance).exclude(file__in=list_to_delete)
             deleted_files_count = files_to_delete.delete()
 
             response = {
                 'message': 'Files deleted successfully',
-                'deleted_files_count': deleted_files_count[0]  # Number of deleted files
+                'deleted_files_count': deleted_files_count[0]  # 
             }
             return JsonResponse(response, status=200)
 
@@ -343,7 +343,7 @@ def sentEmailList(request):
                     for email in emailsVar
                 ]
 
-                # Send the response back as JSON
+                # 
                 return JsonResponse({'emails': email_data}, status=200)
             
             elif data.get('sentNum') == 3:
@@ -362,7 +362,7 @@ def sentEmailList(request):
                     for email in emailsVar
                 ]
 
-                # Send the response back as JSON
+                # 
                 return JsonResponse({'emails': email_data}, status=200)
             elif data.get('sentNum') == 4:
                 #userVar = TemporaryUser.objects.get(id=1)
@@ -380,7 +380,7 @@ def sentEmailList(request):
                     for email in emailsVar
                 ]
 
-                # Send the response back as JSON
+                # 
                 return JsonResponse({'emails': email_data}, status=200)
             
             else:
@@ -390,7 +390,7 @@ def sentEmailList(request):
             print(f"Error: {str(e)}")
             return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
-    # If the request is not POST
+    #
     return JsonResponse({'emails': "not Post"}, status=400)
 
 
@@ -402,7 +402,7 @@ def deleteEmailFunc(request):
         if not email_id:
             return JsonResponse({'message': 'Email ID is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        #
         emailsVar = Email.objects.get(id=email_id)
         emailsVar.isDeleted = True
         emailsVar.save()
@@ -416,7 +416,7 @@ def deleteEmailFunc(request):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
 
@@ -430,7 +430,7 @@ def deleteReplyFunc(request):
         if not reply_id:
             return JsonResponse({'message': 'Reply ID is required.'}, status=400)
 
-        # Attempt to get the email by ID
+        # 
         replyVar = Reply.objects.get(id=reply_id)
         replyVar.delete()
 
@@ -443,6 +443,6 @@ def deleteReplyFunc(request):
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
     except Exception as e:
-        # Log unexpected errors and return a generic error message
+        # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)

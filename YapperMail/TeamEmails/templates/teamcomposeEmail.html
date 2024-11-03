@@ -502,12 +502,12 @@
                 }
 
                 $.ajax({
-                    url: '../composeEmaildetails',  // Django view URL
+                    url: '../composeEmaildetails',  // 
                     type: 'POST',
-                    data: formData,  // Use FormData
-                    contentType: false,  // Set content type to false to let jQuery set it correctly
-                    processData: false,  // Prevent jQuery from automatically transforming the data into a query string
-                    headers: { 'X-CSRFToken': getCookie('csrftoken') },   // CSRF token
+                    data: formData,  //
+                    contentType: false,  // 
+                    processData: false,  // 
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },   // 
                     success: function (response) {
                         console.log("Email updated successfully:", response);
 
