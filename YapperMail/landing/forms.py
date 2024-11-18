@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from .models import Profile
+from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
     fname = forms.CharField(max_length=30, required=True)
@@ -10,17 +9,18 @@ class CustomUserCreationForm(UserCreationForm):
     pnumber = forms.CharField(max_length=12, required=True)
 
     class Meta:
-        model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        model = CustomUser
+        fields = ('email', 'fname', 'lname', 'pnumber', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super(CustomUserCreationForm, self).save(commit=False)
         user.first_name = self.cleaned_data['fname']
         user.last_name = self.cleaned_data['lname']
         user.email = self.cleaned_data['email']
+        user.username = self.cleaned_data['email']  # Set username to email
+        user.pnumber = self.cleaned_data['pnumber']  # Save pnumber in the User model
         
         if commit:
             user.save()
-            Profile.objects.create(user=user, pnumber=self.cleaned_data['pnumber'])
         
         return user

@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm,SearchForm
-from .models import Email,EmailFiles,TemporaryUser,Reply,ReplyFiles
+from .models import Email,EmailFiles,Reply,ReplyFiles
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, Http404
@@ -9,6 +9,7 @@ from urllib.parse import unquote
 import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
+from landing import models
 
 
 # Create your views here.
@@ -24,8 +25,8 @@ def email_composition(request,pk):
 
 
             try:
-                fromUser = TemporaryUser.objects.get(id = pk)
-                toUserDatabase = TemporaryUser.objects.get(userEmail = toUser)
+                fromUser = models.CustomUser.objects.get(id = pk)
+                toUserDatabase = models.CustomUser.objects.get(userEmail = toUser)
                 email = Email(
                     fromUser=fromUser,
                     toUser=toUserDatabase,
@@ -65,7 +66,7 @@ def email_sent_view(request,pk,ok):
 
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
 
-    userRep = TemporaryUser.objects.get(id = pk)
+    userRep = models.CustomUser.objects.get(id = pk)
 
 
     if request.method == "POST":
@@ -119,7 +120,7 @@ def email_reply_view(request):
 
             try:
                 emailRep = Email.objects.get(id = pk)
-                userRep = TemporaryUser.objects.get(id = 3)
+                userRep = models.CustomUser.objects.get(id = 3)
 
                 replyModel = Reply(
                     fromUser = userRep,
@@ -315,7 +316,7 @@ def download_file(request, filename):
 def emailListView(request):
     form = SearchForm()
 
-    userVar = TemporaryUser.objects.get(id = 1)
+    userVar = models.CustomUser.objects.get(id = 1)
     emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
     return render(request,'emailList.html',{'form':form,'emails':emailsVar})
 
@@ -325,7 +326,7 @@ def sentEmailList(request):
             data = json.loads(request.body)
 
             if data.get('sentNum') == 2:
-                userVar = TemporaryUser.objects.get(id=1)
+                userVar = models.CustomUser.objects.get(id=1)
                 emailsVar = Email.objects.filter(Q(fromUser=userVar) & Q(isDeleted = False))
 
                 email_data = [
@@ -342,7 +343,7 @@ def sentEmailList(request):
                 return JsonResponse({'emails': email_data}, status=200)
             
             elif data.get('sentNum') == 3:
-                userVar = TemporaryUser.objects.get(id=1)
+                userVar = models.CustomUser.objects.get(id=1)
                 emailsVar = Email.objects.filter(Q(toUser=userVar) & Q(isDeleted = False))
 
                 email_data = [
@@ -358,7 +359,7 @@ def sentEmailList(request):
                 # Send the response back as JSON
                 return JsonResponse({'emails': email_data}, status=200)
             elif data.get('sentNum') == 4:
-                userVar = TemporaryUser.objects.get(id=1)
+                userVar = models.CustomUser.objects.get(id=1)
                 emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
 
                 email_data = [
