@@ -33,7 +33,7 @@
     </div>
     <div class = "home-body">
       <div class = "home-body-1">
-        <h3 style="color:#DE3F2A"><span style="font-weight: bold;">WELCOME</span>  {{ user.username|safe|escape }}</h3>
+        <h3 style="color:#DE3F2A"><span style="font-weight: bold;">WELCOME</span>  {{ user.first_name|safe|escape }}</h3>
        <div class = "navigation">
         
         <a href = "{% url 'home' %}">

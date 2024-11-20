@@ -6,7 +6,7 @@ class CustomUserCreationForm(UserCreationForm):
     fname = forms.CharField(max_length=30, required=True)
     lname = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(required=True)
-    pnumber = forms.CharField(max_length=12, required=True)
+    pnumber = forms.CharField(max_length=13, required=True)
 
     class Meta:
         model = CustomUser

@@ -3,7 +3,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from landing.forms import CustomUserCreationForm 
+from landing.models import CustomUser
 from django.http import HttpResponse, JsonResponse
+import firebase_admin
 from firebase_admin import auth
 import json
 import requests
@@ -12,7 +14,6 @@ from django.contrib.auth.hashers import make_password
 from EmailCompositionAndManagement.models import Email
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib import messages
-
 
 
 # Create your views here.
@@ -34,10 +35,15 @@ def profile(request):
 def enterpnumber(request):
     return render (request, 'registration/enternumber.html')
 
+def signin_number(request):
+    return render (request, 'registration/numbersignin.html')
+
 def signupForm(request):
+    print("re2uquest receicved")
     if request.method == "POST":
         
         form = CustomUserCreationForm(request.POST)
+
         if form.is_valid():
             user = form.save()
             user.is_staff = True  
@@ -46,6 +52,8 @@ def signupForm(request):
             print("Successfully Signed up {user.username}")
 
             return redirect('login') 
+        else:
+            print(form.errors)
     else:
         form = CustomUserCreationForm()
         print(form.errors)
@@ -72,6 +80,30 @@ def loginForm(request):
     # return render(request, 'home', {"form": form})
 
 
+if not firebase_admin._apps:
+    firebase_admin.initialize_app()
+
+def phone_login(request):
+    if request.method == "POST":
+        try:
+            phone_number = request.POST.get('phone_number')
+            parsed_number = phone_number.replace(" ", "")
+            user = CustomUser.objects.filter(pnumber=parsed_number).first()
+
+            if user:
+                auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+                # Return a JSON response with the redirect URL
+                return JsonResponse({"redirect_url": "/home/"}, status=200)
+            else:
+                return JsonResponse({"message": "User not found for this phone number"}, status=404)
+        except Exception as e:
+            return JsonResponse({"message": str(e)}, status=400)
+
+    return JsonResponse({"message": "Invalid request method"}, status=405)
+
+
+
 def send_otp(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
@@ -85,47 +117,6 @@ def send_otp(request):
         except Exception as e:
             return render(request, 'enternumber.html', {'error': str(e)})
     return render(request, 'registration/enternumber.html')
-
-def verify_otp(request):
-    if request.method == 'POST':
-        otp = request.POST.get('otp')
-        verification_id = request.session.get('verification_id')
-
-        try:
-            # Confirm the OTP
-            auth.verify_phone_number_otp(verification_id, otp)
-            return redirect('reset_password')  # Redirect to password reset page
-        except Exception as e:
-            return render(request, 'registration/verifyotp.html', {'error': str(e)})
-    return render(request, 'registration/verifyotp.html')
-
-
-# def reset_password(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         new_password = request.POST.get('new_password')
-#         confirm_password = request.POST.get('confirm_password')
-
-#         # Check if passwords match
-#         if new_password == confirm_password:
-#             try:
-#                 user = User.objects.get(username=username)  # Retrieve user by username
-#                 form = SetPasswordForm(user=user, data={'new_password1': new_password, 'new_password2': confirm_password})
-
-#                 if form.is_valid():
-#                     user.password = make_password(new_password)  # Hash the new password
-#                     user.save()
-#                     messages.success(request, 'Your password has been reset successfully!')
-#                     return redirect('login')  # Redirect to login or success page
-#                 else:
-#                     return render(request, 'registration/resetpassword.html', {'form': form})
-
-#             except User.DoesNotExist:
-#                 return render(request, 'registration/resetpassword.html', {'error': 'User not found.'})
-#         else:
-#             return render(request, 'registration/resetpassword.html', {'error': 'Passwords do not match.'})
-
-#     return render(request, 'registration/resetpassword.html')
 
 def reset_password(request):
     if request.method == 'POST':
