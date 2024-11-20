@@ -320,6 +320,7 @@ def emailListView(request):
     #userVar = TemporaryUser.objects.get(id = 1)
     userVar = request.user
     emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
+    deletedEmails = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
     return render(request,'emailList.html',{'form':form,'emails':emailsVar,'LogUser':userVar})
 
 def sentEmailList(request):

@@ -100,6 +100,14 @@
             margin-right: 20px;
         }
 
+        .trash {
+            border-style: solid;
+            border-radius: 10px;
+            border-color: #fd7e84;
+            padding: 10px 30px;
+            margin-right: 20px;
+        }
+
         .recBut {
             border-style: solid;
             border-radius: 10px;
@@ -196,7 +204,6 @@
                 color: white;
                 padding: 15px 15px;
                 border-radius: 10px;
-
             }
         }
 
@@ -254,6 +261,8 @@
             <div class="allBut">All</div>
             <div class="sentBut">Sent</div>
             <div class="recBut">Received</div>
+            {% comment %} NINO {% endcomment %}
+            <div class="trash">Trash</div>
             <div class="userId" style="display: none;">{{LogUser.id}}</div>
         </div>
         <div class=composeDiv>
@@ -325,6 +334,11 @@
         var sentButton = document.querySelector(".sentBut")
         sentButton.style.backgroundColor = ""
         sentButton.style.color = ""
+
+        // NINO
+        var trashButton = document.querySelector(".trash")
+        trashButton.style.backgroundColor = ""
+        trashButton.style.color = ""
 
         //clickEmail
         var ckickId = document.querySelectorAll(".emailIdDiv")
