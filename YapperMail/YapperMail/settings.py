@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'compressor',
     'phonenumber_field',
     'TeamEmails',
+    'Chatbot',
 ]
 
 MIDDLEWARE = [

@@ -22,6 +22,7 @@ urlpatterns = [
     path('', include('landing.urls')),
     path('',include('UserProfile.urls')),
     path('emailmanagement/',include('EmailCompositionAndManagement.urls')),
-    path('teamemailmanagement/',include('TeamEmails.urls'))
+    path('teamemailmanagement/',include('TeamEmails.urls')),
+    path('chatbot/',include("Chatbot.urls"))
 ]
  
