@@ -1,5 +1,7 @@
 myvenv/
 YapperMal/UserProfile/static/Script/fbconfig.js
+YapperMail/uploads/
+YapperMail/myenv
 
 *.py[cod]
 __pycache__/
