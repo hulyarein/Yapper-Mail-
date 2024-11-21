@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'UserProfile',
     'landing',
     'EmailCompositionAndManagement',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# Flobite
+
+# COMPRESS_ROOT = BASE_DIR / '/static/'
+
+# COMPRESS_ENABLED = True
+
+# STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+
+# ari ra kutob flowbite
 
 ROOT_URLCONF = 'YapperMail.urls'
 
@@ -124,7 +135,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),
                     '../YapperMail/EmailCompositionAndManagement/static'
                     ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 MEDIA = 'images/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -133,3 +144,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'home' 
 LOGIN_URL = '/login/' 
 LOGOUT_REDIRECT_URL = "landing"
+
+AUTH_USER_MODEL = 'landing.CustomUser'

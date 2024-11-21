@@ -33,17 +33,21 @@
     </div>
     <div class = "home-body">
       <div class = "home-body-1">
-        <h3 style="color:#DE3F2A"><span style="font-weight: bold;">WELCOME</span> Julia Laine Segundo</h3>
+        <h3 style="color:#DE3F2A"><span style="font-weight: bold;">WELCOME</span>  {{ user.first_name|safe|escape }}</h3>
        <div class = "navigation">
-        <div class = "navigation-item" style="background-color: #FF0000;color:#f4f4f4">
-          <i class="bi bi-house-door-fill"></i>
-          <a href = "{% url 'login' %}">Dashboard</a>
-        </div>
+        
+        <a href = "{% url 'home' %}">
+          <div class = "navigation-item">
+            <i class="bi bi-house-door-fill"></i> Dashboard
+          </div>
+        </a>
 
-        <div class = "navigation-item">
-          <i class="bi bi-inbox"></i>
-          <a href = "{% url 'login' %}">Inbox</a>
-        </div>
+
+        <a href = "{% url 'email_list' %}"> 
+          <div class = "navigation-item">
+          <i class="bi bi-inbox"></i> Inbox
+          </div>
+        </a>
 
         <div class = "navigation-item">
           <i class="bi bi-people-fill"></i>
@@ -64,10 +68,12 @@
 
        <div class = "account-navigation">
         <span style="color: #F37D84;">Account</span>
-        <div class = "navigation-item">
-          <i class="bi bi-person-circle"></i>
-          <a href = "{% url 'login' %}">Account</a>
-        </div>
+
+        <a href = "{% url 'myprofile' %}">
+          <div class = "navigation-item">
+            <i class="bi bi-person-circle"></i> Account
+          </div>  
+        </a>
 
         <div class = "navigation-item">
           <i class="bi bi-gear-fill"></i>
@@ -88,15 +94,50 @@
       </div>
       <div class = "home-body-2">
         <div class = "welcome">
-          <span>Friday, October 24 • 10:00 PM</span>
-          <p style="font-size: 3em;font-weight: bold;">Daily Meeting With Product Development</p>
-          <span style="font-size: 1em;font-weight: bold;"><i class="bi bi-reply"></i>Reply</span>
+          {% if plans %}
+            {% for plan in plans %}
+              <span>{{ plan.date_sent|date:"l, F j, g:i A" }}</span>
+              <h1 class = "notification-msg" style="height: 3em;">{{ plan.subject }}</h1>
+              <span style="font-size: 1em;font-weight: bold;"><i class="bi bi-reply"></i>Reply</span>
+            {% endfor %}
+          {% else %}
+            <div class="no-tasks">No plans available.</div>
+          {% endif %}
         </div>
         <div class = "schedule">
           <h1>My Schedule</h1>
         </div>
         <div class = "taskboard">
           <h1>Task board</h1>
+          {% if emails %}
+            {% for email in emails %}
+              <div class = "taskboard-container">
+                <div class = "task-title">{{ email.subject }}</div>
+                <div class = "task-email">{{ email.fromUser}}</div>
+                <div class = "task-text">{{ email.content }}</div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="no-tasks">No emails available.</div>
+          {% endif %}
+    
+              <!-- <div class = "taskboard-container">
+                <div class = "task-title">Event Request</div>
+                <div class = "task-email">userone@101.com</div>
+                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+              </div>
+    
+              <div class = "taskboard-container">
+                <div class = "task-title">Event Request</div>
+                <div class = "task-email">userone@101.com</div>
+                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+              </div>
+    
+              <div class = "taskboard-container">
+                <div class = "task-title">Event Request</div>
+                <div class = "task-email">userone@101.com</div>
+                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+              </div> -->
         </div>
       </div>
 

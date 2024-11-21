@@ -9,6 +9,7 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
+
 }
 
 .landing-container {
@@ -91,25 +92,32 @@ body {
 }
 
 .signup-container{
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr;
     align-items: center;
     width: 100dvw;
     height: 100dvh;
+    
 }
 
 .signup-form {
+    grid-column: 1/2;
     display: flex;
-    width: 45%;
-    height: 100%;
+    /* width: 45%;*/
+    height: 100%; 
+    
+
 }
 
 .signup-bg{
+    grid-column: 2/-1;
     height: 100%;
+    grid-column: 2/-1;
     background-image: url("/static/img/LandingBG.png"), url("/static/img/Design1.png");
     background-size: cover, contain;
     background-repeat: no-repeat;
-    width: 55%;    
-    height: 100%;
+    /* width: 55%;    
+    height: 100%; */
     background-position: left, right;
     display: flex;
     flex-direction: column;
@@ -122,18 +130,22 @@ body {
 }
 
 .login-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
     align-items: center;
+    justify-content: center;
     width: 100dvw;
     height: 100dvh;
+    gap: 50px;
 }
 .login-bg {
+    grid-column: 1/2;
     height: 100%;
     background-image: url("/static/img/LoginBG.png");
     background-size: cover;
     background-repeat: no-repeat;
-    width: 55%;    
-    height: 100%;
+    /* width: 55%;    
+    height: 100%; */
     background-position: center;
     flex-shrink: 0;
     border-top-right-radius: 150px;
@@ -141,15 +153,19 @@ body {
 }
 
 .login-form{
+    grid-column: 2/-1;
     padding-right: 70px;
-    padding-left: 10px;
-    align-self: left;
-    display: flex;
+    /* flex-direction: column; */
+    /* width: 45%;
+     */
+     height: 100%;
+    width: 100%;
+    display:flex;
     flex-direction: column;
-    width: 45%;
-    height: 100%;
-    align-items: center;
+    gap: 1em;
+    /* align-items: center; */
     justify-content: center;
+    
     
 }
 .title {
@@ -187,14 +203,74 @@ align-items: center;
 
 }  
 
-a {
+.login-a{
     text-decoration: none;
+    color: 111111;
+    font-weight: bold;
+}
+
+
+.login-a:hover {
+    text-decoration: underline;
     color: #F37D84;
     font-weight: bold;
     padding: 0;
     margin: 0;
 }
 
+.line{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.line::before,
+.line::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ccc; /* Adjust color */
+    margin: 0 10px;
+}
+
+.line p {
+    font-size: 14px; /* Adjust font size */
+    color: #666;     /* Adjust text color */
+}
+
+.enternumber-button{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: solid 2px rgba(26,26,26,0.3);
+    background-color: #ffffff;
+    color: rgba(26,26,26,0.8);
+    width: 100%;
+    height: 55px;
+    
+}
+
+.enternumber-button:hover{
+    background-color: #F37D84;
+    border:none;
+    color: #ffffff;
+}
+
+.enternumber-button p{
+    flex-grow: 1;
+    font-weight: 600;
+}
+
+.enternumber-button:hover .bi {
+    color: #ffffff; 
+}
+
+
+.bi-telephone{
+    font-size: 30px;
+    color: #F37D84;
+    padding-left: 10px;
+}
 
 .home-container {
     display: flex;
@@ -301,25 +377,36 @@ a {
     border-radius: 100%;
 }
 
+.navigation-item:hover{
+    background-color: #FF0000;
+    color:#f4f4f4;
+}
+
+.navigation-item:hover > a{
+    background-color: #FF0000;
+    color:#f4f4f4;
+}
+
+.welcome {
+    font-weight: bold;
+}
+
 .home-body-2{
     display: grid;
-    
     gap: 2em;
-
     grid-template-areas: 
     "welcome taskboard"
     "schedule taskboard";
-
     grid-template-columns: 1fr 0.5fr;
     grid-template-rows: 0.45fr 0.55fr;
-
     width: 69%;
     height: 98%;
-    background-color: #F37D84;
-    opacity: 20%;
+    background-color: rgba(243, 125, 132, 0.4);
     border-radius: 20px;
     padding: 1em;
     color: #1A1A1A;
+    overflow: hidden;
+    position: relative;
 }
 
 .welcome{
@@ -338,12 +425,47 @@ a {
     display: flex;
     flex-direction: column;
     gap: 1em;
-    padding: 2em;
+    padding: 1em;
     border-radius: 10px;
     color: #1A1A1A;
-    background-color: #fdfdfd;
+    background-color: #ffffff;
+    opacity:   100%;
+    overflow-y: auto;
+
 }
 
+
+
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+.taskboard-container {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(222, 222, 222,0.5);
+    width: 300px;
+    height: 190px;
+    border-radius: 20px;
+    color: #1A1A1A;
+    justify-content: center;
+    /* align-items: center; */
+    padding: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    
+}
+
+.task-title{
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.task-text{
+    margin-top: 10px;
+    font-size: 18px;
+    line-height: 1.2;
+}
 .schedule{
     grid-area: schedule;
     display: flex;
@@ -355,6 +477,182 @@ a {
     background-color: #fdfdfd;
 }
 
+.enternum-container{
+    display: flex;
+    flex-direction: column;
+    width: 100dvw;
+    height: 100dvh;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.signin-otp{
+    background: url("/static/img/Otp_BG.png") center/cover no-repeat;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    flex-direction: column;
+    width: 100dvw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.col-12.signinotp{
+    display: flex;
+    flex-direction: column;
+}
+
+.signinotp-wrap1{
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30em;
+    height: 20em;
+    gap: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
 
 
+
+
+.enternum-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.enternum-wrap1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    width: 30em;
+    height: 20em;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.verifyotp-wrap1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    width: 30em;
+    height: 25em;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+}
+
+
+.otp-container{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.otp-digit {
+    width: 40px;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+  }
+
+
+  .otp-digit.entered {
+    border-color: #F37D84; /* Change to your desired color on hover */
+  }
+
+  .email-list-container{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding-left: 2em;
+    padding-right: 1.5em;
+    height: 100dvh;
+    width: 100dvw;
+    gap: 20px;
+  }
+
+  .email-list-navbar {
+    display: flex;
+    width: 100%;
+    height: 5em;
+    align-items: center;
+    gap: 1em;
+}
+
+.email-button-container{
+    display: flex;
+    width: inherit;
+    height: 2.5em;
+    gap: 1.7em;
+}
+
+
+.email-button-container .btn.btn-primary:hover{
+    background-color: #F37D84;
+}
+
+
+.email-compose-container{
+    display: flex;
+    flex-direction: row;
+    width: 8em;
+    padding: 0.5em;
+    background-color: #F37D84;
+    color: #f4f4f4;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+    margin-top: 1.5em;
+}
+
+.email-list{
+    display: flex;
+    flex-direction: column;
+    height: 25em;
+    width: 10em;
+    background-color: #808080;
+}
+
+.messages{
+    /* padding-left: 1em; */
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    align-self: self-start;
+    color: #d54444;
+    list-style-type: none;
+}
+
+.resetpassword-wrap1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    width: 35em;
+    height: 30em;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
 

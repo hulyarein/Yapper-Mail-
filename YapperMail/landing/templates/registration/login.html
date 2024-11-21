@@ -9,28 +9,46 @@
     rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
     crossorigin="anonymous" />
+    <!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js"></script>
+
+<!-- Firebase Auth (for authentication) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.4/firebase-auth.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/landing.css" />
 </head>
 <body>
     <div class = "login-container">
         <div class = "login-bg"></div>
-        <div class = "login-form">
-            <form class="row g-3" method="post">
+        <div >
+            <form class = "login-form" method="post">
                 {% csrf_token %}    
                 <p class="fs-3 fw-bold" style="color: #111111;" >Welcome <span class="fs-3 fw-bold" style="color: #F37D84;"> back </span></p> 
+                <p class="fs " style="color: #111111;" >Don't have an account? <a href="{% url 'signup' %}" class = "login-a">Create now</a></p>  
                 <div class="col-12">
-                    <input type="text" class="form-control form-control-lg" placeholder="Username" aria-label=".form-control-sm example" name="username">
+                    <input type="text" class="form-control form-control-lg" placeholder="Email" aria-label=".form-control-sm example" name="username">
                 </div>
                 <div class="col-12">
                     <input type="password" class="form-control form-control-lg" placeholder="Password" aria-label="First name" name="password">
                 </div>
+                <div class="col-12">
+                    <p class="fs" style="color: #111111; text-align: right;" ><a href="{% url 'enternumber' %}" class = "login-a">Forgot Password?</a></p>  
+                </div>
+                <div id="recaptcha-container"></div>
                 
                 <div class="col-12">
-                  <button type="submit" class="btn btn-primary fs-6 fw-bold" style="border-radius: 10px; border-color: #F37D84; background-color: #F37D84; width: 100%; height: 55px;">Sign in</button>
+                   
+                  <button type="submit" class="btn btn-primary fs-6 fw-bold" style="border-radius: 10px; border-color: #F37D84; background-color: #F37D84; width: 100%; height: 55px;"onclick="sendVerificationCode()">Sign in</button>
+                </div>
+                <div class = "col-12 line">
+                    <p style="text-align: center;">or</p>
                 </div>
 
-                <p class="fs  text-center" style="color: #111111;" >Have an account? <a href="{% url 'signup' %}">Sign up</a></p>  
+                <div class = "col-12">
+                    <button type="button" class="btn btn-primary enternumber-button" onclick="window.location.href='{% url 'signin_number' %}';"> <span class="bi bi-telephone"></span> <p>Sign in with phone number</p> </button>
+                </div>
+
+                
               </form>
         </div>
     </div>
@@ -38,5 +56,6 @@
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+    <script src="/static/js/landing.js"></script>
 </body>
 </html>
