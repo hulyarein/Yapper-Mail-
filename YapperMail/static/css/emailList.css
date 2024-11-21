@@ -1,0 +1,200 @@
+body {
+  background: linear-gradient(to bottom, #fcdfe0, #fce2e3, #fff1f1, #fff7f7);
+  min-height: 100vh;
+}
+
+.logoImage {
+  width: 250px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.searchCont {
+  height: 50px;
+  border-radius: 1000px;
+  padding: 20px;
+  padding-right: 55px;
+  font-size: 14px;
+  border-style: solid;
+  border-color: #f37d84;
+  width: 500px;
+  min-width: 30px;
+}
+
+.searchCont:focus {
+  outline: none;
+}
+
+.searchItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.searchIcon {
+  color: rgb(172, 170, 170);
+}
+
+.searchbutton {
+  margin-left: -50px;
+}
+
+.profPic {
+  width: 40px;
+  margin-right: 50px;
+  margin-left: 40px;
+}
+
+.backBut {
+  color: #f37d84;
+  font-size: 25px;
+  margin-left: 50px;
+}
+
+.arrangeCont {
+  margin-left: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.toggleButtons {
+  border-style: solid;
+  border-radius: 10px;
+  border-color: #fd7e84;
+  padding: 10px 30px;
+  margin-right: 20px;
+}
+
+.composeButton {
+  background-color: #f37d84;
+  color: white;
+  padding: 20px 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.composeDiv {
+  display: flex;
+  flex-direction: row;
+  margin-right: 50px;
+}
+
+.profDiv {
+  width: 60px;
+}
+
+.nameDiv {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subjectDiv {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contentDiv {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emailGrid {
+  display: grid;
+  grid-template-columns: 300px 300px 300px 300px;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 500px) {
+  .logoImage {
+    width: 150px;
+  }
+
+  .profPic {
+    width: 20px;
+    margin-right: 15px;
+    margin-left: 10px;
+  }
+
+  .allBut {
+    border-style: solid;
+    border-radius: 10px;
+    border-color: #fd7e84;
+    padding: 5px 15px;
+    margin-right: 10px;
+  }
+
+  .sentBut {
+    border-style: solid;
+    border-radius: 10px;
+    border-color: #fd7e84;
+    padding: 5px 15px;
+    margin-right: 10px;
+  }
+
+  .recBut {
+    border-style: solid;
+    border-radius: 10px;
+    border-color: #fd7e84;
+    padding: 5px 15px;
+    margin-right: 10px;
+  }
+
+  .composeButton {
+    background-color: #f37d84;
+    color: white;
+    padding: 15px 15px;
+    border-radius: 10px;
+  }
+}
+
+@media (min-width: 1371px) {
+  .emailGrid {
+    grid-template-columns: repeat(4, 300px);
+    /* Cleaner repetition */
+  }
+}
+
+@media (min-width: 1050px) and (max-width: 1370px) {
+  .emailGrid {
+    grid-template-columns: repeat(3, 300px);
+  }
+}
+
+@media (min-width: 700px) and (max-width: 1049px) {
+  .emailGrid {
+    grid-template-columns: repeat(2, 300px);
+  }
+}
+
+@media (max-width: 699px) {
+  .emailGrid {
+    grid-template-columns: repeat(1, 300px);
+  }
+  .arrangeCont {
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  .composeDiv {
+    display: flex;
+    flex-direction: row;
+    margin-right: 50px;
+    margin-top: 20px;
+  }
+}
