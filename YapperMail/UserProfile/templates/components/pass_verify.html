@@ -1,0 +1,46 @@
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="model-header flex justify-between mt-8 mx-5">
+        <h1 class="text-2xl">Confirm Changes?</h1>
+      </div>
+
+      <div
+        class="flex flex-col justify-center items-center mb-10 mt-2 mx-5 gap-3"
+      >
+        <p class="text-justify text-s">
+          For security purposes, we require you to input your password for every
+          changes you make to your profile.
+        </p>
+        <div class="error-message text-red-500"></div>
+        <input
+          type="password"
+          class="p-3 border-2 border-[#f37d84] rounded-md w-full mx-5"
+          name="pass_verification"
+          id="passVerify"
+          placeholder="Enter Password"
+        />
+      </div>
+
+      <div class="modal-end flex justify-end items-center mb-3 mx-5 gap-5">
+        <a data-bs-dismiss="modal" class="font-semibold hover:font-medium">
+          <label>Cancel</label>
+        </a>
+        <button
+          type="submit"
+          id="passVerifyBtn"
+          class="btn btn-primary font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] disabled:bg-gray-400 disabled:border-[#BDBDBD]"
+          disabled
+        >
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

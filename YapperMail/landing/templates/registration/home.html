@@ -1,127 +1,160 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yapper</title>
-  <link
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yapper</title>
+    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous" />
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet">
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/css/landing.css" />
-</head>
-<body>
-  <div class = "home-container">
-    <div class = "home-navbar">
-      <div class ="logoo"></div>
-      <form class="navbar-search" role="search">
-        <input class="form-control search-bar" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-primary" style="border-radius: 20px; border-color: #F37D84; background-color: #F37D84; width: 7em;" type="submit">Search</button>
-      </form>
-      <div class = "compose-container">
-        <i class="bi bi-plus-circle"></i>
-        <a class = "compose" href = "{% url 'login' %}">Compose</a>
-      </div>
+  </head>
+  <body>
+    <div class="home-container">
+      <div class="home-navbar">
+        <div class="logoo"></div>
+        <form class="navbar-search" role="search">
+          <input
+            class="form-control search-bar"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button
+            class="btn btn-primary"
+            style="
+              border-radius: 20px;
+              border-color: #f37d84;
+              background-color: #f37d84;
+              width: 7em;
+            "
+            type="submit"
+          >
+            Search
+          </button>
+        </form>
+        <div class="compose-container">
+          <i class="bi bi-plus-circle"></i>
+          <a class="compose" href="{% url 'login' %}">Compose</a>
+        </div>
 
-      <div class = "profile-container">
-        <i class="bi bi-bell" style="color:#F37D84"></i>
-        <i class="bi bi-person-circle" style="color:#DE3F2A"></i>
+        <div class="profile-container">
+          <i class="bi bi-bell" style="color: #f37d84"></i>
+          <i class="bi bi-person-circle" style="color: #de3f2a"></i>
+        </div>
       </div>
     </div>
-    <div class = "home-body">
-      <div class = "home-body-1">
-        <h3 style="color:#DE3F2A"><span style="font-weight: bold;">WELCOME</span>  {{ user.first_name|safe|escape }}</h3>
-       <div class = "navigation">
-        
-        <a href = "{% url 'home' %}">
-          <div class = "navigation-item">
-            <i class="bi bi-house-door-fill"></i> Dashboard
+    <div class="home-body">
+      <div class="home-body-1">
+        <h3 style="color: #de3f2a">
+          <span style="font-weight: bold">WELCOME</span> {{
+          user.first_name|safe|escape }}
+        </h3>
+        <div class="navigation">
+          <a href="{% url 'home' %}">
+            <div class="navigation-item">
+              <i class="bi bi-house-door-fill"></i> Dashboard
+            </div>
+          </a>
+
+          <a href="{% url 'email_list' %}">
+            <div class="navigation-item"><i class="bi bi-inbox"></i> Inbox</div>
+          </a>
+
+          <div class="navigation-item">
+            <i class="bi bi-people-fill"></i>
+            <a href="{% url 'login' %}">Team</a>
           </div>
-        </a>
 
-
-        <a href = "{% url 'email_list' %}"> 
-          <div class = "navigation-item">
-          <i class="bi bi-inbox"></i> Inbox
+          <div class="navigation-item">
+            <i class="bi bi-calendar"></i>
+            <a href="{% url 'login' %}">Calendar</a>
           </div>
-        </a>
 
-        <div class = "navigation-item">
-          <i class="bi bi-people-fill"></i>
-          <a href = "{% url 'login' %}">Team</a>
+          <div class="navigation-item">
+            <i class="bi bi-trash"></i>
+            <a href="{% url 'login' %}">Trash</a>
+          </div>
         </div>
 
-        <div class = "navigation-item">
-          <i class="bi bi-calendar"></i>
-          <a href = "{% url 'login' %}">Calendar</a>
+        <div class="account-navigation">
+          <span style="color: #f37d84">Account</span>
+
+          <a href="{% url 'myprofile' %}">
+            <div class="navigation-item">
+              <i class="bi bi-person-circle"></i> Account
+            </div>
+          </a>
+
+          <div class="navigation-item">
+            <i class="bi bi-gear-fill"></i>
+            <a href="{% url 'login' %}">Settings</a>
+          </div>
         </div>
 
-        <div class = "navigation-item">
-          <i class="bi bi-trash"></i>
-          <a href = "{% url 'login' %}">Trash</a>
+        <div class="recent-navigation">
+          <span style="color: #f37d84">Recent</span>
+          <div class="recent-navigation-container">
+            <div
+              class="recent-navigation-item"
+              style="background-color: green"
+            ></div>
+            <div
+              class="recent-navigation-item"
+              style="background-color: orange"
+            ></div>
+            <div
+              class="recent-navigation-item"
+              style="background-color: purple"
+            ></div>
+            <div
+              class="recent-navigation-item"
+              style="background-color: red"
+            ></div>
+            <div
+              class="recent-navigation-item"
+              style="background-color: blue"
+            ></div>
+          </div>
         </div>
-
-       </div>
-
-       <div class = "account-navigation">
-        <span style="color: #F37D84;">Account</span>
-
-        <a href = "{% url 'myprofile' %}">
-          <div class = "navigation-item">
-            <i class="bi bi-person-circle"></i> Account
-          </div>  
-        </a>
-
-        <div class = "navigation-item">
-          <i class="bi bi-gear-fill"></i>
-          <a href = "{% url 'login' %}">Settings</a>
-        </div>
-       </div>
-
-       <div class = "recent-navigation">
-        <span style="color: #F37D84;">Recent</span>
-        <div class = "recent-navigation-container">
-          <div class = "recent-navigation-item" style="background-color: green;"></div>
-          <div class = "recent-navigation-item"  style="background-color: orange;"></div>
-          <div class = "recent-navigation-item" style="background-color: purple;"></div>
-          <div class = "recent-navigation-item" style="background-color: red;"></div>
-          <div class = "recent-navigation-item" style="background-color: blue;"></div>
-        </div>
-       </div>
       </div>
-      <div class = "home-body-2">
-        <div class = "welcome">
-          {% if plans %}
-            {% for plan in plans %}
-              <span>{{ plan.date_sent|date:"l, F j, g:i A" }}</span>
-              <h1 class = "notification-msg" style="height: 3em;">{{ plan.subject }}</h1>
-              <span style="font-size: 1em;font-weight: bold;"><i class="bi bi-reply"></i>Reply</span>
-            {% endfor %}
-          {% else %}
-            <div class="no-tasks">No plans available.</div>
+      <div class="home-body-2">
+        <div class="welcome">
+          {% if plans %} {% for plan in plans %}
+          <span>{{ plan.date_sent|date:"l, F j, g:i A" }}</span>
+          <h1 class="notification-msg" style="height: 3em">
+            {{ plan.subject }}
+          </h1>
+          <span style="font-size: 1em; font-weight: bold"
+            ><i class="bi bi-reply"></i>Reply</span
+          >
+          {% endfor %} {% else %}
+          <div class="no-tasks">No plans available.</div>
           {% endif %}
         </div>
-        <div class = "schedule">
+        <div class="schedule">
           <h1>My Schedule</h1>
         </div>
-        <div class = "taskboard">
+        <div class="taskboard">
           <h1>Task board</h1>
-          {% if emails %}
-            {% for email in emails %}
-              <div class = "taskboard-container">
-                <div class = "task-title">{{ email.subject }}</div>
-                <div class = "task-email">{{ email.fromUser}}</div>
-                <div class = "task-text">{{ email.content }}</div>
-              </div>
-            {% endfor %}
-          {% else %}
-            <div class="no-tasks">No emails available.</div>
+          {% if emails %} {% for email in emails %}
+          <div class="taskboard-container">
+            <div class="task-title">{{ email.subject }}</div>
+            <div class="task-email">{{ email.fromUser}}</div>
+            <div class="task-text">{{ email.content }}</div>
+          </div>
+          {% endfor %} {% else %}
+          <div class="no-tasks">No emails available.</div>
           {% endif %}
-    
-              <!-- <div class = "taskboard-container">
+
+          <!-- <div class = "taskboard-container">
                 <div class = "task-title">Event Request</div>
                 <div class = "task-email">userone@101.com</div>
                 <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
@@ -141,13 +174,10 @@
         </div>
       </div>
 
-    </div>
-    
-    <!-- <form method="post" action="{% url 'landing' %}">
+      <!-- <form method="post" action="{% url 'landing' %}">
       {% csrf_token %}
       <button type="submit">Logout</button>
     </form> -->
-  </div>
-  
-</body>
+    </div>
+  </body>
 </html>
