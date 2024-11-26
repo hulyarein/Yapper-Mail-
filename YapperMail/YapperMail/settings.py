@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'landing',
     'EmailCompositionAndManagement',
     'compressor',
+    'phonenumber_field',
+    'TeamEmails',
+    'Chatbot',
 ]
 
 MIDDLEWARE = [
@@ -56,11 +59,21 @@ MIDDLEWARE = [
 
 # Flobite
 
-# COMPRESS_ROOT = BASE_DIR / '/static/'
+'''COMPRESS_ROOT = BASE_DIR / 'static'
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)'''
+
+'''COMPRESS_ROOT = BASE_DIR / 'static'
 
 # COMPRESS_ENABLED = True
 
-# STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)'''
 
 # ari ra kutob flowbite
 

@@ -1,0 +1,360 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f4f4f4;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.landing-container {
+    display: flex;
+    flex-direction: column;
+    width: 100dvw;
+    height: 100dvh;
+
+}
+
+
+.home-list{
+    display: flex;
+    width: 100%;
+    height: 40px;
+    padding-left: 40px;
+    gap: 15px;
+    align-items: center;
+}
+
+.navbarr {
+    display: flex;
+    width: 100%;
+    height: 4em;
+    align-items: center;
+    /* padding: 20px; */
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-top: 10px;
+}
+
+.navbar-left {
+    display: flex;
+    align-self: flex-start;
+    width: 16em;
+    height: 4em;
+    padding: 0;
+    gap: 30px;
+    align-items: center;
+}
+
+.logoo {
+    background-image: url("/static/img/LOGO.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 140px;    
+    height: 40px;
+    background-position: center;
+}
+
+.second {
+    padding-left: 5em;
+    padding-right: 2em;
+    display: flex;
+    justify-content:space-between;
+    width: 100%;
+    height: 100%;
+}
+
+.second-text {
+    display: flex;
+    justify-content: center;
+    text-align: left;
+    align-items: start;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.bg-placeholder{
+    width: 100%;
+    height: 100%;
+    background-image: url("/static/img/LandingPic.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 50em;    
+    height: 45em;
+    background-position: right;
+    display: flex;
+    flex-shrink: 0;
+}
+
+.signup-container{
+    display: flex;
+    align-items: center;
+    width: 100dvw;
+    height: 100dvh;
+}
+
+.signup-form {
+    display: flex;
+    width: 45%;
+    height: 100%;
+}
+
+.signup-bg{
+    height: 100%;
+    background-image: url("/static/img/LandingBG.png"), url("/static/img/Design1.png");
+    background-size: cover, contain;
+    background-repeat: no-repeat;
+    width: 55%;    
+    height: 100%;
+    background-position: left, right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    flex-shrink: 0;
+    border-top-left-radius: 150px;
+    border-bottom-left-radius: 150px;
+    padding-left: 50px;
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    width: 100dvw;
+    height: 100dvh;
+}
+.login-bg {
+    height: 100%;
+    background-image: url("/static/img/LoginBG.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 55%;    
+    height: 100%;
+    background-position: center;
+    flex-shrink: 0;
+    border-top-right-radius: 150px;
+    border-bottom-right-radius: 150px;
+}
+
+.login-form{
+    padding-right: 70px;
+    padding-left: 10px;
+    align-self: left;
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    
+}
+.title {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.search-bar{
+    border-radius: 10em;
+    width: 35em;
+}
+
+
+.vmiddle {
+display: flex;
+align-items: center;
+}
+
+.form-control:focus {
+    border-color: #FF0000;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.5);
+}
+
+.form-control-lg {   
+    font-size: 15px !important; 
+    height: 55px;
+    color: rgba(26,26,26,0.5);
+    border: solid 2px;
+    border-color: rgba(26,26,26,0.5);
+
+}  
+
+a {
+    text-decoration: none;
+    color: #F37D84;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+}
+
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    background-image: url("/static/img/HomeBG.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100dvw;
+    height: 100dvh;
+    background-color: #f4f4f4;
+}
+
+.navbar-search{
+    display: flex;
+    margin-left: auto;
+    gap: 0.5em;
+    margin-right: 2em;
+}
+
+.compose-container{
+    display: flex;
+    flex-direction: row;
+    width: 8em;
+    padding: 0.5em;
+    background-color: #F37D84;
+    color: #f4f4f4;
+    border-radius: 10em;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.compose{
+    color: #f4f4f4
+}
+
+.home-navbar {
+    display: flex;
+    width: 100%;
+    height: 7em;
+    align-items: center;
+    /* padding: 20px; */
+    padding-left: 40px;
+    padding-top: 10px;
+    gap: 1em;
+}
+
+.profile-container{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+    font-size: 2em;
+    margin-right: 1em;;
+}
+
+.home-body{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.home-body-1{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 100%;
+    padding: 2em;
+    gap:2em;
+}
+
+
+.navigation{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.navigation-item{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+
+    width: 100%;
+    height: 3em;
+    border-radius: 10em;
+    justify-content: left;
+    align-items: center;
+    padding: 1em;
+    font-size: 1rem;
+    color:#F37D84;
+}
+
+.recent-navigation-container{
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    margin-top: 1em;
+}
+
+.recent-navigation-item{
+    height: 5dvh;
+    width: 5dvh;
+    border-radius: 100%;
+}
+
+.home-body-2{
+    display: grid;
+    
+    gap: 2em;
+
+    grid-template-areas: 
+    "welcome taskboard"
+    "schedule taskboard";
+
+    grid-template-columns: 1fr 0.5fr;
+    grid-template-rows: 0.45fr 0.55fr;
+
+    width: 69%;
+    height: 98%;
+    background-color: #F37D84;
+    opacity: 20%;
+    border-radius: 20px;
+    padding: 1em;
+    color: #1A1A1A;
+}
+
+.welcome{
+    grid-area: welcome;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em;
+    border-radius: 10px;
+    color: #1A1A1A;
+    background-color: #fdfdfd;
+}
+
+.taskboard{
+    grid-area: taskboard;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em;
+    border-radius: 10px;
+    color: #1A1A1A;
+    background-color: #fdfdfd;
+}
+
+.schedule{
+    grid-area: schedule;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em;
+    border-radius: 10px;
+    color: #1A1A1A;
+    background-color: #fdfdfd;
+}
+
+
+
+
