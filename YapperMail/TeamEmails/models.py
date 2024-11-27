@@ -5,7 +5,7 @@ from landing.models import CustomUser as User
 # Create your models here.
 
 class TeamEmail(models.Model):
-    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name='team_sent_emails')
+    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name='team_sent_emails',null=True)
     adminUsers = models.ManyToManyField(User, related_name="team_admin_Users")
     memberUsers = models.ManyToManyField(User, related_name="team_member_Users")
     subject = models.CharField(max_length=500)
@@ -19,7 +19,7 @@ class TeamEmail(models.Model):
 
 
 class TeamEmailFiles(models.Model):
-    emailId = models.ForeignKey(TeamEmail,on_delete=models.CASCADE)
+    emailId = models.ForeignKey(TeamEmail,on_delete=models.CASCADE,null=True)
     file = models.FileField(upload_to='uploads/')
 
 
@@ -28,8 +28,8 @@ class TeamEmailFiles(models.Model):
     
 
 class TeamReply(models.Model):
-    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name="team_reply_to_email")
-    emailId = models.ForeignKey(TeamEmail,on_delete=models.CASCADE,related_name="team_emialReply")
+    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name="team_reply_to_email",null=True)
+    emailId = models.ForeignKey(TeamEmail,on_delete=models.CASCADE,related_name="team_emialReply",null=True)
     content = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)   
 
@@ -38,9 +38,9 @@ class TeamReply(models.Model):
     
 
 class TeamReplyFiles(models.Model):
-    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name="team_reply_files_user")
+    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name="team_reply_files_user",null=True)
     emailId = models.ForeignKey(TeamEmail,on_delete=models.CASCADE,related_name="team_emialReplyFiles",null=True,blank=True)
-    replyid = models.ForeignKey(TeamReply,on_delete=models.CASCADE,related_name="team_reply_file_replyid")
+    replyid = models.ForeignKey(TeamReply,on_delete=models.CASCADE,related_name="team_reply_file_replyid",null=True)
     file = models.FileField(upload_to='uploads/')
 
     def __str__(self):

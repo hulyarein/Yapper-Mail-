@@ -15,8 +15,8 @@ class TemporaryUser(models.Model):
     
 
 class Email(models.Model):
-    fromUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='sent_emails')
-    toUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='receive_emails')
+    fromUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='sent_emails',null=True)
+    toUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='receive_emails',null=True)
     subject = models.CharField(max_length=500)
     content = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)
@@ -28,9 +28,9 @@ class Email(models.Model):
 
 
 class EmailFiles(models.Model):
-    fromUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='sent_emailFiles')
-    toUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='receive_emailFiles')
-    emailId = models.ForeignKey(Email,on_delete=models.CASCADE)
+    fromUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='sent_emailFiles',null=True)
+    toUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='receive_emailFiles',null=True)
+    emailId = models.ForeignKey(Email,on_delete=models.CASCADE,null=True)
     file = models.FileField(upload_to='uploads/')
 
 
@@ -39,8 +39,8 @@ class EmailFiles(models.Model):
     
 
 class Reply(models.Model):
-    fromUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name="reply_to_email")
-    emailId = models.ForeignKey(Email,on_delete=models.CASCADE,related_name="emialReply")
+    fromUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name="reply_to_email",null=True)
+    emailId = models.ForeignKey(Email,on_delete=models.CASCADE,related_name="emialReply",null=True)
     content = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)   
 
@@ -49,9 +49,9 @@ class Reply(models.Model):
     
 
 class ReplyFiles(models.Model):
-    fromUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name="reply_files_user")
+    fromUser = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name="reply_files_user",null=True)
     emailId = models.ForeignKey(Email,on_delete=models.CASCADE,related_name="emialReplyFiles",null=True,blank=True)
-    replyid = models.ForeignKey(Reply,on_delete=models.CASCADE,related_name="reply_file_replyid")
+    replyid = models.ForeignKey(Reply,on_delete=models.CASCADE,related_name="reply_file_replyid",null=True)
     file = models.FileField(upload_to='uploads/')
 
     def __str__(self):

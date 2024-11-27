@@ -10,7 +10,7 @@ from urllib.parse import unquote
 import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
-from landing import models
+from landing.models import *
 
 
 # Create your views here.
@@ -27,7 +27,7 @@ def email_composition(request,pk):
 
             try:
                 fromUser = request.user
-                toUserDatabase = User.objects.get(email = toUser)
+                toUserDatabase = CustomUser.objects.get(email = toUser)
                 email = Email(
                     fromUser=fromUser,
                     toUser=toUserDatabase,
@@ -68,7 +68,7 @@ def email_sent_view(request,pk,ok):
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
 
     #userRep = TemporaryUser.objects.get(id = pk)
-    userRep = User.objects.get(id = pk)
+    userRep = CustomUser.objects.get(id = pk)
 
 
     if request.method == "POST":
@@ -122,7 +122,7 @@ def email_reply_view(request):
 
             try:
                 emailRep = Email.objects.get(id = pk)
-                userRep = models.CustomUser.objects.get(id = 3)
+                userRep = CustomUser.objects.get(id = 3)
 
                 replyModel = Reply(
                     fromUser = userRep,
@@ -297,9 +297,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
 
 def download_file(request, filename):
+    print(BASE_DIR)
+    print(UPLOAD_DIRECTORY)
     filename = unquote(filename)
 
-    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY, filename))
+    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY,'media', filename))
 
     print("Requested filename:", filename)
     print("Full file path:", file_path)
