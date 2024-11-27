@@ -12,6 +12,11 @@
       crossorigin="anonymous"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static 'images/logo2.png' %}"
+    />
     <title>Yapper | Profile</title>
   </head>
   <body class="bg-[#F4F4F4]">
@@ -40,9 +45,11 @@
           <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <div class="profilePic p-6 flex justify-between items-center">
               <label class="mx-10 font-medium">Profile Picture</label>
-              <img {% if profilepic %} src="{{ profilepic.url }}" {% else %}
-              src="{% static "images/default_profile.jpg" %}" {% endif %}
-              alt="nayeon" class="rounded-full h-16 w-16 mx-10" />
+              <img
+                src="{{ profilepic }}"
+                alt="nayeon"
+                class="rounded-full h-16 w-16 mx-10"
+              />
             </div>
           </a>
         </div>

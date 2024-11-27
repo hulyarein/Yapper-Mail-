@@ -12,11 +12,7 @@
         const profileForm = document.getElementById("ChangeProfileForm");
 
         // Resets modal if opened previously
-        {% if profilepic %}
-          profilePic.src = "{{profilepic.url}}";
-        {% else %}
-          profilePic.src = "{% static "images/default_profile.jpg" %}";
-        {% endif %}
+        profilePic.src = "{{ profilepic }}";
         saveProfile.style.display = "none";
         removePhotoBtn.style.display = "block";
         profileInput.value = "";
@@ -128,10 +124,12 @@
       </div>
 
       <div class="flex flex-col justify-center items-center mb-10 mt-2 gap-3">
-        <img {% if profilepic %} src="{{ profilepic.url }} {% else %} src="{%
-        static "images/default_profile.jpg" %}" {% endif %} alt="profilepic"
-        id="profilepic" class="rounded-full h-96 w-96 border-2 border-[#f37d84]"
-        data-default-src="{% static "images/default_profile.jpg" %}" />
+        <img
+          src="{{ profilepic }}"
+          alt="profilepic"
+          id="profilepic"
+          class="rounded-full h-96 w-96 border-2 border-[#f37d84]"
+        />
       </div>
 
       <form

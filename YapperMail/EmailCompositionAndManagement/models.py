@@ -3,15 +3,15 @@ from django.contrib.auth.models import User
 from landing.models import *
 # Create your models here.
 
-# class TemporaryUser(models.Model):
+class TemporaryUser(models.Model):
     
-#     userEmail = models.CharField(max_length=100)
-#     firstname = models.CharField(max_length=100)
-#     lastname = models.CharField(max_length=100)
-#     username = models.CharField(max_length=100)
+    userEmail = models.CharField(max_length=100)
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
     
-#     def __str__(self):
-#         return f"{self.userEmail}"
+    def __str__(self):
+        return f"{self.userEmail}"
     
 
 class Email(models.Model):

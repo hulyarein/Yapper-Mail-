@@ -24,11 +24,7 @@
       </div>
   </div>
     <img
-    {% if profilepic %}
-    src="{{ profilepic.url }}"
-    {% else %}
-    src="{% static "images/default_profile.jpg" %}"
-    {% endif %}
+    src="{{ profile_picture_url }}"
     alt="nayeon"
     class="rounded-full h-12 w-12"
   />
