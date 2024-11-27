@@ -191,8 +191,22 @@
             <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
         </div>
         {% if userRep.id == emailCont.fromUser.id %}
-        <div class="deletePost">🗑</div>
-        <img src="{%static 'images/Edit.png'%}" class="editPost">
+
+        {% if emailCont.isDeleted == False %}
+            <div class="deletePost">🗑</div>
+            <img src="{%static 'images/Edit.png'%}" class="editPost">
+        {% endif %}
+
+        {% if emailCont.isDeleted == True %}
+            <div class="deletePost" class="flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
+                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
+                </svg>
+            </div>
+        {% endif %}
+            
+
         {% endif %}
         <div style="display: none;" class="numEmail">{{emailCont.id}}</div>
         <div class="userRephold" style="display: none;">{{userRep.id}}</div>
@@ -284,6 +298,8 @@
 
             <div id="fileList">
             </div>
+
+            {% if emailCont.isDeleted == False %}
             <div
                 style="display: flex; flex-direction: row; justify-content: center; margin-bottom: 10px; margin-left: 10px;">
                 {{form.message}}
@@ -295,6 +311,7 @@
                 </button>
                 <input type="file" id="fileInput" name="file" multiple style="display:none;">
             </div>
+            {% endif %}
     </div>
     </form>
 
@@ -353,11 +370,11 @@
         }
         $(".deletePost").click(function (e) {
             $.ajax({
-                url: `/emailmanagement/deleteEmail`,  // 
+                url: `/emailmanagement/deleteEmail`,
                 type: 'POST',
-                data: JSON.stringify({ "delId": parseInt($(".numEmail").text()) }),  // 
-                contentType: 'application/json',  // 
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // 
+                data: JSON.stringify({ "delId": parseInt($(".numEmail").text()) }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 success: function (response) {
                     console.log("Email updated successfully:", response);
                     if (response.message = 'Email deleted successfully.') {
@@ -369,8 +386,8 @@
                     console.error('An error occurred:', error.responseJSON);
                 }
             });
-
         })
+
         var repedit = document.querySelectorAll(".editReply")
 
         for (a of repedit) {

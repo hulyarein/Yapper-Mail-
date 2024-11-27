@@ -321,6 +321,7 @@ def emailListView(request):
     #userVar = TemporaryUser.objects.get(id = 1)
     userVar = request.user
     emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
+    deletedEmails = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
     return render(request,'emailList.html',{'form':form,'emails':emailsVar,'LogUser':userVar})
 
 def sentEmailList(request):
@@ -381,7 +382,24 @@ def sentEmailList(request):
                     for email in emailsVar
                 ]
 
-                # 
+                return JsonResponse({'emails': email_data}, status=200)
+            
+            elif data.get('sentNum') == 5:
+                #userVar = TemporaryUser.objects.get(id=1)
+                userVar = request.user
+                emailsVar = Email.objects.filter(Q(isDeleted = True))
+
+                email_data = [
+                    {
+                        "id": email.id,
+                        "subject": email.subject,
+                        "content": email.content,
+                        "fromUser": email.fromUser.email,
+                        "toUser":email.toUser.email
+                    }
+                    for email in emailsVar
+                ]
+                
                 return JsonResponse({'emails': email_data}, status=200)
             
             else:
@@ -403,12 +421,18 @@ def deleteEmailFunc(request):
         if not email_id:
             return JsonResponse({'message': 'Email ID is required.'}, status=400)
 
-        #
         emailsVar = Email.objects.get(id=email_id)
-        emailsVar.isDeleted = True
-        emailsVar.save()
 
-        return JsonResponse({'message': 'Email deleted successfully.'}, status=200)
+        if emailsVar.isDeleted:
+            emailsVar.isDeleted = False
+            emailsVar.save()
+
+            return JsonResponse({'message': 'Email recovered successfully.'}, status=200)
+        else:
+            emailsVar.isDeleted = True
+            emailsVar.save()
+
+            return JsonResponse({'message': 'Email deleted successfully.'}, status=200)
 
     except ObjectDoesNotExist:
         return JsonResponse({'message': 'Email not found.'}, status=404)
