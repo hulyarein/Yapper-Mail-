@@ -108,15 +108,27 @@ def compose_email_details(request):
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
 def team_emailListView(request):
-    form = TeamSearchForm()
+    try:
+        form = TeamSearchForm()
 
-    #userVar = TemporaryUser.objects.get(id = 1)
-    userVar = request.user
-    emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
-    emailsVarMe = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
+        userVar = request.user
 
-    combined_emails = emailsVar.union(emailsVarMe)
-    return render(request,'TeamemailList.html',{'form':form,'emails':combined_emails,'LogUser':userVar})
+        emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted=False))
+        emailsVarMe = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted=False))
+
+        combined_emails = emailsVar.union(emailsVarMe)
+
+        return render(request, 'TeamemailList.html', {
+            'form': form,
+            'emails': combined_emails,
+            'LogUser': userVar,
+        })
+
+    except ObjectDoesNotExist as e:
+        return HttpResponse(f"Error: {str(e)}", status=404)
+
+    except Exception as e:
+        return HttpResponse(f"An unexpected error occurred: {str(e)}", status=500)
 
 def team_sentEmailList(request):
     if request.method == "POST":
@@ -205,12 +217,11 @@ def team_sentEmailList(request):
     return JsonResponse({'emails': "not Post"}, status=400)
 
 def team_email_sent_view(request,pk,ok):
-    getEmail = TeamEmail.objects.get(id = ok)
+    getEmail = get_object_or_404(TeamEmail, id=ok)
+    userRep = get_object_or_404(User, id=pk)
 
-    getFiles = TeamEmailFiles.objects.filter(emailId = getEmail)
-
-    #userRep = TemporaryUser.objects.get(id = pk)
-    userRep = User.objects.get(id = pk)
+    # Get associated files
+    getFiles = TeamEmailFiles.objects.filter(emailId=getEmail)
 
 
     if request.method == "POST":
@@ -277,8 +288,12 @@ def team_download_file(request, filename):
 
 
 def team_edit_email(request,pk,uk):
-    getEmail = TeamEmail.objects.get(id = pk)
-    getFiles = TeamEmailFiles.objects.filter(emailId = getEmail)
+
+    getEmail = get_object_or_404(TeamEmail, id=pk)
+
+    getFiles = TeamEmailFiles.objects.filter(emailId=getEmail)
+
+    emess = "False"
     
     if request.method == "POST":
         form = TeamEditEmailForm(request.POST)
@@ -306,11 +321,11 @@ def team_edit_email(request,pk,uk):
                 return redirect(f'../../emailSentView/{uk}/{pk}')
             except ObjectDoesNotExist:
                 error_message = True
+            except Exception as e:
+                error_mes = f"An unexpected error occurred: {str(e)}"
         else:
             print("not valid")
-
-
-
+            emess = "True"
 
     else:
         initialValue = {
@@ -319,7 +334,7 @@ def team_edit_email(request,pk,uk):
         }
         form = TeamEditEmailForm(initial = initialValue)
 
-    return render(request,"teameditEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk})
+    return render(request,"teameditEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk,"errormes":emess})
 
 def team_editExistingImage(request,pk):
     '''getEmail = Email.objects.get(id = pk)
@@ -353,8 +368,9 @@ def team_editExistingImage(request,pk):
 
 
 def team_edit_reply(request,pk,uk):
-    getReply = TeamReply.objects.get(id = pk)
-    getReplyFiles = TeamReplyFiles.objects.filter(replyid = getReply)
+    getReply = get_object_or_404(TeamReply, id=pk)
+    getReplyFiles = TeamReplyFiles.objects.filter(replyid=getReply)
+    errorrep = "False"
     if request.method == "POST":
         form = TeamEditReplyForm(request.POST)
         if form.is_valid():
@@ -381,8 +397,8 @@ def team_edit_reply(request,pk,uk):
 
             except ObjectDoesNotExist:
                 print("Does Not exist")
-
-
+        else:
+            errorrep = "True"
 
     else:
         initialValue = {
@@ -390,7 +406,7 @@ def team_edit_reply(request,pk,uk):
         }
         form = TeamEditReplyForm(initial=initialValue)
 
-    return render(request,"teameditReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk})
+    return render(request,"teameditReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk,"errorrep":errorrep})
 
 def team_existingReplyFile(request, pk):
     if request.method == 'POST':
