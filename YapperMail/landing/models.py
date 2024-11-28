@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class CustomUser(AbstractUser):
-    pnumber = models.CharField(max_length=13, unique=True)  # Add pnumber field
+    pnumber = models.CharField(max_length=13, unique=True, default="+1234567890")  # Add pnumber field
 
     def __str__(self):
         return self.username

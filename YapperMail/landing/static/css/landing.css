@@ -656,3 +656,7 @@ align-items: center;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+a{
+    color: #F37D84;
+    text-decoration: none;
+}
