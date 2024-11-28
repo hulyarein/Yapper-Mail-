@@ -3,7 +3,7 @@ from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm
 from .models import Email,EmailFiles,TemporaryUser,Reply,ReplyFiles
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist,ValidationError
 from django.http import FileResponse, Http404
 import os
 from urllib.parse import unquote
@@ -11,6 +11,8 @@ import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
 from landing.models import *
+from django.contrib import messages
+from django.db import IntegrityError,DatabaseError
 
 
 # Create your views here.
@@ -50,8 +52,15 @@ def email_composition(request,pk):
                     print("No files were uploaded.")
 
                 return redirect('emailListView')
-            except ObjectDoesNotExist:
+            except CustomUser.DoesNotExist:
                 error_message = True
+            except IntegrityError as e:
+                error_message = True
+                messages.error(request, f"Database error: {e}")
+            except Exception as e:
+                error_message = True
+                print(f"Unexpected error: {e}")
+                messages.error(request, "An unexpected error occurred. Please try again.")
         else:
             print("Not working")
             print(form.errors)
@@ -63,12 +72,10 @@ def email_composition(request,pk):
 
 
 def email_sent_view(request,pk,ok):
-    getEmail = Email.objects.get(id = ok)
 
-    getFiles = EmailFiles.objects.filter(emailId = getEmail)
-
-    #userRep = TemporaryUser.objects.get(id = pk)
-    userRep = CustomUser.objects.get(id = pk)
+    getEmail = get_object_or_404(Email, id=ok)
+    userRep = get_object_or_404(CustomUser, id=pk)
+    getFiles = EmailFiles.objects.filter(emailId=getEmail)
 
 
     if request.method == "POST":
@@ -109,6 +116,7 @@ def email_sent_view(request,pk,ok):
     
     allRep = Reply.objects.filter(emailId = getEmail)
     allRepFiles = ReplyFiles.objects.filter(emailId = getEmail)
+
         
     return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep})
 
@@ -145,9 +153,10 @@ def email_reply_view(request):
     return render(request,"emailReceiveView.html",{'form':form})
 
 def edit_email(request,pk,uk):
-    getEmail = Email.objects.get(id = pk)
-    getFiles = EmailFiles.objects.filter(emailId = getEmail)
+    getEmail = get_object_or_404(Email, id=pk)
+    getFiles = EmailFiles.objects.filter(emailId=getEmail)
     error_message = "Flase"
+    error_mes = ""
     
     if request.method == "POST":
         form = EditEmailForm(request.POST)
@@ -176,8 +185,12 @@ def edit_email(request,pk,uk):
                     print("No files were uploaded.")
 
                 return redirect(f'../../emailSentView/{uk}/{pk}')
-            except Exception:
-                error_mess = True
+            except CustomUser.DoesNotExist:
+                error_mes = "The recipient does not exist."
+            except ValidationError as e:
+                error_mes= f"Validation error: {str(e)}"
+            except Exception as e:
+                error_mes = f"An unexpected error occurred: {str(e)}"
         else:
             error_message= "True"
             print("not valid")
@@ -226,8 +239,8 @@ def editExistingImage(request,pk):
 
 def edit_reply(request,pk,uk):
     error_messagerep = "False"
-    getReply = Reply.objects.get(id = pk)
-    getReplyFiles = ReplyFiles.objects.filter(replyid = getReply)
+    getReply = get_object_or_404(Reply, id=pk)
+    getReplyFiles = ReplyFiles.objects.filter(replyid=getReply)
     if request.method == "POST":
         form = EditReplyForm(request.POST)
         if form.is_valid():
@@ -318,11 +331,64 @@ def download_file(request, filename):
 def emailListView(request):
     form = SearchForm()
 
-    #userVar = TemporaryUser.objects.get(id = 1)
-    userVar = request.user
-    emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
-    deletedEmails = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
+    try:
+        userVar = request.user
+        if not CustomUser.objects.filter(id=userVar.id).exists():
+            raise ObjectDoesNotExist("The logged-in user no longer exists in the database.")
+
+        emailsVar = Email.objects.filter(
+            (Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted=False)
+        )
+        deletedEmails = Email.objects.filter(
+            (Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted=True)
+        )
+
+    except ObjectDoesNotExist:
+        emailsVar = []
+        deletedEmails = []
+        form = None
+        return render(
+            request,
+            'emailList.html',
+            {
+                'form': form,
+                'emails': emailsVar,
+                'LogUser': None,
+                'error_message': "User or related data does not exist.",
+            },
+        )
+
+    except DatabaseError as db_err:
+        print(f"Database error: {db_err}")
+        return render(
+            request,
+            'emailList.html',
+            {
+                'form': None,
+                'emails': [],
+                'LogUser': None,
+                'error_message': "A database error occurred. Please try again later.",
+            },
+        )
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return render(
+            request,
+            'emailList.html',
+            {
+                'form': None,
+                'emails': [],
+                'LogUser': None,
+                'error_message': "An unexpected error occurred. Please contact support.",
+            },
+        )
+
     return render(request,'emailList.html',{'form':form,'emails':emailsVar,'LogUser':userVar})
+
+
+    
+
 
 def sentEmailList(request):
     if request.method == "POST":
@@ -414,14 +480,14 @@ def sentEmailList(request):
 
 
 def deleteEmailFunc(request):
+    data = json.loads(request.body)
+    email_id = data.get('delId')
+
+    if not email_id:
+        return JsonResponse({'message': 'Email ID is required.'}, status=400)
+
+    emailsVar = get_object_or_404(Email, id=email_id)
     try:
-        data = json.loads(request.body)
-        email_id = data.get('delId')
-
-        if not email_id:
-            return JsonResponse({'message': 'Email ID is required.'}, status=400)
-
-        emailsVar = Email.objects.get(id=email_id)
 
         if emailsVar.isDeleted:
             emailsVar.isDeleted = False
@@ -433,10 +499,9 @@ def deleteEmailFunc(request):
             emailsVar.save()
 
             return JsonResponse({'message': 'Email deleted successfully.'}, status=200)
-
-    except ObjectDoesNotExist:
+    except Http404:
         return JsonResponse({'message': 'Email not found.'}, status=404)
-
+    
     except json.JSONDecodeError:
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
@@ -456,7 +521,7 @@ def deleteReplyFunc(request):
             return JsonResponse({'message': 'Reply ID is required.'}, status=400)
 
         # 
-        replyVar = Reply.objects.get(id=reply_id)
+        replyVar = get_object_or_404(Reply, id=reply_id)
         replyVar.delete()
 
         return JsonResponse({'message': 'Reply deleted successfully.'}, status=200)
