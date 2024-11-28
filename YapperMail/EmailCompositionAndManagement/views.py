@@ -147,6 +147,7 @@ def email_reply_view(request):
 def edit_email(request,pk,uk):
     getEmail = Email.objects.get(id = pk)
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
+    error_message = "Flase"
     
     if request.method == "POST":
         form = EditEmailForm(request.POST)
@@ -175,14 +176,11 @@ def edit_email(request,pk,uk):
                     print("No files were uploaded.")
 
                 return redirect(f'../../emailSentView/{uk}/{pk}')
-            except ObjectDoesNotExist:
-                error_message = True
+            except Exception:
+                error_mess = True
         else:
+            error_message= "True"
             print("not valid")
-
-
-
-
     else:
         initialValue = {
             'toUser':getEmail.toUser.email,
@@ -191,7 +189,7 @@ def edit_email(request,pk,uk):
         }
         form = EditEmailForm(initial = initialValue)
 
-    return render(request,"editEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk})
+    return render(request,"editEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk,"errorMess":error_message})
 
 def editExistingImage(request,pk):
     '''getEmail = Email.objects.get(id = pk)
@@ -227,6 +225,7 @@ def editExistingImage(request,pk):
 
 
 def edit_reply(request,pk,uk):
+    error_messagerep = "False"
     getReply = Reply.objects.get(id = pk)
     getReplyFiles = ReplyFiles.objects.filter(replyid = getReply)
     if request.method == "POST":
@@ -255,16 +254,15 @@ def edit_reply(request,pk,uk):
 
             except ObjectDoesNotExist:
                 print("Does Not exist")
-
-
-
+        else:
+            error_messagerep = "True"
     else:
         initialValue = {
             'description':getReply.content
         }
         form = EditReplyForm(initial=initialValue)
 
-    return render(request,"editReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk})
+    return render(request,"editReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk,"errorme":error_messagerep})
 
 def existingReplyFile(request, pk):
     if request.method == 'POST':

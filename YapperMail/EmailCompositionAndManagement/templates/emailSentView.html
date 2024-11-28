@@ -267,7 +267,7 @@
                                 </div>
                             </div>
                             <div style="display: flex; flex-direction: row; align-items: center;">
-                                {% if userRep.id == rep.fromUser.id %}
+                                {% if userRep.id == rep.fromUser.id and emailCont.isDeleted == False %}
                                 <div class="deleteReply" style="color: #F37D84; margin-right: 10px; font-size: 20px;">🗑
                                 </div>
                                 <img src="{%static 'images/Edit.png'%}" class="editReply" style="height: 15px;">
@@ -280,7 +280,7 @@
                             {% for repfiles in allRepFiles %}
                             {% if rep.id == repfiles.replyid.id %}
                             <div class="filePostItem">
-                                <a href="{% url 'download_file' repfiles.file %}"
+                                <a href="{% url 'download_fileme' repfiles.file %}"
                                     style="color: #F69BA0; text-decoration: none;">
                                     {{repfiles.file}}
                                 </a>
