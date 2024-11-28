@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .forms import TeamEmailComposeForm,TeamReplyComposeForm,TeamEditEmailForm,TeamEditReplyForm,TeamSearchForm
 from .models import TeamEmail,TeamEmailFiles,TeamReply,TeamReplyFiles
-from django.contrib.auth.models import User
+from landing.models import CustomUser as User
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, Http404
@@ -260,7 +260,7 @@ UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
 def team_download_file(request, filename):
     filename = unquote(filename)
 
-    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY, filename))
+    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY,"media",filename))
 
     print("Requested filename:", filename)
     print("Full file path:", file_path)
