@@ -234,6 +234,7 @@ def team_email_sent_view(request,pk,ok):
 
     # Get associated files
     getFiles = TeamEmailFiles.objects.filter(emailId=getEmail)
+    allTeamCateg = get_object_or_404(CategoryTeamEmail,fromUser = userRep,emaildCat = getEmail)
 
 
     if request.method == "POST":
@@ -275,7 +276,7 @@ def team_email_sent_view(request,pk,ok):
     allRep = TeamReply.objects.filter(emailId = getEmail)
     allRepFiles = TeamReplyFiles.objects.filter(emailId = getEmail)
         
-    return render(request,"teamemailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep})
+    return render(request,"teamemailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,"allTeamCateg":allTeamCateg})
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
@@ -657,6 +658,90 @@ def team_addCollaborator(request,pk):
         # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the user.'}, status=500)
+    
+
+
+def team_importCheck(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(TeamEmail, id=emailid)
+        userRep = get_object_or_404(User, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryTeamEmail, fromUser=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate= True
+            allCateginst.isScheduled = False
+            allCateginst.isDo = False
+            allCateginst.save()
+
+            return JsonResponse({"message":"Successfull"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
+
+def team_scheduledCheck(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(TeamEmail, id=emailid)
+        userRep = get_object_or_404(User, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryTeamEmail, fromUser=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate= False
+            allCateginst.isScheduled = True
+            allCateginst.isDo = False
+            allCateginst.save()
+
+            return JsonResponse({"message":"Successfull"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
+
+
+def team_DoCheck(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(TeamEmail, id=emailid)
+        userRep = get_object_or_404(User, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryTeamEmail, fromUser=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate= False
+            allCateginst.isScheduled = False
+            allCateginst.isDo = True
+            allCateginst.save()
+
+            return JsonResponse({"message":"Successfull"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
 
 
 
