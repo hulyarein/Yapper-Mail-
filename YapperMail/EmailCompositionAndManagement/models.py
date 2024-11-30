@@ -21,6 +21,9 @@ class Email(models.Model):
     content = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)
     isDeleted = models.BooleanField(default=False)
+    isImportant = models.BooleanField(default = False)
+    isScheduled = models.BooleanField(default = False)
+    isSnoozed = models.BooleanField(default = False)
 
     def __str__(self):
         return f"{self.subject}"

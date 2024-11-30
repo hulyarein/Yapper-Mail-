@@ -14,5 +14,7 @@ urlpatterns = [
     path('emailList',views.emailListView,name='emailListView'),
     path('emailList/sent',views.sentEmailList,name = "sentEmailList"),
     path('deleteEmail',views.deleteEmailFunc,name = "deleteEmailFunc"),
-    path('deleteReply',views.deleteReplyFunc,name = "deleteReplyFunc")
+    path('deleteReply',views.deleteReplyFunc,name = "deleteReplyFunc"),
+    path('changeImportant',views.changeIsImportant,name = "change_Important"),
+    path("changeScheduled",views.changeIsScheduled,name = "changeI_Scheduled")
 ]

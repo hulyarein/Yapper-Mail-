@@ -536,3 +536,55 @@ def deleteReplyFunc(request):
         # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)
+    
+
+
+def changeIsImportant(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        print(emailid)
+        try:
+            emailinstance = get_object_or_404(Email,id = emailid)
+            emailinstance.isImportant = True
+            emailinstance.isScheduled = False
+            emailinstance.isSnoozed = False
+            emailinstance.save()
+
+            return JsonResponse({"message":"Successfull"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
+
+
+def changeIsScheduled(request):
+    if(request.method == "POST"):
+        try:
+            data = json.loads(request.body)
+
+            emailid = data.get("emailid")
+
+            emailinst = get_object_or_404(Email,id = emailid)
+            emailinst.isImportant = False
+            emailinst.isScheduled = True
+            emailinst.isSnoozed = False
+            emailinst.save()
+
+            return JsonResponse({"message":"Success"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)

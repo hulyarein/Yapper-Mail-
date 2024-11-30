@@ -195,6 +195,25 @@
         {% if emailCont.isDeleted == False %}
             <div class="deletePost">🗑</div>
             <img src="{%static 'images/Edit.png'%}" class="editPost">
+            <div class="dropdown" style="margin-left: 10px;">
+                <div class="dropdown-toggle chooseCat" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                style="color:#F37D84;">
+                  {% if emailCont.isImportant == True %}
+                    Important
+                  {% elif emailCont.isScheduled == True %}
+                    Scheduled
+                  {% elif emailCont.isSnoozed == True %}
+                    Snoozed
+                  {% else %}
+                    None
+                  {% endif %}
+                </div>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item importBut">Important</a>
+                  <a class="dropdown-item schedBut">Scheduled</a>
+                  <a class="dropdown-item snoozeBut">Snoozed</a>
+                </div>
+              </div>
         {% endif %}
 
         {% if emailCont.isDeleted == True %}
@@ -346,6 +365,40 @@
     })
 
     $(document).ready(function () {
+        $(".importBut").click(function(e){
+            $.ajax({
+                    url: `/emailmanagement/changeImportant`,
+                    type: 'POST',
+                    data: JSON.stringify({ "emailid": parseInt($(".numEmail").text()) }),
+                    contentType: 'application/json',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    success: function (response) {
+                        console.log(response);
+                        window.location.reload()
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred:', error.responseJSON);
+                    }
+                })
+        })
+        $(".schedBut").click(function(e){
+            $.ajax({
+                    url: `/emailmanagement/changeScheduled`,
+                    type: 'POST',
+                    data: JSON.stringify({ "emailid": parseInt($(".numEmail").text()) }),
+                    contentType: 'application/json',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    success: function (response) {
+                        console.log(response);
+                        window.location.reload()
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred:', error.responseJSON);
+                    }
+                })
+        })
 
         var delrep = document.querySelectorAll(".deleteReply")
 
