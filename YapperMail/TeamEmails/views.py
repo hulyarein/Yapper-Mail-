@@ -10,6 +10,8 @@ from urllib.parse import unquote
 import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
+from django.templatetags.static import static
+
 
 
 def team_email_composition(request,pk):
@@ -130,10 +132,37 @@ def team_emailListView(request):
 
         combined_emails = emailsVar.union(emailsVarMe)
 
+        listUserme = []
+
+        for nnn in combined_emails:
+            bbb = nnn.fromUser.profile_picture.url if nnn.fromUser.profile_picture else static('images/default_profile.jpg')
+            listUserme.append(bbb)
+
+        for mmm in range(len(listUserme)):
+            combined_emails[mmm].profshowme = listUserme[mmm]
+        
+
+        profilepic = userVar.profile_picture.url if userVar.profile_picture else static('images/default_profile.jpg')
+
+        countNumber = []
+        countpush = 0
+        for nnn in combined_emails:
+            for min in nnn.adminUsers.all():
+                countpush+=1
+            for max in nnn.memberUsers.all():
+                countpush+=1
+            countNumber.append(countpush)
+            countpush = 0
+        
+        for mel in range(len(countNumber)):
+            combined_emails[mel].numcount = countNumber[mel]
+
         return render(request, 'TeamemailList.html', {
             'form': form,
             'emails': combined_emails,
             'LogUser': userVar,
+            "profilepic":profilepic,
+            "countNumber":countNumber
         })
 
     except ObjectDoesNotExist as e:
