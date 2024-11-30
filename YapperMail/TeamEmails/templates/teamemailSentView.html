@@ -392,8 +392,8 @@
                     <div>
                         <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
                             <div style="display: flex; flex-direction: row; align-items: center;">
-                                <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
-                                    {{emailCont.fromUser.first_name|slice:":1"}}
+                                <div class="profDiv">
+                                    <img src="{{origUserProf}}" style="object-fit: full; height: 100%; width: 100%;">
                                 </div>
                                 <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                     {{emailCont.fromUser.email}}
@@ -410,9 +410,13 @@
                             <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
                                 <div style="display: none;">{{admins.id}}</div>
                                 <div style="display: flex; flex-direction: row; align-items: center;">
-                                    <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
-                                        {{admins.first_name|slice:":1"}}
-                                    </div>
+                                    {% for holdu in allColabortors %}
+                                        {% if admins == holdu.userh %}
+                                            <div class="profDiv">
+                                                <img src="{{holdu.profh}}" style="object-fit: full; height: 100%; width: 100%;">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                     <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         {{admins.email}}
                                     </div>
@@ -439,9 +443,13 @@
                             <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
                                 <div style="display: none;">{{members.id}}</div>
                                 <div style="display: flex; flex-direction: row; align-items: center;">
-                                    <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
-                                        {{members.first_name|slice:":1"}}
-                                    </div>
+                                    {% for holdu in allColabortors %}
+                                        {% if members == holdu.userh %}
+                                            <div class="profDiv">
+                                                <img src="{{holdu.profh}}" style="object-fit: full; height: 100%; width: 100%;">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                     <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         {{members.email}}
                                     </div>
