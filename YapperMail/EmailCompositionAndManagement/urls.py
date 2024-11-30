@@ -16,5 +16,6 @@ urlpatterns = [
     path('deleteEmail',views.deleteEmailFunc,name = "deleteEmailFunc"),
     path('deleteReply',views.deleteReplyFunc,name = "deleteReplyFunc"),
     path('changeImportant',views.changeIsImportant,name = "change_Important"),
-    path("changeScheduled",views.changeIsScheduled,name = "changeI_Scheduled")
+    path("changeScheduled",views.changeIsScheduled,name = "changeI_Scheduled"),
+    path("changeSnoozed",views.changeIsSnooze,name = "changeI_Snooze")
 ]

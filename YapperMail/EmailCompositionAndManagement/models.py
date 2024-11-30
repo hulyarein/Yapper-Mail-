@@ -59,6 +59,14 @@ class ReplyFiles(models.Model):
 
     def __str__(self):
         return f"{self.id}-{self.file}"
+    
+
+class CategoryEmail(models.Model):
+    userCat = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name="categUser",null=True)
+    emaildCat = models.ForeignKey(Email,on_delete=models.CASCADE,related_name="categEmail",null=True)
+    isDelegate = models.BooleanField(default = False)
+    isScheduled = models.BooleanField(default = False)
+    isDo = models.BooleanField(default = False)
 
     
 

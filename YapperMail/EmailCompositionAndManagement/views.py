@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm,SearchForm
-from .models import Email,EmailFiles,TemporaryUser,Reply,ReplyFiles
+from .models import Email,EmailFiles,TemporaryUser,Reply,ReplyFiles,CategoryEmail
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist,ValidationError
@@ -51,6 +51,20 @@ def email_composition(request,pk):
                 else:
                     print("No files were uploaded.")
 
+                categemailFrom = CategoryEmail(
+                    userCat = fromUser,
+                    emaildCat = email
+                )
+                categemailFrom.save()
+
+                if fromUser != toUserDatabase:
+
+                    categemailTo = CategoryEmail(
+                        userCat = toUserDatabase,
+                        emaildCat = email
+                    )
+                    categemailTo.save()
+
                 return redirect('emailListView')
             except CustomUser.DoesNotExist:
                 error_message = True
@@ -76,6 +90,7 @@ def email_sent_view(request,pk,ok):
     getEmail = get_object_or_404(Email, id=ok)
     userRep = get_object_or_404(CustomUser, id=pk)
     getFiles = EmailFiles.objects.filter(emailId=getEmail)
+    allCateg = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
 
 
     if request.method == "POST":
@@ -118,7 +133,7 @@ def email_sent_view(request,pk,ok):
     allRepFiles = ReplyFiles.objects.filter(emailId = getEmail)
 
         
-    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep})
+    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,'allCateg':allCateg})
 
 def email_reply_view(request):
 
@@ -543,13 +558,16 @@ def changeIsImportant(request):
     if request.method == "POST":
         data = json.loads(request.body)
         emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(Email, id=emailid)
+        userRep = get_object_or_404(CustomUser, id=userid)
         print(emailid)
         try:
-            emailinstance = get_object_or_404(Email,id = emailid)
-            emailinstance.isImportant = True
-            emailinstance.isScheduled = False
-            emailinstance.isSnoozed = False
-            emailinstance.save()
+            allCateginst = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate= True
+            allCateginst.isScheduled = False
+            allCateginst.isDo = False
+            allCateginst.save()
 
             return JsonResponse({"message":"Successfull"})
 
@@ -565,17 +583,47 @@ def changeIsImportant(request):
 
 
 def changeIsScheduled(request):
-    if(request.method == "POST"):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(Email, id=emailid)
+        userRep = get_object_or_404(CustomUser, id=userid)
+        print(emailid)
         try:
-            data = json.loads(request.body)
+            allCateginst = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate = False
+            allCateginst.isScheduled = True
+            allCateginst.isDo = False
+            allCateginst.save()
 
-            emailid = data.get("emailid")
+            return JsonResponse({"message":"Success"})
 
-            emailinst = get_object_or_404(Email,id = emailid)
-            emailinst.isImportant = False
-            emailinst.isScheduled = True
-            emailinst.isSnoozed = False
-            emailinst.save()
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
+
+
+def changeIsSnooze(request):
+    if(request.method == "POST"):
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(Email, id=emailid)
+        userRep = get_object_or_404(CustomUser, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate = False
+            allCateginst.isScheduled = False
+            allCateginst.isDo = True
+            allCateginst.save()
 
             return JsonResponse({"message":"Success"})
 
