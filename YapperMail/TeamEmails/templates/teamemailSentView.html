@@ -85,6 +85,7 @@
 
         .fromName {
             font-weight: bold;
+            word-break: break-all;
         }
 
         .profCont {
@@ -185,6 +186,20 @@
             border-radius: 1000px;
             border-color:#DE3F2A;
         }
+        .profDiv {
+            min-width: 50px;
+            width: 50px;
+            max-width: 50px;
+            min-height: 50px;
+            max-height: 50px;
+            height: 50px;
+            border-radius: 1000px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        .toName{
+            word-break: break-all;
+        }
 
         @media (max-width: 400px) {
             .logoImage {
@@ -256,11 +271,11 @@
                     <div class="postContent">
                         <div class="accountContain">
                             <div class="profCont">
-                                <div class="profShow">
-                                    {{emailCont.fromUser.first_name|slice:":1"}}
+                                <div class="profDiv">
+                                    <img src="{{origUserProf}}" style="object-fit: full; height: 100%; width: 100%;">
                                 </div>
                                 <div>
-                                    <div class=fromName style="font-size: 18px;">{{emailCont.fromUser.username}}</div>
+                                    <div class=fromName style="font-size: 15px;">{{emailCont.fromUser.username}}</div>
                                     <div class=toName style="font-size: 13px;">{{emailCont.fromUser.first_name}} {{emailCont.fromUser.last_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{emailCont.date_sent}}</div>
@@ -291,11 +306,21 @@
                         <div class="accountContain">
                             <div class="profCont">
                                 <div class="repId" style="display: none;">{{rep.id}}</div>
-                                <div class="profShow">
-                                    {{rep.fromUser.first_name|slice:":1"}}
-                                </div>
+                                {% if not rep.fromUser in allColaboratorList %}
+                                    <div class="profDiv">
+                                        <img src="{{default_profile_picture}}" style="object-fit: full; height: 100%; width: 100%;">
+                                    </div>
+                                {% else %}
+                                    {% for holdu in allColabortors %}
+                                        {% if rep.fromUser == holdu.userh %}
+                                            <div class="profDiv">
+                                                <img src="{{holdu.profh}}" style="object-fit: full; height: 100%; width: 100%;">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
                                 <div>
-                                    <div class=fromName style="font-size: 18px;">{{rep.fromUser.username}}</div>
+                                    <div class=fromName style="font-size: 15px;">{{rep.fromUser.username}}</div>
                                     <div class=toName style="font-size: 13px;">{{rep.fromUser.first_name}} {{rep.fromUser.last_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{rep.date_sent}}</div>

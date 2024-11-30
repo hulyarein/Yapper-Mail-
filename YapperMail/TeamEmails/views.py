@@ -180,7 +180,7 @@ def team_sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
-
+                default_profile_picture = static('images/default_profile.jpg')
                 email_data = [
                     {
                         "id": email.id,
@@ -192,6 +192,8 @@ def team_sentEmailList(request):
                         "memberUsers":[member.id for member in email.memberUsers.all()],
                         "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
                         "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                        "countnumber":email.adminUsers.count() + email.memberUsers.count(),
+                        "profshowme":  email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -203,6 +205,7 @@ def team_sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
+                default_profile_picture = static('images/default_profile.jpg')
 
                 email_data = [
                     {
@@ -215,6 +218,8 @@ def team_sentEmailList(request):
                         "memberUsers":[member.id for member in email.memberUsers.all()],
                         "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
                         "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                        "countnumber":email.adminUsers.count() + email.memberUsers.count(),
+                        "profshowme":  email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -226,8 +231,8 @@ def team_sentEmailList(request):
                 userVar = request.user
                 emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
                 emailsVarMe = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
-
                 combined_emails = emailsVar.union(emailsVarMe)
+                default_profile_picture = static('images/default_profile.jpg')
 
                 email_data = [
                     {
@@ -240,6 +245,8 @@ def team_sentEmailList(request):
                         "memberUsers":[member.id for member in email.memberUsers.all()],
                         "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
                         "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                        "countnumber":email.adminUsers.count() + email.memberUsers.count(),
+                        "profshowme":  email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in combined_emails
                 ]
@@ -260,6 +267,8 @@ def team_sentEmailList(request):
 def team_email_sent_view(request,pk,ok):
     getEmail = get_object_or_404(TeamEmail, id=ok)
     userRep = get_object_or_404(User, id=pk)
+    origUser = getEmail.fromUser
+    default_profile_picture = static('images/default_profile.jpg')
 
     # Get associated files
     getFiles = TeamEmailFiles.objects.filter(emailId=getEmail)
@@ -304,8 +313,25 @@ def team_email_sent_view(request,pk,ok):
     
     allRep = TeamReply.objects.filter(emailId = getEmail)
     allRepFiles = TeamReplyFiles.objects.filter(emailId = getEmail)
+    origUserProf = origUser.profile_picture.url if origUser.profile_picture else default_profile_picture
+
+    allColabortors = []
+
+    for adm in getEmail.adminUsers.all():
+        dictme = {"userh":adm,"profh":adm.profile_picture.url if adm.profile_picture else default_profile_picture}
+        allColabortors.append(dictme)
+
+    for memb in getEmail.memberUsers.all():
+        dictme = {"userh":memb,"profh":memb.profile_picture.url if memb.profile_picture else default_profile_picture}
+        allColabortors.append(dictme)
+
+    allColaboratorList= []
+    for admmem in getEmail.adminUsers.all():
+        allColaboratorList.append(admmem)
+    for memadm  in getEmail.memberUsers.all():
+        allColaboratorList.append(memadm)
         
-    return render(request,"teamemailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,"allTeamCateg":allTeamCateg})
+    return render(request,"teamemailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,"allTeamCateg":allTeamCateg,"origUserProf":origUserProf,"allColabortors":allColabortors,"default_profile_picture":default_profile_picture,"allColaboratorList":allColaboratorList})
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
