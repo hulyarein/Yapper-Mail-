@@ -11,9 +11,10 @@ import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
 from django.templatetags.static import static
+from django.contrib.auth.decorators import login_required
 
 
-
+@login_required
 def team_email_composition(request,pk):
     error_message = False
     if request.method == "POST":
@@ -61,6 +62,7 @@ def team_email_composition(request,pk):
     #return render(request,"composeEmail.html",{'form':form,"errormessage":error_message})
     return render(request,"teamcomposeEmail.html",{'form':form})
 
+@login_required
 def compose_email_details(request):
     if request.method == 'POST':
         try:
@@ -121,6 +123,8 @@ def compose_email_details(request):
         
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+
+@login_required
 def team_emailListView(request):
     try:
         form = TeamSearchForm()
@@ -171,6 +175,8 @@ def team_emailListView(request):
     except Exception as e:
         return HttpResponse(f"An unexpected error occurred: {str(e)}", status=500)
 
+
+@login_required
 def team_sentEmailList(request):
     if request.method == "POST":
         try:
@@ -264,6 +270,8 @@ def team_sentEmailList(request):
     # 
     return JsonResponse({'emails': "not Post"}, status=400)
 
+
+@login_required
 def team_email_sent_view(request,pk,ok):
     getEmail = get_object_or_404(TeamEmail, id=ok)
     userRep = get_object_or_404(User, id=pk)
@@ -336,6 +344,8 @@ def team_email_sent_view(request,pk,ok):
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
 
+
+@login_required
 def team_download_file(request, filename):
     filename = unquote(filename)
 
@@ -354,7 +364,7 @@ def team_download_file(request, filename):
         raise Http404(f"File not found: {filename}")
     
 
-
+@login_required
 def team_edit_email(request,pk,uk):
 
     getEmail = get_object_or_404(TeamEmail, id=pk)
@@ -404,6 +414,8 @@ def team_edit_email(request,pk,uk):
 
     return render(request,"teameditEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk,"errormes":emess})
 
+
+@login_required
 def team_editExistingImage(request,pk):
     '''getEmail = Email.objects.get(id = pk)
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
@@ -435,6 +447,7 @@ def team_editExistingImage(request,pk):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
+@login_required
 def team_edit_reply(request,pk,uk):
     getReply = get_object_or_404(TeamReply, id=pk)
     getReplyFiles = TeamReplyFiles.objects.filter(replyid=getReply)
@@ -476,6 +489,7 @@ def team_edit_reply(request,pk,uk):
 
     return render(request,"teameditReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk,"errorrep":errorrep})
 
+@login_required
 def team_existingReplyFile(request, pk):
     if request.method == 'POST':
         try:
@@ -501,7 +515,7 @@ def team_existingReplyFile(request, pk):
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-
+@login_required
 def teams_deleteReplyFunc(request):
     try:
         data = json.loads(request.body)
@@ -528,6 +542,7 @@ def teams_deleteReplyFunc(request):
         return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)
     
 
+@login_required
 def team_deleteEmailFunc(request):
     try:
         data = json.loads(request.body)
@@ -555,7 +570,7 @@ def team_deleteEmailFunc(request):
         return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
     
 
-
+@login_required
 def team_removeAccessMember(request,pk):
     try:
         data = json.loads(request.body)
@@ -585,7 +600,8 @@ def team_removeAccessMember(request,pk):
         #
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the User.'}, status=500)
-    
+
+@login_required   
 def team_removeAccessAdmin(request,pk):
     try:
         data = json.loads(request.body)
@@ -616,7 +632,7 @@ def team_removeAccessAdmin(request,pk):
         return JsonResponse({'message': 'An error occurred while deleting the User.'}, status=500)
     
 
-
+@login_required
 def team_addAdmin(request,pk):
     try:
         data = json.loads(request.body)
@@ -644,7 +660,7 @@ def team_addAdmin(request,pk):
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
     
-
+@login_required
 def team_downgradeMember(request,pk):
     try:
         data = json.loads(request.body)
@@ -672,7 +688,7 @@ def team_downgradeMember(request,pk):
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
 
-
+@login_required
 def team_addCollaborator(request,pk):
 
     try:
@@ -715,7 +731,7 @@ def team_addCollaborator(request,pk):
         return JsonResponse({'message': 'An error occurred while adding the user.'}, status=500)
     
 
-
+@login_required
 def team_importCheck(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -743,6 +759,7 @@ def team_importCheck(request):
 
     return JsonResponse({"error":"not a Post method"},status = 400)
 
+@login_required
 def team_scheduledCheck(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -771,6 +788,7 @@ def team_scheduledCheck(request):
     return JsonResponse({"error":"not a Post method"},status = 400)
 
 
+@login_required
 def team_DoCheck(request):
     if request.method == "POST":
         data = json.loads(request.body)
