@@ -93,6 +93,14 @@ def email_sent_view(request,pk,ok):
     userRep = get_object_or_404(CustomUser, id=pk)
     getFiles = EmailFiles.objects.filter(emailId=getEmail)
     allCateg = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
+    OtherUserHold = ""
+    if(userRep == getEmail.fromUser):
+        OtherUserHold = getEmail.toUser
+    
+    else:
+        OtherUserHold = getEmail.fromUser
+    
+    
 
 
     if request.method == "POST":
@@ -133,9 +141,14 @@ def email_sent_view(request,pk,ok):
     
     allRep = Reply.objects.filter(emailId = getEmail)
     allRepFiles = ReplyFiles.objects.filter(emailId = getEmail)
+    profilepicFrom = userRep.profile_picture.url if userRep.profile_picture else static('images/default_profile.jpg')
+    profilepicTo = OtherUserHold.profile_picture.url if OtherUserHold.profile_picture else static('images/default_profile.jpg')
+    print(profilepicFrom)
+    print(profilepicTo)
+    print(OtherUserHold)
 
         
-    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,'allCateg':allCateg})
+    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,'allCateg':allCateg,"profilepicFrom":profilepicFrom,"profilepicTo":profilepicTo,"OtherUserHold":OtherUserHold})
 
 @login_required
 def email_reply_view(request):
@@ -364,9 +377,21 @@ def emailListView(request):
         deletedEmails = Email.objects.filter(
             (Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted=True)
         )
+
         print(userVar.profile_picture.url)
 
+        listUserme = []
+
+        for nnn in emailsVar:
+            bbb = nnn.fromUser.profile_picture.url if nnn.fromUser.profile_picture else static('images/default_profile.jpg')
+            listUserme.append(bbb)
+
+        for mmm in range(len(listUserme)):
+            emailsVar[mmm].profshowme = listUserme[mmm]
+
         profilepic = userVar.profile_picture.url if userVar.profile_picture else static('images/default_profile.jpg')
+
+
 
 
     except ObjectDoesNotExist:
@@ -425,14 +450,15 @@ def sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = Email.objects.filter(Q(fromUser=userVar) & Q(isDeleted = False))
-
+                default_profile_picture = static('images/default_profile.jpg')
                 email_data = [
                     {
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
-                        "toUser":email.toUser.email
+                        "toUser":email.toUser.email,
+                        "profshowme": email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -444,14 +470,15 @@ def sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = Email.objects.filter(Q(toUser=userVar) & Q(isDeleted = False))
-
+                default_profile_picture = static('images/default_profile.jpg')
                 email_data = [
                     {
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
-                        "toUser":email.toUser.email
+                        "toUser":email.toUser.email,
+                        "profshowme": email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -462,6 +489,7 @@ def sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
+                default_profile_picture = static('images/default_profile.jpg')
 
                 email_data = [
                     {
@@ -469,7 +497,8 @@ def sentEmailList(request):
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
-                        "toUser":email.toUser.email
+                        "toUser":email.toUser.email,
+                        "profshowme": email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -479,7 +508,8 @@ def sentEmailList(request):
             elif data.get('sentNum') == 5:
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
-                emailsVar = Email.objects.filter(Q(isDeleted = True))
+                emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = True))
+                default_profile_picture = static('images/default_profile.jpg')
 
                 email_data = [
                     {
@@ -487,7 +517,8 @@ def sentEmailList(request):
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
-                        "toUser":email.toUser.email
+                        "toUser":email.toUser.email,
+                        "profshowme": email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
