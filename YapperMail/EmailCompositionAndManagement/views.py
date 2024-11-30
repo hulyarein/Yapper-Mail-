@@ -7,16 +7,18 @@ from django.core.exceptions import ObjectDoesNotExist,ValidationError
 from django.http import FileResponse, Http404
 import os
 from urllib.parse import unquote
+from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
 from landing.models import *
 from django.contrib import messages
 from django.db import IntegrityError,DatabaseError
+from django.templatetags.static import static
 
 
 # Create your views here.
-
+@login_required
 def email_composition(request,pk):
     error_message = False
     if request.method == "POST":
@@ -84,7 +86,7 @@ def email_composition(request,pk):
 
     return render(request,"composeEmail.html",{'form':form,"errormessage":error_message})
 
-
+@login_required
 def email_sent_view(request,pk,ok):
 
     getEmail = get_object_or_404(Email, id=ok)
@@ -135,6 +137,7 @@ def email_sent_view(request,pk,ok):
         
     return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,'allCateg':allCateg})
 
+@login_required
 def email_reply_view(request):
 
     if request.method == "POST":
@@ -167,6 +170,7 @@ def email_reply_view(request):
         
     return render(request,"emailReceiveView.html",{'form':form})
 
+@login_required
 def edit_email(request,pk,uk):
     getEmail = get_object_or_404(Email, id=pk)
     getFiles = EmailFiles.objects.filter(emailId=getEmail)
@@ -219,6 +223,7 @@ def edit_email(request,pk,uk):
 
     return render(request,"editEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk,"errorMess":error_message})
 
+@login_required
 def editExistingImage(request,pk):
     '''getEmail = Email.objects.get(id = pk)
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
@@ -251,7 +256,7 @@ def editExistingImage(request,pk):
 
 
 
-
+@login_required
 def edit_reply(request,pk,uk):
     error_messagerep = "False"
     getReply = get_object_or_404(Reply, id=pk)
@@ -292,6 +297,7 @@ def edit_reply(request,pk,uk):
 
     return render(request,"editReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk,"errorme":error_messagerep})
 
+@login_required
 def existingReplyFile(request, pk):
     if request.method == 'POST':
         try:
@@ -322,6 +328,7 @@ def existingReplyFile(request, pk):
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
 
+@login_required
 def download_file(request, filename):
     print(BASE_DIR)
     print(UPLOAD_DIRECTORY)
@@ -342,7 +349,7 @@ def download_file(request, filename):
         raise Http404(f"File not found: {filename}")
     
 
-
+@login_required
 def emailListView(request):
     form = SearchForm()
 
@@ -357,6 +364,10 @@ def emailListView(request):
         deletedEmails = Email.objects.filter(
             (Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted=True)
         )
+        print(userVar.profile_picture.url)
+
+        profilepic = userVar.profile_picture.url if userVar.profile_picture else static('images/default_profile.jpg')
+
 
     except ObjectDoesNotExist:
         emailsVar = []
@@ -399,12 +410,12 @@ def emailListView(request):
             },
         )
 
-    return render(request,'emailList.html',{'form':form,'emails':emailsVar,'LogUser':userVar})
+    return render(request,'emailList.html',{'form':form,'emails':emailsVar,'LogUser':userVar,'profilepic':profilepic})
 
 
     
 
-
+@login_required
 def sentEmailList(request):
     if request.method == "POST":
         try:
@@ -493,7 +504,7 @@ def sentEmailList(request):
     #
     return JsonResponse({'emails': "not Post"}, status=400)
 
-
+@login_required
 def deleteEmailFunc(request):
     data = json.loads(request.body)
     email_id = data.get('delId')
@@ -526,7 +537,7 @@ def deleteEmailFunc(request):
         return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
 
 
-
+@login_required
 def deleteReplyFunc(request):
     try:
         data = json.loads(request.body)
@@ -553,7 +564,7 @@ def deleteReplyFunc(request):
         return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)
     
 
-
+@login_required
 def changeIsImportant(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -581,7 +592,7 @@ def changeIsImportant(request):
 
     return JsonResponse({"error":"not a Post method"},status = 400)
 
-
+@login_required
 def changeIsScheduled(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -609,7 +620,7 @@ def changeIsScheduled(request):
 
     return JsonResponse({"error":"not a Post method"},status = 400)
 
-
+@login_required
 def changeIsSnooze(request):
     if(request.method == "POST"):
         data = json.loads(request.body)
