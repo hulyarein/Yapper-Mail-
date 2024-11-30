@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .forms import TeamEmailComposeForm,TeamReplyComposeForm,TeamEditEmailForm,TeamEditReplyForm,TeamSearchForm
-from .models import TeamEmail,TeamEmailFiles,TeamReply,TeamReplyFiles
+from .models import TeamEmail,TeamEmailFiles,TeamReply,TeamReplyFiles,CategoryTeamEmail
 from landing.models import CustomUser as User
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
@@ -91,11 +91,23 @@ def compose_email_details(request):
             uploaded_files = request.FILES.getlist('file')  # 
             if uploaded_files:
                 for uploaded_file in uploaded_files:
-                    email_file = TeamEmailFiles(
+                    email_file = TeamEmailFiles.objects.create(
                         emailId=team_email,  # 
                         file=uploaded_file
                     )
                     email_file.save()  # 
+
+
+            for ben in team_email.memberUsers.all():
+                categtema = CategoryTeamEmail.objects.create(
+                    fromUser = ben,
+                    emaildCat = team_email
+                )
+
+            categuse = CategoryTeamEmail.objects.create(
+                fromUser = request.user,
+                emaildCat = team_email
+            )
 
             return JsonResponse({"message": "Email details saved successfully"}, status=201)
     
@@ -498,7 +510,12 @@ def team_removeAccessMember(request,pk):
 
         # 
         teamVar = TeamEmail.objects.get(id=pk)
+        userGet = teamVar.memberUsers.get(id = user_id)
         teamVar.memberUsers.remove(user_id)
+
+        category = get_object_or_404(CategoryTeamEmail, fromUser=userGet, emaildCat=teamVar)
+        category.delete()
+
 
         return JsonResponse({'message': 'User deleted successfully.'}, status=200)
 
@@ -523,7 +540,11 @@ def team_removeAccessAdmin(request,pk):
 
         # 
         teamVar = TeamEmail.objects.get(id=pk)
+        userGet = teamVar.adminUsers.get(id = user_id)
         teamVar.adminUsers.remove(user_id)
+
+        category = get_object_or_404(CategoryTeamEmail, fromUser=userGet, emaildCat=teamVar)
+        category.delete()
 
         return JsonResponse({'message': 'User deleted successfully.'}, status=200)
 
@@ -618,6 +639,11 @@ def team_addCollaborator(request,pk):
             return JsonResponse({'message': 'User already exists.'}, status=200)
         
         emailsVar.memberUsers.add(userCollab)
+
+        categtema = CategoryTeamEmail.objects.create(
+            fromUser = userCollab,
+            emaildCat = emailsVar
+            )
 
         return JsonResponse({'message': 'User added successfully.'}, status=200)
 

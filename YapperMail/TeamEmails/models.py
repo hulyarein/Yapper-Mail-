@@ -45,3 +45,12 @@ class TeamReplyFiles(models.Model):
 
     def __str__(self):
         return f"{self.id}-{self.file}"
+    
+
+class CategoryTeamEmail(models.Model):
+    fromUser = models.ForeignKey(User,on_delete=models.CASCADE,related_name="team_category_user",null=True)
+    emaildCat= models.ForeignKey(TeamEmail,on_delete=models.CASCADE,related_name="teamcatgEmail",null=True)
+    isDelegate = models.BooleanField(default = False)
+    isScheduled = models.BooleanField(default = False)
+    isDo = models.BooleanField(default = False)
+    
