@@ -14,9 +14,12 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
+        *{
+            transition: 0.2s;
+        }
         body {
-            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
-            background-color: #fff7f7;
+            background: linear-gradient(to bottom, #fdeced, #fdeced, #fff1f1,#fff7f7);
+            background-color: #fff1f1;
             background-repeat: no-repeat;
             height: 100%;
             display: flex;
@@ -36,7 +39,8 @@
 
         .backEmailComp {
             font-size: 30px;
-            color: #F69BA0;
+            color: #F37D84;
+            cursor: pointer;
         }
 
         .viewEmail {
@@ -172,12 +176,14 @@
             color: #F37D84;
             font-size: 20px;
             margin-left: 10px;
+            cursor: pointer;
         }
 
         .editPost {
             height: 15px;
             width: 15px;
             margin-left: 10px;
+            cursor: pointer;
         }
         .teamManage{
             margin-right: 60px;
@@ -185,6 +191,7 @@
             padding: 7px;
             border-radius: 1000px;
             border-color:#DE3F2A;
+            cursor: pointer;
         }
         .profDiv {
             min-width: 50px;
@@ -199,6 +206,21 @@
         }
         .toName{
             word-break: break-all;
+        }
+        .chooseCat{
+            cursor: pointer;
+        }
+        .importBut,.schedBut,.snoozeBut{
+            cursor: pointer;
+        }
+        .editReply{
+            cursor: pointer;
+        }
+        .deleteReply{
+            cursor: pointer;
+        }
+        .addCollab{
+            cursor: pointer;
         }
 
         @media (max-width: 400px) {
@@ -383,12 +405,12 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="imageModalLabel">Collaborators</h5>
+              <h5 class="modal-title" id="imageModalLabel" style="font-weight: bold;">Collaborators</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="max-height: 550px; overflow-y: auto;">
                 <div>
-                    <div>Creator</div>
+                    <div style="font-weight: bold;">Creator</div>
                     <div>
                         <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
                             <div style="display: flex; flex-direction: row; align-items: center;">
@@ -403,7 +425,7 @@
                     </div>
                 </div>
                 <div>
-                    <div>Admin</div>
+                    <div style="font-weight: bold;">Admin</div>
                     <div>
                         {% for admins in emailCont.adminUsers.all %}
                         <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
@@ -434,7 +456,7 @@
                     </div>
                 </div>
                 <div>
-                    <div>
+                    <div style="font-weight: bold;">
                         Members
                     </div>
                     <div>
@@ -476,7 +498,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="inputModalLabel">Add Member</h5>
+                    <h5 class="modal-title" id="inputModalLabel" style="font-weight: bold;">Add Member</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
