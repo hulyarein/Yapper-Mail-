@@ -85,6 +85,7 @@
 
         .fromName {
             font-weight: bold;
+            word-break: break-all;
         }
 
         .profCont {
@@ -185,6 +186,34 @@
             border-radius: 1000px;
             border-color:#DE3F2A;
         }
+        .profDiv {
+            min-width: 50px;
+            width: 50px;
+            max-width: 50px;
+            min-height: 50px;
+            max-height: 50px;
+            height: 50px;
+            border-radius: 1000px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        .toName{
+            word-break: break-all;
+        }
+
+        @media (max-width: 400px) {
+            .logoImage {
+                width: 200px;
+            }
+            .teamManage{
+                margin-right: 60px;
+                border-style: solid;
+                padding: 5px;
+                border-radius: 1000px;
+                border-color:#DE3F2A;
+                height: 30px;
+            }
+        }
     </style>
 
 </head>
@@ -209,6 +238,26 @@
         <div class="deletePost">🗑</div>
         <img src="{%static 'images/Edit.png'%}" class="editPost">
         {% endif %}
+
+        <div class="dropdown" style="margin-left: 10px;">
+            <div class="dropdown-toggle chooseCat" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            style="color:#F37D84;">
+              {% if allTeamCateg.isDelegate == True %}
+                Delegate
+              {% elif allTeamCateg.isScheduled == True %}
+                Scheduled
+              {% elif allTeamCateg.isDo == True %}
+                Do
+              {% else %}
+                None
+              {% endif %}
+            </div>
+            <div class="dropdown-menu">
+              <a class="dropdown-item importBut">Delegate</a>
+              <a class="dropdown-item schedBut">Scheduled</a>
+              <a class="dropdown-item snoozeBut">Do</a>
+            </div>
+        </div>
         <div style="display: none;" class="numEmail">{{emailCont.id}}</div>
         <div class="userRephold" style="display: none;">{{userRep.id}}</div>
     </div>
@@ -222,11 +271,11 @@
                     <div class="postContent">
                         <div class="accountContain">
                             <div class="profCont">
-                                <div class="profShow">
-                                    {{emailCont.fromUser.first_name|slice:":1"}}
+                                <div class="profDiv">
+                                    <img src="{{origUserProf}}" style="object-fit: full; height: 100%; width: 100%;">
                                 </div>
                                 <div>
-                                    <div class=fromName style="font-size: 18px;">{{emailCont.fromUser.username}}</div>
+                                    <div class=fromName style="font-size: 15px;">{{emailCont.fromUser.username}}</div>
                                     <div class=toName style="font-size: 13px;">{{emailCont.fromUser.first_name}} {{emailCont.fromUser.last_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{emailCont.date_sent}}</div>
@@ -257,11 +306,21 @@
                         <div class="accountContain">
                             <div class="profCont">
                                 <div class="repId" style="display: none;">{{rep.id}}</div>
-                                <div class="profShow">
-                                    {{rep.fromUser.first_name|slice:":1"}}
-                                </div>
+                                {% if not rep.fromUser in allColaboratorList %}
+                                    <div class="profDiv">
+                                        <img src="{{default_profile_picture}}" style="object-fit: full; height: 100%; width: 100%;">
+                                    </div>
+                                {% else %}
+                                    {% for holdu in allColabortors %}
+                                        {% if rep.fromUser == holdu.userh %}
+                                            <div class="profDiv">
+                                                <img src="{{holdu.profh}}" style="object-fit: full; height: 100%; width: 100%;">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
                                 <div>
-                                    <div class=fromName style="font-size: 18px;">{{rep.fromUser.username}}</div>
+                                    <div class=fromName style="font-size: 15px;">{{rep.fromUser.username}}</div>
                                     <div class=toName style="font-size: 13px;">{{rep.fromUser.first_name}} {{rep.fromUser.last_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{rep.date_sent}}</div>
@@ -333,8 +392,8 @@
                     <div>
                         <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
                             <div style="display: flex; flex-direction: row; align-items: center;">
-                                <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
-                                    {{emailCont.fromUser.first_name|slice:":1"}}
+                                <div class="profDiv">
+                                    <img src="{{origUserProf}}" style="object-fit: full; height: 100%; width: 100%;">
                                 </div>
                                 <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                     {{emailCont.fromUser.email}}
@@ -351,9 +410,13 @@
                             <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
                                 <div style="display: none;">{{admins.id}}</div>
                                 <div style="display: flex; flex-direction: row; align-items: center;">
-                                    <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
-                                        {{admins.first_name|slice:":1"}}
-                                    </div>
+                                    {% for holdu in allColabortors %}
+                                        {% if admins == holdu.userh %}
+                                            <div class="profDiv">
+                                                <img src="{{holdu.profh}}" style="object-fit: full; height: 100%; width: 100%;">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                     <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         {{admins.email}}
                                     </div>
@@ -380,9 +443,13 @@
                             <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 10px; justify-content: space-between;">
                                 <div style="display: none;">{{members.id}}</div>
                                 <div style="display: flex; flex-direction: row; align-items: center;">
-                                    <div class="profShow" style="min-height: 40px; min-width: 40px; font-size: 15px;">
-                                        {{members.first_name|slice:":1"}}
-                                    </div>
+                                    {% for holdu in allColabortors %}
+                                        {% if members == holdu.userh %}
+                                            <div class="profDiv">
+                                                <img src="{{holdu.profh}}" style="object-fit: full; height: 100%; width: 100%;">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                     <div style="max-width: 250px; overflow-x: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         {{members.email}}
                                     </div>
@@ -466,6 +533,59 @@
 
     $(document).ready(function () {
         const toastLiveExample = document.getElementById('liveToast');
+
+        $(".importBut").click(function(e){
+            $.ajax({
+                    url: `/teamemailmanagement/teamImportCheck`,
+                    type: 'POST',
+                    data: JSON.stringify({ "emailid": parseInt($(".numEmail").text()), "userid":$(".userRephold").text()}),
+                    contentType: 'application/json',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    success: function (response) {
+                        console.log(response);
+                        window.location.reload()
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred:', error.responseJSON);
+                    }
+                })
+        })
+        $(".schedBut").click(function(e){
+            $.ajax({
+                    url: `/teamemailmanagement/teamScheduledCheck`,
+                    type: 'POST',
+                    data: JSON.stringify({ "emailid": parseInt($(".numEmail").text()), "userid":$(".userRephold").text()}),
+                    contentType: 'application/json',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    success: function (response) {
+                        console.log(response);
+                        window.location.reload()
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred:', error.responseJSON);
+                    }
+                })
+        })
+        $(".snoozeBut").click(function(e){
+            $.ajax({
+                    url: `/teamemailmanagement/teamDoCheck`,
+                    type: 'POST',
+                    data: JSON.stringify({"emailid": parseInt($(".numEmail").text()), "userid":$(".userRephold").text()}),
+                    contentType: 'application/json',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    success: function (response) {
+                        console.log(response);
+                        window.location.reload()
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred:', error.responseJSON);
+                    }
+                })
+        })
+
         $(".SubmitModal").click(function(e){
 
             if($(".memberEmailInp").val().trim() == ""){

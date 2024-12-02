@@ -19,7 +19,10 @@ urlpatterns = [
     path('removeAdmin/<int:pk>',views.team_removeAccessAdmin,name = "team_removeAccessAdmin"),
     path('addAdmin/<int:pk>',views.team_addAdmin,name = "team_addAdmin"),
     path('downgradeMember/<int:pk>',views.team_downgradeMember,name = "team_downgradeMember"),
-    path('addCollab/<int:pk>',views.team_addCollaborator,name = "team_addCollaborator")
+    path('addCollab/<int:pk>',views.team_addCollaborator,name = "team_addCollaborator"),
+    path('teamImportCheck',views.team_importCheck,name = "team_importCheck"),
+    path('teamScheduledCheck',views.team_scheduledCheck,name = "team_scheduledCheck"),
+    path('teamDoCheck',views.team_DoCheck,name = "team_DoCheck")
 ]
 
 

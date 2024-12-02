@@ -240,6 +240,9 @@
 </head>
 
 <body>
+    <div class = "errorme" style="opacity: 0;">
+        {{errorMess}}
+    </div>
     <div>
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
@@ -295,6 +298,20 @@
         </form>
         <div class="clickImage" style="display: none;">Image</div>
     </div>
+
+
+    <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">UserError</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body toastPut">
+                
+            </div>
+        </div>
+    </div>
 </body>
 <script>
     
@@ -323,6 +340,16 @@
 
 
     $(document).ready(function () {
+        const toastLiveExample = document.getElementById('liveToast');
+        var errorme = document.querySelector(".errorme").innerText;
+        if (errorme === "True") {
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+            $(".toastPut").text("Incomplete credentials")
+            toastBootstrap.show();
+        }
+        else{
+        }
+
         $(".backEmailComp").click(function(e){
             ukid = parseInt($(".userPK").text())
             okid = parseInt($(".emailSentId").text())

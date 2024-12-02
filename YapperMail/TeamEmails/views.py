@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .forms import TeamEmailComposeForm,TeamReplyComposeForm,TeamEditEmailForm,TeamEditReplyForm,TeamSearchForm
-from .models import TeamEmail,TeamEmailFiles,TeamReply,TeamReplyFiles
-from django.contrib.auth.models import User
+from .models import TeamEmail,TeamEmailFiles,TeamReply,TeamReplyFiles,CategoryTeamEmail
+from landing.models import CustomUser as User
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse, Http404
@@ -10,8 +10,11 @@ from urllib.parse import unquote
 import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
+from django.templatetags.static import static
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def team_email_composition(request,pk):
     error_message = False
     if request.method == "POST":
@@ -59,6 +62,7 @@ def team_email_composition(request,pk):
     #return render(request,"composeEmail.html",{'form':form,"errormessage":error_message})
     return render(request,"teamcomposeEmail.html",{'form':form})
 
+@login_required
 def compose_email_details(request):
     if request.method == 'POST':
         try:
@@ -91,11 +95,23 @@ def compose_email_details(request):
             uploaded_files = request.FILES.getlist('file')  # 
             if uploaded_files:
                 for uploaded_file in uploaded_files:
-                    email_file = TeamEmailFiles(
+                    email_file = TeamEmailFiles.objects.create(
                         emailId=team_email,  # 
                         file=uploaded_file
                     )
                     email_file.save()  # 
+
+
+            for ben in team_email.memberUsers.all():
+                categtema = CategoryTeamEmail.objects.create(
+                    fromUser = ben,
+                    emaildCat = team_email
+                )
+
+            categuse = CategoryTeamEmail.objects.create(
+                fromUser = request.user,
+                emaildCat = team_email
+            )
 
             return JsonResponse({"message": "Email details saved successfully"}, status=201)
     
@@ -107,17 +123,60 @@ def compose_email_details(request):
         
     return JsonResponse({"error": "Invalid request method"}, status=405)
 
+
+@login_required
 def team_emailListView(request):
-    form = TeamSearchForm()
+    try:
+        form = TeamSearchForm()
 
-    #userVar = TemporaryUser.objects.get(id = 1)
-    userVar = request.user
-    emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
-    emailsVarMe = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
+        userVar = request.user
 
-    combined_emails = emailsVar.union(emailsVarMe)
-    return render(request,'TeamemailList.html',{'form':form,'emails':combined_emails,'LogUser':userVar})
+        emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted=False))
+        emailsVarMe = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted=False))
 
+        combined_emails = emailsVar.union(emailsVarMe)
+
+        listUserme = []
+
+        for nnn in combined_emails:
+            bbb = nnn.fromUser.profile_picture.url if nnn.fromUser.profile_picture else static('images/default_profile.jpg')
+            listUserme.append(bbb)
+
+        for mmm in range(len(listUserme)):
+            combined_emails[mmm].profshowme = listUserme[mmm]
+        
+
+        profilepic = userVar.profile_picture.url if userVar.profile_picture else static('images/default_profile.jpg')
+
+        countNumber = []
+        countpush = 0
+        for nnn in combined_emails:
+            for min in nnn.adminUsers.all():
+                countpush+=1
+            for max in nnn.memberUsers.all():
+                countpush+=1
+            countNumber.append(countpush)
+            countpush = 0
+        
+        for mel in range(len(countNumber)):
+            combined_emails[mel].numcount = countNumber[mel]
+
+        return render(request, 'TeamemailList.html', {
+            'form': form,
+            'emails': combined_emails,
+            'LogUser': userVar,
+            "profilepic":profilepic,
+            "countNumber":countNumber
+        })
+
+    except ObjectDoesNotExist as e:
+        return HttpResponse(f"Error: {str(e)}", status=404)
+
+    except Exception as e:
+        return HttpResponse(f"An unexpected error occurred: {str(e)}", status=500)
+
+
+@login_required
 def team_sentEmailList(request):
     if request.method == "POST":
         try:
@@ -127,7 +186,7 @@ def team_sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
-
+                default_profile_picture = static('images/default_profile.jpg')
                 email_data = [
                     {
                         "id": email.id,
@@ -139,6 +198,8 @@ def team_sentEmailList(request):
                         "memberUsers":[member.id for member in email.memberUsers.all()],
                         "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
                         "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                        "countnumber":email.adminUsers.count() + email.memberUsers.count(),
+                        "profshowme":  email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -150,6 +211,7 @@ def team_sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
+                default_profile_picture = static('images/default_profile.jpg')
 
                 email_data = [
                     {
@@ -162,6 +224,8 @@ def team_sentEmailList(request):
                         "memberUsers":[member.id for member in email.memberUsers.all()],
                         "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
                         "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                        "countnumber":email.adminUsers.count() + email.memberUsers.count(),
+                        "profshowme":  email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -173,8 +237,8 @@ def team_sentEmailList(request):
                 userVar = request.user
                 emailsVar = TeamEmail.objects.filter(Q(adminUsers=userVar) & Q(isDeleted = False))
                 emailsVarMe = TeamEmail.objects.filter(Q(memberUsers=userVar) & Q(isDeleted = False))
-
                 combined_emails = emailsVar.union(emailsVarMe)
+                default_profile_picture = static('images/default_profile.jpg')
 
                 email_data = [
                     {
@@ -187,6 +251,8 @@ def team_sentEmailList(request):
                         "memberUsers":[member.id for member in email.memberUsers.all()],
                         "adminUsersF":[admin.first_name for admin in email.adminUsers.all()],
                         "memberUsersF":[member.first_name for member in email.memberUsers.all()],
+                        "countnumber":email.adminUsers.count() + email.memberUsers.count(),
+                        "profshowme":  email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in combined_emails
                 ]
@@ -204,13 +270,17 @@ def team_sentEmailList(request):
     # 
     return JsonResponse({'emails': "not Post"}, status=400)
 
+
+@login_required
 def team_email_sent_view(request,pk,ok):
-    getEmail = TeamEmail.objects.get(id = ok)
+    getEmail = get_object_or_404(TeamEmail, id=ok)
+    userRep = get_object_or_404(User, id=pk)
+    origUser = getEmail.fromUser
+    default_profile_picture = static('images/default_profile.jpg')
 
-    getFiles = TeamEmailFiles.objects.filter(emailId = getEmail)
-
-    #userRep = TemporaryUser.objects.get(id = pk)
-    userRep = User.objects.get(id = pk)
+    # Get associated files
+    getFiles = TeamEmailFiles.objects.filter(emailId=getEmail)
+    allTeamCateg = get_object_or_404(CategoryTeamEmail,fromUser = userRep,emaildCat = getEmail)
 
 
     if request.method == "POST":
@@ -251,16 +321,35 @@ def team_email_sent_view(request,pk,ok):
     
     allRep = TeamReply.objects.filter(emailId = getEmail)
     allRepFiles = TeamReplyFiles.objects.filter(emailId = getEmail)
+    origUserProf = origUser.profile_picture.url if origUser.profile_picture else default_profile_picture
+
+    allColabortors = []
+
+    for adm in getEmail.adminUsers.all():
+        dictme = {"userh":adm,"profh":adm.profile_picture.url if adm.profile_picture else default_profile_picture}
+        allColabortors.append(dictme)
+
+    for memb in getEmail.memberUsers.all():
+        dictme = {"userh":memb,"profh":memb.profile_picture.url if memb.profile_picture else default_profile_picture}
+        allColabortors.append(dictme)
+
+    allColaboratorList= []
+    for admmem in getEmail.adminUsers.all():
+        allColaboratorList.append(admmem)
+    for memadm  in getEmail.memberUsers.all():
+        allColaboratorList.append(memadm)
         
-    return render(request,"teamemailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep})
+    return render(request,"teamemailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,"allTeamCateg":allTeamCateg,"origUserProf":origUserProf,"allColabortors":allColabortors,"default_profile_picture":default_profile_picture,"allColaboratorList":allColaboratorList})
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
 
+
+@login_required
 def team_download_file(request, filename):
     filename = unquote(filename)
 
-    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY, filename))
+    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY,"media",filename))
 
     print("Requested filename:", filename)
     print("Full file path:", file_path)
@@ -275,10 +364,14 @@ def team_download_file(request, filename):
         raise Http404(f"File not found: {filename}")
     
 
-
+@login_required
 def team_edit_email(request,pk,uk):
-    getEmail = TeamEmail.objects.get(id = pk)
-    getFiles = TeamEmailFiles.objects.filter(emailId = getEmail)
+
+    getEmail = get_object_or_404(TeamEmail, id=pk)
+
+    getFiles = TeamEmailFiles.objects.filter(emailId=getEmail)
+
+    emess = "False"
     
     if request.method == "POST":
         form = TeamEditEmailForm(request.POST)
@@ -306,11 +399,11 @@ def team_edit_email(request,pk,uk):
                 return redirect(f'../../emailSentView/{uk}/{pk}')
             except ObjectDoesNotExist:
                 error_message = True
+            except Exception as e:
+                error_mes = f"An unexpected error occurred: {str(e)}"
         else:
             print("not valid")
-
-
-
+            emess = "True"
 
     else:
         initialValue = {
@@ -319,8 +412,10 @@ def team_edit_email(request,pk,uk):
         }
         form = TeamEditEmailForm(initial = initialValue)
 
-    return render(request,"teameditEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk})
+    return render(request,"teameditEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk,"errormes":emess})
 
+
+@login_required
 def team_editExistingImage(request,pk):
     '''getEmail = Email.objects.get(id = pk)
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
@@ -352,9 +447,11 @@ def team_editExistingImage(request,pk):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
+@login_required
 def team_edit_reply(request,pk,uk):
-    getReply = TeamReply.objects.get(id = pk)
-    getReplyFiles = TeamReplyFiles.objects.filter(replyid = getReply)
+    getReply = get_object_or_404(TeamReply, id=pk)
+    getReplyFiles = TeamReplyFiles.objects.filter(replyid=getReply)
+    errorrep = "False"
     if request.method == "POST":
         form = TeamEditReplyForm(request.POST)
         if form.is_valid():
@@ -381,8 +478,8 @@ def team_edit_reply(request,pk,uk):
 
             except ObjectDoesNotExist:
                 print("Does Not exist")
-
-
+        else:
+            errorrep = "True"
 
     else:
         initialValue = {
@@ -390,8 +487,9 @@ def team_edit_reply(request,pk,uk):
         }
         form = TeamEditReplyForm(initial=initialValue)
 
-    return render(request,"teameditReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk})
+    return render(request,"teameditReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk,"errorrep":errorrep})
 
+@login_required
 def team_existingReplyFile(request, pk):
     if request.method == 'POST':
         try:
@@ -417,7 +515,7 @@ def team_existingReplyFile(request, pk):
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-
+@login_required
 def teams_deleteReplyFunc(request):
     try:
         data = json.loads(request.body)
@@ -444,6 +542,7 @@ def teams_deleteReplyFunc(request):
         return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)
     
 
+@login_required
 def team_deleteEmailFunc(request):
     try:
         data = json.loads(request.body)
@@ -471,7 +570,7 @@ def team_deleteEmailFunc(request):
         return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
     
 
-
+@login_required
 def team_removeAccessMember(request,pk):
     try:
         data = json.loads(request.body)
@@ -482,7 +581,12 @@ def team_removeAccessMember(request,pk):
 
         # 
         teamVar = TeamEmail.objects.get(id=pk)
+        userGet = teamVar.memberUsers.get(id = user_id)
         teamVar.memberUsers.remove(user_id)
+
+        category = get_object_or_404(CategoryTeamEmail, fromUser=userGet, emaildCat=teamVar)
+        category.delete()
+
 
         return JsonResponse({'message': 'User deleted successfully.'}, status=200)
 
@@ -496,7 +600,8 @@ def team_removeAccessMember(request,pk):
         #
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the User.'}, status=500)
-    
+
+@login_required   
 def team_removeAccessAdmin(request,pk):
     try:
         data = json.loads(request.body)
@@ -507,7 +612,11 @@ def team_removeAccessAdmin(request,pk):
 
         # 
         teamVar = TeamEmail.objects.get(id=pk)
+        userGet = teamVar.adminUsers.get(id = user_id)
         teamVar.adminUsers.remove(user_id)
+
+        category = get_object_or_404(CategoryTeamEmail, fromUser=userGet, emaildCat=teamVar)
+        category.delete()
 
         return JsonResponse({'message': 'User deleted successfully.'}, status=200)
 
@@ -523,7 +632,7 @@ def team_removeAccessAdmin(request,pk):
         return JsonResponse({'message': 'An error occurred while deleting the User.'}, status=500)
     
 
-
+@login_required
 def team_addAdmin(request,pk):
     try:
         data = json.loads(request.body)
@@ -551,7 +660,7 @@ def team_addAdmin(request,pk):
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
     
-
+@login_required
 def team_downgradeMember(request,pk):
     try:
         data = json.loads(request.body)
@@ -579,7 +688,7 @@ def team_downgradeMember(request,pk):
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the User.'}, status=500)
 
-
+@login_required
 def team_addCollaborator(request,pk):
 
     try:
@@ -603,6 +712,11 @@ def team_addCollaborator(request,pk):
         
         emailsVar.memberUsers.add(userCollab)
 
+        categtema = CategoryTeamEmail.objects.create(
+            fromUser = userCollab,
+            emaildCat = emailsVar
+            )
+
         return JsonResponse({'message': 'User added successfully.'}, status=200)
 
     except ObjectDoesNotExist:
@@ -615,6 +729,92 @@ def team_addCollaborator(request,pk):
         # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while adding the user.'}, status=500)
+    
+
+@login_required
+def team_importCheck(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(TeamEmail, id=emailid)
+        userRep = get_object_or_404(User, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryTeamEmail, fromUser=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate= True
+            allCateginst.isScheduled = False
+            allCateginst.isDo = False
+            allCateginst.save()
+
+            return JsonResponse({"message":"Successfull"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
+
+@login_required
+def team_scheduledCheck(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(TeamEmail, id=emailid)
+        userRep = get_object_or_404(User, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryTeamEmail, fromUser=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate= False
+            allCateginst.isScheduled = True
+            allCateginst.isDo = False
+            allCateginst.save()
+
+            return JsonResponse({"message":"Successfull"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
+
+
+@login_required
+def team_DoCheck(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(TeamEmail, id=emailid)
+        userRep = get_object_or_404(User, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryTeamEmail, fromUser=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate= False
+            allCateginst.isScheduled = False
+            allCateginst.isDo = True
+            allCateginst.save()
+
+            return JsonResponse({"message":"Successfull"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
 
 
 
