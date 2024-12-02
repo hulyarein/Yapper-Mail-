@@ -40,13 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'UserProfile',
     'landing',
-    'notifications',
     'EmailCompositionAndManagement',
     'compressor',
     'phonenumber_field',
     'TeamEmails',
     'Chatbot',
-    'channels'
+    'channels',
+    'notifications_app'
 ]
 
 MIDDLEWARE = [
@@ -100,6 +100,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'YapperMail.wsgi.application'
+ASGI_APPLICATION = 'YapperMail.asgi.application'
+
 
 
 # Database

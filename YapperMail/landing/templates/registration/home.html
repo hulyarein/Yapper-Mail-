@@ -51,10 +51,11 @@
         </div>
       </div>
     </div>
+
     <div class="home-body">
       <div class="home-body-1">
         <h3 style="color: #de3f2a">
-          <span style="font-weight: bold">WELCOME</span> {{
+          <span style="font-weight: bold"></span> {{
           user.first_name|safe|escape }}
         </h3>
         <div class="navigation">
@@ -124,7 +125,6 @@
             ></div>
           </div>
         </div>
-<<<<<<< HEAD
 
        </div>
 
@@ -153,9 +153,8 @@
           <div class = "recent-navigation-item" style="background-color: blue;"></div>
         </div>
        </div>
-=======
->>>>>>> cc93c5411c5b69b01f0e99e2da70476d268d232b
       </div>
+      
       <div class="home-body-2">
         <div class="welcome">
           {% if plans %} {% for plan in plans %}
@@ -184,24 +183,23 @@
           {% endfor %} {% else %}
           <div class="no-tasks">No emails available.</div>
           {% endif %}
+          <div class = "taskboard-container">
+                <div class = "task-title">Event Request</div>
+                <div class = "task-email">userone@101.com</div>
+                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div>
 
-          <!-- <div class = "taskboard-container">
-                <div class = "task-title">Event Request</div>
-                <div class = "task-email">userone@101.com</div>
-                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-              </div>
-    
-              <div class = "taskboard-container">
-                <div class = "task-title">Event Request</div>
-                <div class = "task-email">userone@101.com</div>
-                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-              </div>
-    
-              <div class = "taskboard-container">
-                <div class = "task-title">Event Request</div>
-                <div class = "task-email">userone@101.com</div>
-                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-              </div> -->
+          <div class = "taskboard-container">
+            <div class = "task-title">Event Request</div>
+            <div class = "task-email">userone@101.com</div>
+            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div>
+
+          <div class = "taskboard-container">
+            <div class = "task-title">Event Request</div>
+            <div class = "task-email">userone@101.com</div>
+            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div> 
         </div>
       </div>
 
