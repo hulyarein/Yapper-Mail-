@@ -12,47 +12,71 @@
       crossorigin="anonymous"
     />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static 'images/logo2.png' %}"
+    />
     <title>Yapper | Profile</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'images/logo2.png' %}">
   </head>
   <body class="bg-[#F4F4F4]">
     {% include 'components/header.html' %}
     <div class="header">{% block header %}{% endblock %}</div>
 
-    <div class="title flex flex-row gap-10 justify-center items-center flex-wrap-reverse">
+    <div
+      class="title flex flex-row gap-10 justify-center items-center flex-wrap-reverse"
+    >
       <div class="">
         <label class="font-mono font-bold text-7xl">Personal Info</label>
         <h3>Manage how the world sees you</h3>
       </div>
-      <img src="{% static 'images/cuteImage.png' %}" alt="">
+      <img src="{% static 'images/cuteImage.png' %}" alt="" />
     </div>
 
     <div class="content pb-20 flex flex-col items-center">
-      <div class="personalInfo border-2 border-[#F37D84] my-10 flex flex-col w-3/5 rounded-3xl">
+      <div
+        class="personalInfo border-2 border-[#F37D84] my-10 flex flex-col w-3/5 rounded-3xl"
+      >
         <div class="flex items-center m-6">
           <label class="font-sans text-3xl mx-10">Personal Info</label>
         </div>
         <hr class="border-[#F37D84] border-2" />
-          <div class="hover:bg-[#e9e7e7]">
+        <div class="hover:bg-[#e9e7e7]">
+          <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <div class="profilePic p-6 flex justify-between items-center">
-                <label class="mx-10 font-medium">Profile Picture</label>
-                  <img
-                    src="https://iv1.lisimg.com/image/25565557/740full-im-nayeon.jpg"
-                    alt="nayeon"
-                    class="rounded-full h-16 w-16 mx-10"
-                  />
+              <label class="mx-10 font-medium">Profile Picture</label>
+              <img
+                src="{{ profilepic }}"
+                alt="nayeon"
+                class="rounded-full h-16 w-16 mx-10"
+              />
             </div>
-          </div>
+          </a>
+        </div>
         <hr class="border-[#F37D84] border-2" />
         <a href="{% url 'changeName' %}">
           <div class="hover:bg-[#e9e7e7]">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Name</label></div>
-                <label class="font-medium">{{ first_name }} {{ last_name }}</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Name</label>
+                </div>
+                <label class="font-medium"
+                  >{{ first_name }} {{ middle_name }} {{ last_name }}</label
+                >
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
@@ -62,33 +86,59 @@
           <div class="hover:bg-[#e9e7e7]">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Birthday</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Birthday</label>
+                </div>
+                <label class="font-medium">{{ birthday }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
-        
+
         <hr class="border-[#F37D84] border-2" />
         <a href="{% url 'changeGender' %}">
           <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Gender</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Gender</label>
+                </div>
+                <label class="font-medium">{{ gender }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
       </div>
 
-      <div class="contactInfo border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
+      <div
+        class="contactInfo border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl"
+      >
         <div class="flex items-center m-6">
           <label class="font-sans text-3xl mx-10">Contact Information</label>
         </div>
@@ -97,32 +147,41 @@
           <div class="hover:bg-[#e9e7e7]">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Phone Number</label></div>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Phone Number</label>
+                </div>
                 <label class="font-medium">{{ phone_number }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
-        
+
         <hr class="border-[#F37D84] border-2" />
-        <a href="{% url 'changeEmail' %}">
-          <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
-            <div class="name p-6 flex justify-between items-center">
-              <div class="flex content-between">
-                <div class="ml-10 w-40  "><label class="font-medium">Email Address</label></div>
-                <label class="font-medium">{{ email_address }}</label>
+        <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
+          <div class="name p-6 flex justify-between items-center">
+            <div class="flex content-between">
+              <div class="ml-10 w-40">
+                <label class="font-medium">Email Address</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-              </svg>
+              <label class="font-medium">{{ email_address }}</label>
             </div>
           </div>
-        </a>
+        </div>
       </div>
-     
+
       <div class="addresses border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
         <div class="flex items-center m-6">
           <label class="font-sans text-3xl mx-10">Addresses</label>
@@ -132,52 +191,255 @@
           <div class="hover:bg-[#e9e7e7]">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Home</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Home</label>
+                </div>
+                <label class="font-medium">{{ home_address }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
-        
+
         <hr class="border-[#F37D84] border-2" />
         <a href="{% url 'changeWork' %}">
           <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Work</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Work</label>
+                </div>
+                <label class="font-medium">{{ work_address }}</label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
       </div>
 
-       <div class="addresses border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
+      <div class="addresses border-2 border-[#F37D84] my-10 w-3/5 rounded-3xl">
         <div class="flex items-center m-6">
           <label class="font-sans text-3xl mx-10">Security</label>
         </div>
-                <hr class="border-[#F37D84] border-2" />
-        <a href="{% url 'changeWork' %}">
+        <hr class="border-[#F37D84] border-2" />
+        <a href="{% url 'changePassword' %}">
           <div class="hover:bg-[#e9e7e7] rounded-b-3xl">
             <div class="name p-6 flex justify-between items-center">
               <div class="flex content-between">
-                <div class="ml-10 w-40"><label class="font-medium">Password</label></div>
-                <label class="font-medium">TODO</label>
+                <div class="ml-10 w-40">
+                  <label class="font-medium">Password</label>
+                </div>
+                <label class="font-medium"></label>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chevron-right mx-16" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-chevron-right mx-16"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"
+                />
               </svg>
             </div>
           </div>
         </a>
       </div>
 
+      <button
+        type="button"
+        class="btn btn-danger w-3/5"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteAccountModal"
+      >
+        Delete Account
+      </button>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const deleteModal = document.getElementById("deleteAccountModal");
+
+          if (deleteModal) {
+            deleteModal.addEventListener("shown.bs.modal", function () {
+              const passwordInput = document.getElementById("deletePassword");
+              const confirmInput = document.getElementById("deleteConfirm");
+              const deleteLink = document.getElementById("deleteAccountBtn");
+              const form = document.getElementById("deleteForm");
+              const errorMessagesDiv = document.getElementById("errorMessages");
+
+              passwordInput.value = "";
+              confirmInput.value = "";
+              errorMessagesDiv.style.display = "none"; // Hide errors by default
+
+              function displayError(message) {
+                errorMessagesDiv.innerText = message;
+                errorMessagesDiv.style.display = "block";
+              }
+
+              function validateFields() {
+                if (
+                  passwordInput.value.trim() !== "" &&
+                  confirmInput.value.trim() !== ""
+                ) {
+                  deleteLink.onclick = function (event) {
+                    event.preventDefault();
+
+                    if (confirmInput.value.trim() !== "Yapper/{{ user }}") {
+                      displayError("The confirmation text does not match.");
+                      return;
+                    }
+
+                    const formData = new FormData(form);
+                    fetch(form.action, {
+                      method: "POST",
+                      body: formData,
+                      headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                      },
+                    })
+                      .then((response) => response.json())
+                      .then((data) => {
+                        if (data.success) {
+                          window.location.href = "/";
+                        } else {
+                          displayError(data.error || "An error occurred.");
+                        }
+                      })
+                      .catch(() => {
+                        displayError(
+                          "An unexpected error occurred. Please try again."
+                        );
+                      });
+                  };
+                } else {
+                  deleteLink.classList.add("disabled");
+                  deleteLink.setAttribute("aria-disabled", "true");
+                  deleteLink.onclick = function () {
+                    displayError("Please fill in all fields.");
+                  };
+                }
+              }
+
+              // Hide error messages and validate fields on input
+              passwordInput.addEventListener("input", function () {
+                errorMessagesDiv.style.display = "none";
+                validateFields();
+              });
+              confirmInput.addEventListener("input", function () {
+                errorMessagesDiv.style.display = "none";
+                validateFields();
+              });
+            });
+          }
+        });
+      </script>
+
+      <div
+        class="modal fade"
+        id="deleteAccountModal"
+        tabindex="-1"
+        aria-labelledby="deleteAccountModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div
+              class="model-header flex flex-col justify-between mt-8 mx-5 mb-2"
+            >
+              <h1 class="text-3xl text-[#FF0000] font-bold">Delete Account</h1>
+              <p>
+                Are you sure about this? Deleting you account would mean that
+                all your data will be lost.
+              </p>
+            </div>
+
+            <div class="model-contents flex flex-col justify-between mx-5 mb-5">
+              <form
+                action="{% url 'profile' %}"
+                class="flex flex-col gap-3"
+                id="deleteForm"
+              >
+                {% csrf_token %}
+                <input type="hidden" name="delete_account" value="1" />
+
+                <div class="flex flex-col gap-2">
+                  <div
+                    class="alert alert-danger"
+                    id="errorMessages"
+                    style="display: none"
+                    role="alert"
+                  ></div>
+                  <div class="flex flex-col">
+                    <label class="text-lg font-semibold">Password</label>
+                    <input
+                      type="password"
+                      class="p-3 border-1 border-[#f37d84]"
+                      name="password"
+                      id="deletePassword"
+                    />
+                  </div>
+                  <div class="flex flex-col">
+                    <label class="text-lg font-semibold">Confirmation</label>
+                    <p>Please type the confirmation shown below</p>
+                    <input
+                      type="text"
+                      class="p-3 border-1 border-[#f37d84]"
+                      name="deleteConfirm"
+                      id="deleteConfirm"
+                      placeholder="Yapper/{{ user }}"
+                    />
+                  </div>
+                </div>
+                <div class="flex justify-end gap-10 items-center">
+                  <a
+                    class="font-semibold hover:font-medium"
+                    id="deleteAccountBtn"
+                    aria-disabled="true"
+                    ><label>Delete</label></a
+                  >
+                  <button
+                    type="button"
+                    data-bs-dismiss="modal"
+                    class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]"
+                    id="openModal"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% include 'components/changeProfilePic.html' %}
     </div>
     <!-- bootstrapshiz-->
     <script

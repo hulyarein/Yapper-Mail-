@@ -1,8 +1,10 @@
 myvenv/
 YapperMail/UserProfile/static/Script/fbconfig.js
+YapperMail/uploads/
 YapperMail/uploads/*
 YapperMail/myenv
 YapperMail/media/*
+YapperMail/uploads
 
 *.py[cod]
 __pycache__/
@@ -22,3 +24,4 @@ db.sqlite3
 /pip-log.txt
 .env
 YapperMail/Chatbot/chatbotapi.py
+.idea

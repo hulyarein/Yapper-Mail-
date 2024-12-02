@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Email</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
+            background-color: #fff7f7;
+            background-repeat: no-repeat;
+            height: 97vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Helvetica;
+        }
+
+        .logoImage {
+            width: 250px;
+        }
+
+        .bodyContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+        }
+
+        .emailCompose {
+            min-height: 600px;
+            width: 80%;
+            background-color: white;
+            border-style: solid;
+            border-width: 3px;
+            border-color: #F37D84;
+            border-radius: 20px;
+        }
+
+        .buttonPart {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .composeButton {
+            width: 170px;
+            margin-bottom: 20px;
+        }
+
+        .inboxButton {
+            height: 35px;
+            width: 150px;
+            object-fit: contain;
+        }
+
+        .sentButton {
+            height: 35px;
+            width: 150px;
+            object-fit: contain;
+        }
+
+        .trashButton {
+            height: 35px;
+            width: 150px;
+            object-fit: contain;
+        }
+
+        .viewEmailButtons {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+        }
+
+        .UsertoClass {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            margin: 30px 50px;
+        }
+
+        .toDesign {
+            background-color: #F69BA0;
+            color: white;
+            padding: 15px 35px;
+            border-radius: 10px;
+        }
+
+        .userToForm {
+            border-style: none;
+            border-bottom-style: solid;
+            padding: 5px;
+            height: 100%;
+            font-size: 15px;
+            margin-left: 20px;
+            width: 100%;
+        }
+
+        .userToForm:focus {
+            outline: none;
+        }
+
+        .formUserDiv {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+        }
+
+        .formSubjectDiv {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+        }
+
+        .SubjectDesign {
+            background-color: #F69BA0;
+            color: white;
+            padding: 15px 18px;
+            border-radius: 10px;
+        }
+
+        .SubjectClass {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            margin: 30px 50px;
+        }
+
+        .subjectForm {
+            border-style: none;
+            border-bottom-style: solid;
+            padding: 5px;
+            height: 100%;
+            font-size: 15px;
+            margin-left: 20px;
+            width: 100%;
+        }
+
+        .subjectForm:focus {
+            outline: none;
+        }
+
+        .descriptionForm {
+            width: 100%;
+            font-size: 15px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .descriptionDiv {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 60px;
+            margin-right: 60px;
+        }
+
+        .ButtonClass {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-left: 60px
+        }
+
+        .SubmitBut {
+            background-color: #F37D84;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border-style: none;
+        }
+
+        .attachCls {
+            width: 30px;
+            height: 30px;
+        }
+
+        .linkcls {
+            width: 30px;
+            height: 30px;
+        }
+
+        .file-item {
+            background-color: #F0F0F0;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            color: #F69BA0;
+        }
+
+        .delete-button {
+            color: #F69BA0;
+            margin-left: 10px;
+        }
+
+        .backEmailComp {
+            font-size: 30px;
+            color: #F69BA0;
+            margin-left: 10%;
+        }
+        #fileList{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+        }
+
+
+        @media (max-width:380px) {
+            .UsertoClass {
+                margin: 30px 30px;
+            }
+
+            .toDesign {
+                padding: 15px 20px;
+            }
+
+            .SubjectDesign {
+                padding: 15px 10px;
+            }
+
+            .SubjectClass {
+                margin: 30px 30px;
+            }
+
+            .descriptionDiv {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                margin-left: 60px;
+                margin-right: 60px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <img src="{% static 'images/logo.png' %}" class="logoImage">
+    </div>
+    <div class="backEmailComp">
+        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+    </div>
+    <div class = "userPK" style="">{{userPk.id}}</div>
+    <div class="bodyContent">
+        <div class="emailCompose">
+            <div style="height: 530px; border-radius: 10px; padding: 10px;">
+
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+                <input type = "text" style="width: 90%; font-size: 15px; padding: 10px 10px;" class = "getInput">
+                <img src = "{% static 'images/send.png' %}" style="height: 30px; width: 30px;" class = "sendPrompt">
+            </div>
+            
+        </div>
+    </div>
+</body>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    $(document).ready(function(e){
+        $(".sendPrompt").click(function(e){
+            var inputPrompt = document.querySelector(".getInput")
+
+            $.ajax({
+                url: "../../chatbot/chatbotsystem/pass/",  
+                type: 'POST',
+                data: JSON.stringify({ "message": inputPrompt.value }),  
+                contentType: 'application/json',  
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  
+                success: function (response) {
+                   console.log(response)
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+        })
+    })
+</script>
+
+</html>

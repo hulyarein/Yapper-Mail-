@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'notifications',
     'EmailCompositionAndManagement',
     'compressor',
+    'phonenumber_field',
+    'TeamEmails',
+    'Chatbot',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -57,11 +61,21 @@ MIDDLEWARE = [
 
 # Flobite
 
-# COMPRESS_ROOT = BASE_DIR / '/static/'
+'''COMPRESS_ROOT = BASE_DIR / 'static'
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)'''
+
+'''COMPRESS_ROOT = BASE_DIR / 'static'
 
 # COMPRESS_ENABLED = True
 
-# STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)'''
 
 # ari ra kutob flowbite
 
@@ -78,6 +92,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # my context processors
+                'UserProfile.Utils.context_processors.user_profile_picture',
             ],
         },
     },
@@ -138,6 +154,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 MEDIA = 'images/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -147,3 +167,12 @@ LOGIN_URL = '/login/'
 LOGOUT_REDIRECT_URL = "landing"
 
 AUTH_USER_MODEL = 'landing.CustomUser'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channel_redis.core.RedisChannelLayer",
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

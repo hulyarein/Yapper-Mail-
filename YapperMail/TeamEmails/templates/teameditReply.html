@@ -1,0 +1,416 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Email</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
+            background-color: #fff7f7;
+            background-repeat: no-repeat;
+            height: 97vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Helvetica;
+        }
+
+        .logoImage {
+            width: 250px;
+        }
+
+        .bodyContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+        }
+
+        .emailCompose {
+            min-height: 600px;
+            width: 80%;
+            background-color: white;
+            border-style: solid;
+            border-width: 3px;
+            border-color: #F37D84;
+            border-radius: 20px;
+        }
+
+        .buttonPart {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .composeButton {
+            width: 170px;
+            margin-bottom: 20px;
+        }
+
+        .inboxButton {
+            height: 35px;
+            width: 150px;
+            object-fit: contain;
+        }
+
+        .sentButton {
+            height: 35px;
+            width: 150px;
+            object-fit: contain;
+        }
+
+        .trashButton {
+            height: 35px;
+            width: 150px;
+            object-fit: contain;
+        }
+
+        .viewEmailButtons {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+        }
+
+        .UsertoClass {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            margin: 30px 50px;
+        }
+
+        .toDesign {
+            background-color: #F69BA0;
+            color: white;
+            padding: 15px 35px;
+            border-radius: 10px;
+        }
+
+        .userToForm {
+            border-style: none;
+            border-bottom-style: solid;
+            padding: 5px;
+            height: 100%;
+            font-size: 15px;
+            margin-left: 20px;
+            width: 100%;
+        }
+
+        .userToForm:focus {
+            outline: none;
+        }
+
+        .formUserDiv {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+        }
+
+        .formSubjectDiv {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+        }
+
+        .SubjectDesign {
+            background-color: #F69BA0;
+            color: white;
+            padding: 15px 18px;
+            border-radius: 10px;
+        }
+
+        .SubjectClass {
+            display: flex;
+            flex-direction: row;
+            align-items: end;
+            margin: 30px 50px;
+        }
+
+        .subjectForm {
+            border-style: none;
+            border-bottom-style: solid;
+            padding: 5px;
+            height: 100%;
+            font-size: 15px;
+            margin-left: 20px;
+            width: 100%;
+        }
+
+        .subjectForm:focus {
+            outline: none;
+        }
+
+        .descriptionForm {
+            width: 100%;
+            font-size: 15px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .descriptionDiv {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 60px;
+            margin-right: 60px;
+        }
+
+        .ButtonClass {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-left: 60px
+        }
+
+        .SubmitBut {
+            background-color: #F37D84;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border-style: none;
+        }
+
+        .attachCls {
+            width: 30px;
+            height: 30px;
+        }
+
+        .linkcls {
+            width: 30px;
+            height: 30px;
+        }
+        .file-item{
+            background-color: #F0F0F0;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            color: #F69BA0;
+        }
+        #fileList{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+        }
+        .delete-button{
+            color: #F69BA0;
+            margin-left: 10px;
+        }
+        .backEmailComp{
+            font-size: 30px;
+            color:#F69BA0 ;
+            margin-left: 10%;
+        }
+
+
+        @media (max-width:380px) {
+            .UsertoClass {
+                margin: 30px 30px;
+            }
+
+            .toDesign {
+                padding: 15px 20px;
+            }
+
+            .SubjectDesign {
+                padding: 15px 10px;
+            }
+
+            .SubjectClass {
+                margin: 30px 30px;
+            }
+
+            .descriptionDiv {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                margin-left: 60px;
+                margin-right: 60px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <img src="{% static 'images/logo.png' %}" class="logoImage">
+    </div>
+    <div class = "userIdh" style="display: none;"> {{userRep}}</div>
+    <div class = "emailIdh" style="display: none;">{{reply.emailId.id}}</div>
+    <div class = "backEmailComp">
+        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+    </div>
+    <div class="bodyContent">
+        <div class = "replyIdCont" style="display: none;">{{reply.id}}</div>
+        <form method="POST" class="emailCompose" enctype="multipart/form-data" style="padding: 10px;">
+            {%csrf_token%}
+            <div class="descriptionDiv">
+                {{form.description}}
+            </div>
+            <div style="height: 130px; margin-bottom: 30px; margin-left: 60px ;
+                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items:start;" >
+
+                {% for files in myfiles %}
+                    <div class="file-item">
+                        <span>{{files.file}}</span>
+                        <span class="delete-button-myfile">🗑️</span>
+                    </div>
+                {% endfor %}
+
+                    <div id="fileList">
+
+                    </div>
+            </div>
+
+            <div class="ButtonClass">
+                <button class="SubmitBut" type="submit">
+                    Save
+                </button>
+                <img src="{% static 'images/Attach.png' %}" class="attachCls">
+                <input type="file" id="fileInput" name="file" multiple style="display:none;">
+            </div>
+        </form>
+        <div class="clickImage" style="display: none;">Image</div>
+    </div>
+</body>
+<script>
+    // 
+    function FileListItems(files) {
+        var b = new ClipboardEvent('').clipboardData || new DataTransfer();
+        for (var i = 0; i < files.length; i++) {
+            b.items.add(files[i]);
+        }
+        return b.files;
+    }
+
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+    $(document).ready(function () {
+        $(".backEmailComp").click(function(e){
+            ukid = parseInt($(".userIdh").text())
+            okkid = parseInt($(".emailIdh").text())
+            window.location.href = `http://127.0.0.1:8000/teamemailmanagement/emailSentView/${ukid}/${okkid}`
+        })
+        var delMyfile = document.querySelectorAll(".delete-button-myfile")
+        for(delmf of delMyfile){
+            delmf.addEventListener("click",function(e){
+                e.target.parentElement.remove()
+            })
+        }
+
+        $('.attachCls').on('click', function () {
+            $('#fileInput').click();
+        });
+
+        // 
+        $('#fileInput').on('change', function () {
+            var fileInput = this; //
+            var files = Array.from(fileInput.files); // 
+            console.log(files);
+
+            if (files.length > 0) {
+                $('#fileList').empty(); //
+
+                // 
+                var modifiedFiles = [];
+
+                // 
+                for (var i = 0; i < files.length; i++) {
+                    var fileName = files[i].name;
+                    var uniqueString = new Date().getTime(); // 
+                    var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
+
+                    // 
+                    var newFile = new File([files[i]], uniqueName, { type: files[i].type });
+
+                    // 
+                    modifiedFiles.push(newFile);
+
+                    // 
+                    var fileItem = $('<div class="file-item"></div>');
+                    fileItem.append($('<span></span>').text(uniqueName)); // 
+                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // 
+
+                    $('#fileList').append(fileItem);
+                }
+
+                // 
+                fileInput.files = FileListItems(modifiedFiles);
+                console.log(Array.from(fileInput.files))
+            }
+        });
+
+
+        $(document).on('click', '.delete-button', function () {
+            var index = $(this).data('index'); // 
+            var fileInput = $('#fileInput')[0];
+            var files = Array.from(fileInput.files); // 
+
+            // 
+            files.splice(index, 1);
+            fileInput.files = new FileListItems(files); // 
+
+            // 
+            $('#fileList').empty();
+            files.forEach(function (file, i) {
+                var fileItem = $('<div class="file-item"></div>');
+                fileItem.append($('<span></span>').text(file.name));
+                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); //
+
+                $('#fileList').append(fileItem);
+            });
+
+            console.log(files)
+
+            // 
+            /*if (files.length === 0) {
+                $('#uploadButton').hide();
+            }*/
+        });
+
+        $(".SubmitBut").click(function(e){
+            e.preventDefault()
+            $(".emailCompose").submit()
+            $(".clickImage").click()
+        })
+
+        $(".clickImage").click(function (e) {
+            var delList = document.querySelectorAll(".delete-button-myfile");
+            var listDel = [];
+            delList.forEach(nn => listDel.push(nn.parentElement.firstElementChild.innerText));  // 
+
+            const emailId = parseInt($(".replyIdCont").text());  // 
+
+            $.ajax({
+                url: `/teamemailmanagement/changeImageReply/${emailId}`,  // 
+                type: 'POST',
+                data: JSON.stringify({ "listme": listDel }),  // 
+                contentType: 'application/json',  // 
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  //
+                success: function (response) {
+                    console.log("Email updated successfully:", response);
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+                }
+            });
+
+        })
+    })
+</script>
+
+</html>

@@ -10,7 +10,9 @@
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <style>
         body {
-            background-color: #F4F4F4;
+            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
+            background-color: #fff7f7;
+            background-repeat: no-repeat;
             height: 97vh;
             display: flex;
             flex-direction: column;
@@ -143,6 +145,8 @@
         .descriptionForm {
             width: 100%;
             font-size: 15px;
+            padding: 10px;
+            border-radius: 10px;
         }
 
         .descriptionDiv {
@@ -163,7 +167,7 @@
             background-color: #F37D84;
             color: white;
             padding: 15px 30px;
-            border-radius: 1000px;
+            border-radius: 10px;
             border-style: none;
         }
 
@@ -182,6 +186,11 @@
             margin-bottom: 10px;
             border-radius: 10px;
             color: #F69BA0;
+        }
+        #fileList{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
         }
         .delete-button{
             color: #F69BA0;
@@ -228,16 +237,18 @@
     </div>
     <div class = "userIdh" style="display: none;"> {{userRep}}</div>
     <div class = "emailIdh" style="display: none;">{{reply.emailId.id}}</div>
-    <div class = "backEmailComp">←</div>
+    <div class = "backEmailComp">
+        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+    </div>
     <div class="bodyContent">
         <div class = "replyIdCont" style="display: none;">{{reply.id}}</div>
-        <form method="POST" class="emailCompose" enctype="multipart/form-data">
+        <form method="POST" class="emailCompose" enctype="multipart/form-data" style="padding: 10px;">
             {%csrf_token%}
             <div class="descriptionDiv">
                 {{form.description}}
             </div>
             <div style="height: 130px; margin-bottom: 30px; margin-left: 60px ;
-                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;" >
+                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items:start;" >
 
                 {% for files in myfiles %}
                     <div class="file-item">
@@ -263,7 +274,7 @@
     </div>
 </body>
 <script>
-    // Helper to create a new FileList
+    // 
     function FileListItems(files) {
         var b = new ClipboardEvent('').clipboardData || new DataTransfer();
         for (var i = 0; i < files.length; i++) {
@@ -304,68 +315,66 @@
             $('#fileInput').click();
         });
 
-        // Handle the file selection
+        // 
         $('#fileInput').on('change', function () {
-            var fileInput = this; // Get the input element
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var fileInput = this; // 
+            var files = Array.from(fileInput.files); // 
             console.log(files);
 
             if (files.length > 0) {
-                $('#fileList').empty(); // Clear existing file list
+                $('#fileList').empty(); //
 
-                // Create an array to hold modified files
+                // 
                 var modifiedFiles = [];
 
-                // Loop through selected files
+                // 
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
-                    var uniqueString = new Date().getTime(); // Create a unique string using the current timestamp
+                    var uniqueString = new Date().getTime(); // 
                     var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
 
-                    // Create a new File object with the unique name
+                    // 
                     var newFile = new File([files[i]], uniqueName, { type: files[i].type });
 
-                    // Push the new file to the modifiedFiles array
+                    // 
                     modifiedFiles.push(newFile);
 
-                    // Create and display the file item
+                    // 
                     var fileItem = $('<div class="file-item"></div>');
-                    fileItem.append($('<span></span>').text(uniqueName)); // Display the unique name
-                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
+                    fileItem.append($('<span></span>').text(uniqueName)); // 
+                    fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // 
 
                     $('#fileList').append(fileItem);
                 }
 
-                // Update the input element with the modified files using FileListItems
+                // 
                 fileInput.files = FileListItems(modifiedFiles);
                 console.log(Array.from(fileInput.files))
             }
         });
 
-        // Handle delete button click
-        // Handle delete button click
         $(document).on('click', '.delete-button', function () {
-            var index = $(this).data('index'); // Get index of file to delete
+            var index = $(this).data('index'); // 
             var fileInput = $('#fileInput')[0];
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var files = Array.from(fileInput.files); // 
 
-            // Remove the selected file
+            // 
             files.splice(index, 1);
-            fileInput.files = new FileListItems(files); // Update file input
+            fileInput.files = new FileListItems(files); // 
 
-            // Refresh the file list
+            // 
             $('#fileList').empty();
             files.forEach(function (file, i) {
                 var fileItem = $('<div class="file-item"></div>');
                 fileItem.append($('<span></span>').text(file.name));
-                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // Delete icon with index
+                fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i)); // 
 
                 $('#fileList').append(fileItem);
             });
 
             console.log(files)
 
-            // Hide upload button if no files left
+            // 
             /*if (files.length === 0) {
                 $('#uploadButton').hide();
             }*/
@@ -380,16 +389,16 @@
         $(".clickImage").click(function (e) {
             var delList = document.querySelectorAll(".delete-button-myfile");
             var listDel = [];
-            delList.forEach(nn => listDel.push(nn.parentElement.firstElementChild.innerText));  // Push inner text to array
+            delList.forEach(nn => listDel.push(nn.parentElement.firstElementChild.innerText));  // 
 
-            const emailId = parseInt($(".replyIdCont").text());  // Extract email ID
+            const emailId = parseInt($(".replyIdCont").text());  // 
 
             $.ajax({
-                url: `/emailmanagement/changeImageReply/${emailId}`,  // Django view URL
+                url: `/emailmanagement/changeImageReply/${emailId}`,  // 
                 type: 'POST',
-                data: JSON.stringify({ "listme": listDel }),  // JSON-encoded data
-                contentType: 'application/json',  // Set content type to JSON
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                data: JSON.stringify({ "listme": listDel }),  // 
+                contentType: 'application/json',  // 
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // 
                 success: function (response) {
                     console.log("Email updated successfully:", response);
 

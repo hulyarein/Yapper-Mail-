@@ -12,9 +12,88 @@
       crossorigin="anonymous"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>I miss you</title>
+    <link rel="icon" type="image/x-icon" href="{% static "images/logo2.png" %}"
+    />
+    <title>Yapper | Gender</title>
   </head>
   <body class="bg-[#F4F4F4]">
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('myForm');
+    const submitButton = document.getElementById  ('openModal');
+    const passBtn = document.getElementById('passVerifyBtn');
+
+    let initialPass = document.getElementById('passVerify').value;
+
+    // Capture initial values
+    let initialValues = {
+      work_address: document.getElementById('workAddress').value
+    };
+
+    const checkChanges = () => {
+      const currentValues = {
+        work_address: document.getElementById('workAddress').value
+      };
+
+      const currPass = document.getElementById('passVerify').value;
+
+      // Check if values have changed
+      const hasChanges = 
+        currentValues.work_address !== initialValues.work_address;
+
+      const hasPass = currPass !== initialPass;
+
+      passBtn.disabled = !hasPass;
+      submitButton.disabled = !hasChanges; 
+    };
+
+    form.addEventListener('input', checkChanges);
+
+    let modalElement, modalInstance;
+
+    submitButton.addEventListener('click', () => {
+      modalElement = document.getElementById('exampleModal');
+      modalInstance = bootstrap.Modal.getInstance(modalElement);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent default form submission
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: new URLSearchParams(new FormData(form)),
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(data => {
+            const errorMessage = data.error || "An error occurred. Please try again.";
+            document.querySelector('.error-message').textContent = errorMessage;
+            console.error('Server response error:', data);
+          });
+        } else {
+          modalInstance.hide();
+          alert('Changes saved successfully!'); 
+
+          // Update initial values to the current ones after successful submission
+          initialValues = {
+            work_address: document.getElementById('workAddress').value
+          };
+          initialPass = document.getElementById('passVerify').value;
+
+          // Recheck to disable buttons if no changes detected
+          checkChanges();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  });
+  </script>
     {% include 'components/header.html' %}
     <div class="header">{% block header %}{% endblock %}</div>
       <a href="{% url 'profile' %}">
@@ -28,19 +107,29 @@
       <hr class="border-[#f37d84]">
       <div class="content pb-20 flex flex-col items-center">
         <div class="fields border-2 border-[#F37D84] my-10 w-1/2 rounded-lg">
-          <form action="" class="flex flex-col m-12 gap-3">
 
-          <p class="ml-16">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+          <form action="{% url 'changeWork' %}" class="flex flex-col m-12 gap-3" id="myForm">
+            {% csrf_token %}
+            <p class="ml-16">"Work work work work"</p>
             <div class="flex flex-col gap-10">
               <div class="flex flex-col">
                 <label class="mx-16 text-lg font-semibold">Work Address</label>
-                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" placeholder="123 Sesame Street">
+                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" value="{{ form.work_address.value }}" name="work_address" id="workAddress">
               </div>
             </div>
             <div class="flex justify-end gap-10 mr-16 items-center">
               <a href="{% url 'profile' %}" class="font-semibold hover:font-medium"><label>Cancel</label></a>
-              <input class="btn btn-primary w-1/6 font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12" type="submit" value="Save">
+              <button type="button" 
+                      class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#exampleModal"
+                      disabled
+                      id="openModal"
+                      >
+                      Save
+              </button>
             </div>
+            {% include 'components/pass_verify.html'%}
           </form>
         </div>
       </div>
@@ -51,5 +140,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
   </body>
 </html>

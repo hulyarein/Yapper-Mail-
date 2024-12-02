@@ -15,8 +15,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
-            background-color: #F4F4F4;
-            height: 97vh;
+            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
+            background-color: #fff7f7;
+            background-repeat: no-repeat;
+            height: 100%;
             display: flex;
             flex-direction: column;
             font-family: Helvetica;
@@ -143,6 +145,8 @@
 
         .messageForm {
             width: 90%;
+            border-radius: 5px;
+            padding: 10px;
         }
 
         .sendReply {
@@ -183,10 +187,26 @@
         <img src="{% static 'images/logo.png' %}" class="logoImage">
     </div>
     <div style="display: flex; flex-direction: row; margin-left: 10%; align-items: center;">
-        <div class="backEmailComp">←</div>
+        <div class="backEmailComp">
+            <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+        </div>
         {% if userRep.id == emailCont.fromUser.id %}
-        <div class="deletePost">🗑</div>
-        <img src="{%static 'images/Edit.png'%}" class="editPost">
+
+        {% if emailCont.isDeleted == False %}
+            <div class="deletePost">🗑</div>
+            <img src="{%static 'images/Edit.png'%}" class="editPost">
+        {% endif %}
+
+        {% if emailCont.isDeleted == True %}
+            <div class="deletePost" class="flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
+                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
+                </svg>
+            </div>
+        {% endif %}
+            
+
         {% endif %}
         <div style="display: none;" class="numEmail">{{emailCont.id}}</div>
         <div class="userRephold" style="display: none;">{{userRep.id}}</div>
@@ -202,11 +222,11 @@
                         <div class="accountContain">
                             <div class="profCont">
                                 <div class="profShow">
-                                    {{emailCont.fromUser.firstname|slice:":1"}}
+                                    {{emailCont.fromUser.first_name|slice:":1"}}
                                 </div>
                                 <div>
-                                    <div class=fromName>{{emailCont.fromUser.firstname}}</div>
-                                    <div class=toName>{{emailCont.fromUser.lastname}}</div>
+                                    <div class=fromName style="font-size: 18px;">{{emailCont.fromUser.username}}</div>
+                                    <div class=toName style="font-size: 13px;">{{emailCont.fromUser.first_name}} {{emailCont.fromUser.last_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{emailCont.date_sent}}</div>
                                 </div>
@@ -237,11 +257,11 @@
                             <div class="profCont">
                                 <div class="repId" style="display: none;">{{rep.id}}</div>
                                 <div class="profShow">
-                                    {{rep.fromUser.firstname|slice:":1"}}
+                                    {{rep.fromUser.first_name|slice:":1"}}
                                 </div>
                                 <div>
-                                    <div class=fromName>{{rep.fromUser.firstname}}</div>
-                                    <div class=toName>{{rep.fromUser.lastname}}</div>
+                                    <div class=fromName style="font-size: 18px;">{{rep.fromUser.username}}</div>
+                                    <div class=toName style="font-size: 13px;">{{rep.fromUser.first_name}} {{rep.fromUser.last_name}}</div>
                                     <div class=dateCreated style="color: rgb(176, 176, 176); font-size: 12px;">
                                         {{rep.date_sent}}</div>
                                 </div>
@@ -278,6 +298,8 @@
 
             <div id="fileList">
             </div>
+
+            {% if emailCont.isDeleted == False %}
             <div
                 style="display: flex; flex-direction: row; justify-content: center; margin-bottom: 10px; margin-left: 10px;">
                 {{form.message}}
@@ -289,6 +311,7 @@
                 </button>
                 <input type="file" id="fileInput" name="file" multiple style="display:none;">
             </div>
+            {% endif %}
     </div>
     </form>
 
@@ -309,7 +332,7 @@
         }
         return cookieValue;
     }
-    // Helper to create a new FileList
+    // 
     function FileListItems(files) {
         var b = new ClipboardEvent('').clipboardData || new DataTransfer();
         for (var i = 0; i < files.length; i++) {
@@ -347,11 +370,11 @@
         }
         $(".deletePost").click(function (e) {
             $.ajax({
-                url: `/emailmanagement/deleteEmail`,  // Django view URL
+                url: `/emailmanagement/deleteEmail`,
                 type: 'POST',
-                data: JSON.stringify({ "delId": parseInt($(".numEmail").text()) }),  // JSON-encoded data
-                contentType: 'application/json',  // Set content type to JSON
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  // CSRF token
+                data: JSON.stringify({ "delId": parseInt($(".numEmail").text()) }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 success: function (response) {
                     console.log("Email updated successfully:", response);
                     if (response.message = 'Email deleted successfully.') {
@@ -363,8 +386,8 @@
                     console.error('An error occurred:', error.responseJSON);
                 }
             });
-
         })
+
         var repedit = document.querySelectorAll(".editReply")
 
         for (a of repedit) {
@@ -382,56 +405,56 @@
             $('#fileInput').click();
         });
 
-        // Handle the file selection
+        // 
         $('#fileInput').on('change', function () {
-            var fileInput = this; // Get the input element
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var fileInput = this; // 
+            var files = Array.from(fileInput.files); // 
             console.log(files);
 
             if (files.length > 0) {
-                $('#fileList').empty(); // Clear existing file list
+                $('#fileList').empty(); // 
 
-                // Create an array to hold modified files
+                // 
                 var modifiedFiles = [];
 
-                // Loop through selected files
+                // 
                 for (var i = 0; i < files.length; i++) {
                     var fileName = files[i].name;
-                    var uniqueString = new Date().getTime(); // Create a unique string using the current timestamp
+                    var uniqueString = new Date().getTime(); // 
                     var uniqueName = fileName.replace(/(\.[\w\d]+)$/, '_' + uniqueString + '$1');
 
 
-                    // Create a new File object with the unique name
+                    // 
                     var newFile = new File([files[i]], uniqueName, { type: files[i].type });
 
-                    // Push the new file to the modifiedFiles array
+                    // 
                     modifiedFiles.push(newFile);
 
-                    // Create and display the file item
+                    // 
                     var fileItem = $('<div class="file-item"></div>');
-                    fileItem.append($('<span></span>').text(uniqueName)); // Display the unique name
+                    fileItem.append($('<span></span>').text(uniqueName)); // 
                     fileItem.append($('<span class="delete-button">🗑️</span>').data('index', i));
 
                     $('#fileList').append(fileItem);
                 }
 
-                // Update the input element with the modified files using FileListItems
+                // 
                 fileInput.files = FileListItems(modifiedFiles);
                 console.log(Array.from(fileInput.files))
             }
         });
 
-        // Handle delete button click
+        // 
         $(document).on('click', '.delete-button', function () {
-            var index = $(this).data('index'); // Get index of file to delete
+            var index = $(this).data('index'); // 
             var fileInput = $('#fileInput')[0];
-            var files = Array.from(fileInput.files); // Convert FileList to array
+            var files = Array.from(fileInput.files); // 
 
-            // Remove the selected file
+            // 
             files.splice(index, 1);
-            fileInput.files = new FileListItems(files); // Update file input
+            fileInput.files = new FileListItems(files); // 
 
-            // Refresh the file list
+            // 
             $('#fileList').empty();
             files.forEach(function (file, i) {
                 var fileItem = $('<div class="file-item"></div>');

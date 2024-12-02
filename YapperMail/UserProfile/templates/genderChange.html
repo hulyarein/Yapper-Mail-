@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,45 +13,168 @@
       crossorigin="anonymous"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>I miss you</title>
+    <link rel="icon" type="image/x-icon" href="{% static "images/logo2.png" %}"
+    />
+    <title>Yapper | Gender</title>
   </head>
   <body class="bg-[#F4F4F4]">
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("myForm");
+        const submitButton = document.getElementById("openModal");
+        const passBtn = document.getElementById("passVerifyBtn");
+        let initialPass = document.getElementById("passVerify").value;
+
+        function findSelectedRadio() {
+          const selectedRadio = document.querySelector(
+            'input[name="gender"]:checked'
+          );
+          return selectedRadio ? selectedRadio.value : null;
+        }
+
+        // Capture initial values
+        let initialValues = {
+          gender: findSelectedRadio(),
+        };
+
+        const checkChanges = () => {
+          const currentValues = {
+            gender: findSelectedRadio(),
+          };
+
+          const currPass = document.getElementById("passVerify").value;
+
+          // Check if values have changed
+          const hasChanges = currentValues.gender !== initialValues.gender;
+          const hasPass = currPass !== initialPass;
+
+          passBtn.disabled = !hasPass;
+          submitButton.disabled = !hasChanges;
+        };
+
+        form.addEventListener("input", checkChanges);
+
+        let modalElement, modalInstance;
+        submitButton.addEventListener("click", () => {
+          modalElement = document.getElementById("exampleModal");
+          modalInstance = new bootstrap.Modal(modalElement);
+          console.log("Selected gender:", findSelectedRadio());
+        });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          fetch(form.action, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "X-CSRFToken": document.querySelector(
+                "[name=csrfmiddlewaretoken]"
+              ).value,
+            },
+            body: new URLSearchParams(new FormData(form)),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                return response.json().then((data) => {
+                  const errorMessage =
+                    data.error || "An error occurred. Please try again.";
+                  document.querySelector(".error-message").textContent =
+                    errorMessage;
+                  console.error("Server response error:", data);
+                });
+              } else {
+                document.getElementById("passVerify").value = "";
+                modalInstance.hide();
+                alert("Changes saved successfully!");
+                initialValues.gender = findSelectedRadio();
+                checkChanges();
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+      });
+    </script>
+
     {% include 'components/header.html' %}
     <div class="header">{% block header %}{% endblock %}</div>
-      <a href="{% url 'profile' %}">
-        <div class="w-3/5 flex justify-center items-center gap-2 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
-          </svg>
-          <label class="text-3xl font-light">Gender</label>
-        </div>
-      </a>
-      <hr class="border-[#f37d84]">
-      <div class="content pb-20 flex flex-col items-center">
-        <div class="fields border-2 border-[#F37D84] my-10 w-2/5 rounded-lg">
-          <form action="" class="flex flex-col m-12 gap-3">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam, vero nisi, dolores velit similique est praesentium suscipit quidem itaque voluptatum veritatis sunt eius harum nihil? Facilis, corporis? Excepturi, reiciendis cumque?</p>
-           <div class="flex">
-               <select class="form-select" aria-label="Default select example">
-                 <option selected value="1">January</option>
-                 <option value="2">February</option>
-                 <option value="3">March</option>
-                 <option value="4">April</option>
-                 <option value="5">May</option>
-                 <option value="7">July</option>
-                 <option value="8">August</option>
-                 <option value="9">September</option>
-                 <option value="10">October</option>
-                 <option value="11">November</option>
-                 <option value="12">December</option>
-               </select>
-           </div> 
-            <div class="flex justify-end gap-10 items-center">
-              <a href="{% url 'profile' %}" class="font-semibold hover:font-medium"><label>Cancel</label></a>
-              <input class="btn btn-primary w-1/6 font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12" type="submit" value="Save">
+    <a href="{% url 'profile' %}">
+      <div class="w-3/5 flex justify-center items-center gap-2 mb-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          fill="currentColor"
+          class="bi bi-arrow-left-short"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"
+          />
+        </svg>
+        <label class="text-3xl font-light">Gender</label>
+      </div>
+    </a>
+    <hr class="border-[#f37d84]" />
+    <div class="content pb-20 flex flex-col items-center">
+      <div class="fields border-2 border-[#F37D84] my-10 w-2/5 rounded-lg">
+        <form
+          action="{% url 'changeGender' %}"
+          id="myForm"
+          method="post"
+          class="flex flex-col m-12 gap-3"
+        >
+          {% csrf_token %}
+          <p>!p Born this way - Lady Gaga</p>
+          <div class="flex flex-col gap-2">
+            <div class="flex flex-row items-center gap-2">
+              <input class="form-check-input" type="radio" name="gender"
+              value="Male" id="Male" {% if form.gender.value == "Male" %}
+              checked{% endif %} />
+              <label for="Male" name="genderRadio">Male</label>
             </div>
-          </form>
-        </div>
+            <div class="flex flex-row items-center gap-2">
+              <input class="form-check-input" type="radio" name="gender"
+              value="Female" id="Female" {% if form.gender.value == "Female" %}
+              checked{% endif %} />
+              <label for="Female" name="genderRadio">Female</label>
+            </div>
+            <div class="flex flex-row items-center gap-2">
+              <input class="form-check-input" type="radio" name="gender"
+              value="PNS" id="PNS" {% if form.gender.value == "PNS" %} checked
+              {% endif %} />
+              <label for="PNS" name="genderRadio">Prefer not to Say</label>
+            </div>
+            <div class="flex flex-row items-center gap-2">
+              <input class="form-check-input" type="radio" name="gender"
+              value="Other" id="Others" {% if form.gender.value == "Other" %}
+              checked{% endif %} />
+              <label for="Others" name="genderRadio">Others</label>
+              {{ form.other_gender }}
+            </div>
+          </div>
+          <div class="flex justify-end gap-10 items-center">
+            <a
+              href="{% url 'profile' %}"
+              class="font-semibold hover:font-medium"
+              ><label>Cancel</label></a
+            >
+            <button
+              type="button"
+              class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              disabled
+              id="openModal"
+            >
+              Save
+            </button>
+          </div>
+          {% include 'components/pass_verify.html' %}
+        </form>
       </div>
     </div>
     <!-- bootstrapshiz-->

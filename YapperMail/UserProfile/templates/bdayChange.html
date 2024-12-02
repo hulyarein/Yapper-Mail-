@@ -16,9 +16,98 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <title>I miss you</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static 'images/logo2.png' %}"
+    />
+    <title>Yapper | Birthday</title>
   </head>
   <body class="bg-[#F4F4F4]">
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('myForm');
+    const submitButton = document.getElementById  ('openModal');
+    const passBtn = document.getElementById('passVerifyBtn');
+
+    let initialPass = document.getElementById('passVerify').value;
+
+    // Get today's date
+    const today = new Date();
+    // Subtract 13 years from the current date
+    const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+    // Format the date to YYYY-MM-DD format
+    const formattedDate = minDate.toISOString().split('T')[0];
+    // Set the max attribute on the input field
+    document.getElementById("birthday").max = formattedDate;
+
+    // Capture initial values
+    let initialValues = {
+      birthday: document.getElementById('birthday').value
+    };
+
+    const checkChanges = () => {
+      const currentValues = {
+        birthday: document.getElementById('birthday').value
+      };
+
+      const currPass = document.getElementById('passVerify').value;
+
+      // Check if values have changed
+      const hasChanges = 
+        currentValues.birthday!== initialValues.birthday;
+
+      const hasPass = currPass !== initialPass;
+
+      passBtn.disabled = !hasPass;
+      submitButton.disabled = !hasChanges; 
+    };
+
+    form.addEventListener('input', checkChanges);
+
+    let modalElement, modalInstance;
+
+    submitButton.addEventListener('click', () => {
+      modalElement = document.getElementById('exampleModal');
+      modalInstance = bootstrap.Modal.getInstance(modalElement);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent default form submission
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+        body: new URLSearchParams(new FormData(form)),
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(data => {
+            const errorMessage = data.error || "An error occurred. Please try again.";
+            document.querySelector('.error-message').textContent = errorMessage;
+            console.error('Server response error:', data);
+          });
+        } else {
+          document.getElementById('passVerify').value = '';
+          modalInstance.hide();
+          alert('Changes saved successfully!'); 
+
+          // Update initial values to the current ones after successful submission
+          initialValues.birthday = document.getElementById('birthday').value;
+
+          // Recheck to disable buttons if no changes detected
+          checkChanges();
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  });
+  </script>
     {% include 'components/header.html' %}
     <div class="header">{% block header %}{% endblock %}</div>
       <a href="{% url 'profile' %}">
@@ -32,18 +121,34 @@
       <hr class="border-[#f37d84]">
       <div class="content pb-20 flex flex-col items-center">
         <div class="fields border-2 border-[#F37D84] my-10 w-2/5 rounded-lg">
-          <form action="" class="flex flex-col m-12 gap-3">
+          <form action="{% url 'changeBday' %}" id="myForm" class="flex flex-col m-12 gap-3">
+            {%csrf_token%}
             <p>Hey Shawty, it's yo' Birthday. We gonna party like it's yo' Birthday</p>
             <div class="">
-              <input id="startDate" class="form-control" type="date" />
-              <span id="startDateSelected"></span>
+              <input 
+              id="birthday" 
+              class="form-control" 
+              name="birthday"
+              type="date" 
+              value="{{ form.birthday.value|date:"Y-m-d" }}"/>
+              <div class="flex justify-end gap-10 mt-8 items-center">
+                <a href="{% url 'profile' %}" class="font-semibold hover:font-medium"><label>Cancel</label></a>
+                <button type="button" 
+                        class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#exampleModal"
+                        disabled
+                        id="openModal"
+                        >
+                        Save
+                </button>
+              </div>
+              {% include 'components/pass_verify.html' %}
             </div>
           </form>
         </div>
       </div>
     </div>
-
-
 
     <!-- bootstrapshiz-->
     <script
@@ -51,5 +156,10 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.11"></script>
   </body>
 </html>

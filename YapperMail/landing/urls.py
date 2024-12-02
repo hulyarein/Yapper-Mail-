@@ -1,6 +1,8 @@
 from django.urls import path, include
 from . import views
 from .views import signupForm, loginForm
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('', views.landing, name='landing'), 
@@ -18,3 +20,5 @@ urlpatterns = [
     path('reset-password/', views.reset_password, name='reset_password'),
     path("accounts/", include("django.contrib.auth.urls")),  
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
