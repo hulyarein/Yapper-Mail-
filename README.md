@@ -113,6 +113,7 @@ Follow these steps to get started with our website.
    ```sh
    python manage.py runserver
    ```
+8. Reach out to us for you to get the necessary api keys for the project
 
 
 
