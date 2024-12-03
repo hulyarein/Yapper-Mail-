@@ -21,7 +21,7 @@
 
 <details>
   <summary>Table of Contents</summary>
-  <ol>
+  <ul>
     <li>
       <a href="#system-overview">System Overview</a>
     </li>
@@ -29,15 +29,20 @@
       <a href="#functional-requirements">Functional Requirements</a>
     </li>
     <li>
-       <a href="#installation">Installation</a>
+       <a href="#technologies-used">Technologies Used</a>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
+    <li>
+	<a href="#prerequisite">Prerequisite</a>
+    </li>
+    <li>
+	<a href="#installation">Installation</a>
+    </li>
+    <li><a href="#business-requirements">Business Requirements</a></li>
+    <li><a href="#gantt-chart">Gantt Chart</a></li>
+    <li><a href="#erd">Erd</a></li>
+    <li><a href="#user-interface">User Interface</a></li>
+    <li><a href="#contributors">Contributors</a></li>
+  </ul>
 </details>
 
 
@@ -152,7 +157,7 @@ Click the image below
   </a>
 </section>
 
-## ERD
+## Erd
 Click the image below
 <section id="ERD" align = "center">
   <a href="https://lucid.app/lucidchart/0eb8fb52-3d4a-4d88-9b28-b827abe3ef9a/edit?viewport_loc=-207%2C-630%2C3056%2C1488%2C0_0&invitationId=inv_9ffd2681-4f89-494b-bdae-f1d9fc848476" target="_blank">
@@ -160,7 +165,7 @@ Click the image below
   </a>
 </section>
 
-## UI/UX
+## User Interface
 Click the image below
 <section id="UIUX" align = "center">
   <a href="https://www.figma.com/design/AhFPW4uRwa75PsDdzeVZJI/Yapper-1.0?t=hZQyJFtnFTZfelH2-1" target="_blank">
