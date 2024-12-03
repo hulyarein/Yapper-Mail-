@@ -154,15 +154,23 @@
 
         .listsubcontright {
             margin-right: 10px;
+            margin-left: 10px;
         }
 
         .listsubcontleft {
             margin-left: 10px;
+            margin-right: 10px;
         }
 
         .botPic {
             width: 40px;
             height: 40px;
+        }
+
+        .profPic {
+            width: 40px;
+            height: 40px;
+            border-radius: 1000px;
         }
 
         .listContent {
@@ -185,16 +193,21 @@
             justify-content: flex-start;
             flex-direction: row;
         }
-        .secVertMain{
+
+        .secVertMain {
             height: 100vh;
             max-height: 100vh;
             min-height: 500px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            width: 100%;
         }
-        .getInput{
-            width: 95%; font-size: 15px; padding: 10px 10px;
+
+        .getInput {
+            width: 95%;
+            font-size: 15px;
+            padding: 10px 10px;
             height: 70px;
             margin-left: 10px;
             border-radius: 5px;
@@ -202,36 +215,47 @@
             border-width: 2px;
             border-color: rgb(177, 177, 177);
         }
-        .sendDiv{
-            display: flex; flex-direction: row;
+
+        .sendDiv {
+            display: flex;
+            flex-direction: row;
             align-items: center;
         }
-        .sendPrompt{
+
+        .sendPrompt {
             cursor: pointer;
         }
-        @media (max-height:624px){
-            .logoImage{
+
+        @media (max-height:624px) {
+            .logoImage {
                 margin-top: 20px;
-                animation-name:showLog2;
+                animation-name: showLog2;
             }
         }
-        @media (max-height:560px){
-            .logoImage{
+
+        @media (max-height:560px) {
+            .logoImage {
                 height: 180px;
                 width: 180px;
             }
         }
-        @media (max-width:560px){
-            .logoImage{
+
+        @media (max-width:560px) {
+            .logoImage {
                 display: none;
             }
-            .firstVert{
+
+            .firstVert {
                 min-width: 120px;
             }
-            .typing-container,.typing-container2{
+
+            .typing-container,
+            .typing-container2 {
                 display: none;
             }
-            .typing,.typing2{
+
+            .typing,
+            .typing2 {
                 display: none;
             }
         }
@@ -263,19 +287,23 @@
                 border-color: transparent;
             }
         }
-        @keyframes showLog{
-            from{
+
+        @keyframes showLog {
+            from {
                 margin-top: -150%;
             }
-            to{
+
+            to {
                 margin-top: 30%;
             }
         }
-        @keyframes showLog2{
-            from{
+
+        @keyframes showLog2 {
+            from {
                 margin-top: -150%;
             }
-            to{
+
+            to {
                 margin-top: 20px;
             }
         }
@@ -297,190 +325,45 @@
         </div>
         <div class="secVertMain">
             <ul class="secondVert">
-                <!-- Left-aligned message -->
+
+                {% for prompt in userPrompt %}
+                {% if prompt.fromAi %}
                 <li class="listcontleft">
                     <div class="listsubcontleft">
                         <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
                     </div>
                     <div class="listContent">
-                        He Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
+                        {{prompt.prompt_text}}
                     </div>
                 </li>
-    
-                <!-- Right-aligned message -->
+                {% else %}
                 <li class="listcontright">
+                    <div class="btn-group dropleft">
+                        <div style="display: flex; flex-direction: row; align-items: center; cursor: pointer;"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{% static 'images/down-arrow.png'%}"
+                                style="color:#fd5e66; height: 20px; width: 20px; display: flex; flex-direction: row; align-items: center; margin-right: 5px;">
+                        </div>
+
+                        <div class="dropdown-menu">
+                            <div style="opacity: 0; font-size: 2px;">{{prompt.id}}</div>
+                            <button class="dropdown-item deletemess" type="button">Delete</button>
+                            <button class="dropdown-item editmess" type="button">Edit</button>
+                        </div>
+                    </div>
                     <div class="listContent">
-                        Hello world! This is a right-aligned message.
+                        {{prompt.prompt_text}}
                     </div>
                     <div class="listsubcontright">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
+                        <img src="{{profilepic}}" class="profPic">
                     </div>
                 </li>
-    
-                <!-- Left-aligned message -->
-                <li class="listcontleft">
-                    <div class="listsubcontleft">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                    <div class="listContent">
-                        Another left-aligned message here.
-                    </div>
-                </li>
-    
-                <!-- Right-aligned message -->
-                <li class="listcontright">
-                    <div class="listContent">
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                    </div>
-                    <div class="listsubcontright">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                </li>
-                                <!-- Left-aligned message -->
-                <li class="listcontleft">
-                    <div class="listsubcontleft">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                    <div class="listContent">
-                        He Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                    </div>
-                </li>
-    
-                <!-- Right-aligned message -->
-                <li class="listcontright">
-                    <div class="listContent">
-                        Hello world! This is a right-aligned message.
-                    </div>
-                    <div class="listsubcontright">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                </li>
-    
-                <!-- Left-aligned message -->
-                <li class="listcontleft">
-                    <div class="listsubcontleft">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                    <div class="listContent">
-                        Another left-aligned message here.
-                    </div>
-                </li>
-    
-                <!-- Right-aligned message -->
-                <li class="listcontright">
-                    <div class="listContent">
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                    </div>
-                    <div class="listsubcontright">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                </li>
-                <!-- Left-aligned message -->
-                <li class="listcontleft">
-                    <div class="listsubcontleft">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                    <div class="listContent">
-                        He Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                    </div>
-                </li>
-    
-                <!-- Right-aligned message -->
-                <li class="listcontright">
-                    <div class="listContent">
-                        Hello world! This is a right-aligned message.
-                    </div>
-                    <div class="listsubcontright">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                </li>
-    
-                <!-- Left-aligned message -->
-                <li class="listcontleft">
-                    <div class="listsubcontleft">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                    <div class="listContent">
-                        Another left-aligned message here.
-                    </div>
-                </li>
-    
-                <!-- Right-aligned message -->
-                <li class="listcontright">
-                    <div class="listContent">
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                    </div>
-                    <div class="listsubcontright">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                </li>
-                <!-- Left-aligned message -->
-                <li class="listcontleft">
-                    <div class="listsubcontleft">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                    <div class="listContent">
-                        He Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                    </div>
-                </li>
-    
-                <!-- Right-aligned message -->
-                <li class="listcontright">
-                    <div class="listContent">
-                        Hello world! This is a right-aligned message.
-                    </div>
-                    <div class="listsubcontright">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                </li>
-    
-                <!-- Left-aligned message -->
-                <li class="listcontleft">
-                    <div class="listsubcontleft">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                    <div class="listContent">
-                        Another left-aligned message here.
-                    </div>
-                </li>
-    
-                <!-- Right-aligned message -->
-                <li class="listcontright">
-                    <div class="listContent">
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                        Another right-aligned message herejasndfjnsajkdfnaskjfdnkasjnfsjdnfk
-                    </div>
-                    <div class="listsubcontright">
-                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
-                    </div>
-                </li>
+                {% endif %}
+                {% endfor %}
             </ul>
-            <div class = "sendDiv">
-                <input type = "text" class = "getInput">
-                <img src = "{% static 'images/send.png' %}" style="height: 30px; width: 30px;" class = "sendPrompt">
+            <div class="sendDiv">
+                <textarea class="getInput"></textarea>
+                <img src="{% static 'images/send.png' %}" style="height: 30px; width: 30px;" class="sendPrompt">
             </div>
         </div>
     </div>
@@ -501,22 +384,190 @@
         return cookieValue;
     }
     $(document).ready(function (e) {
+        const parentElementvv = document.querySelector('.secondVert');
+        parentElementvv.scrollTop = parentElementvv.scrollHeight;
         $(".sendPrompt").click(function (e) {
             var inputPrompt = document.querySelector(".getInput")
+            var inputValue = inputPrompt.value.trim()
+            if (inputPrompt.value.trim() == "") {
+                console.log("none")
+                return;
+            }
+
+            const parentElement = document.querySelector('.secondVert');
+
+            const listItem = document.createElement('li');
+            listItem.classList.add('listcontright');
+
+            const btnGroup = document.createElement('div');
+            btnGroup.classList.add('btn-group', 'dropleft');
+            btnGroup.style.opacity = 0
+
+            const dropdownToggle = document.createElement('div');
+            dropdownToggle.style.cssText = "display: flex; flex-direction: row; align-items: center; cursor: pointer;";
+            dropdownToggle.setAttribute('data-bs-toggle', 'dropdown');
+            dropdownToggle.setAttribute('aria-haspopup', 'true');
+            dropdownToggle.setAttribute('aria-expanded', 'false');
+
+            const arrowImg = document.createElement('img');
+            arrowImg.src = "{% static 'images/down-arrow.png' %}";
+            arrowImg.style.cssText = "color:#fd5e66; height: 20px; width: 20px; margin-right: 5px;";
+
+            dropdownToggle.appendChild(arrowImg);
+
+            const dropdownMenu = document.createElement('div');
+            dropdownMenu.classList.add('dropdown-menu');
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('dropdown-item', 'deletemess');
+            deleteButton.setAttribute('type', 'button');
+            deleteButton.textContent = 'Delete';
+
+            const editButton = document.createElement('button');
+            editButton.classList.add('dropdown-item', 'editmess');
+            editButton.setAttribute('type', 'button');
+            editButton.textContent = 'Edit';
+
+            var idme = document.createElement('div')
+            idme.innerText = ""
+            idme.style.opacity = "0"
+            idme.style.fontSize = "2px"
+
+            dropdownMenu.appendChild(idme);
+            dropdownMenu.appendChild(deleteButton);
+            dropdownMenu.appendChild(editButton);
+
+            btnGroup.appendChild(dropdownToggle);
+            btnGroup.appendChild(dropdownMenu);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('listContent');
+            contentDiv.textContent = inputValue;
+
+            const rightContainer = document.createElement('div');
+            rightContainer.classList.add('listsubcontright');
+
+            const profileImg = document.createElement('img');
+            profileImg.src = "{{profilepic}}";
+            profileImg.classList.add('profPic');
+
+            rightContainer.appendChild(profileImg);
+
+            listItem.appendChild(btnGroup);
+            listItem.appendChild(contentDiv);
+            listItem.appendChild(rightContainer);
+
+            parentElement.appendChild(listItem);
+
+            parentElement.scrollTop = parentElement.scrollHeight;
+
+            inputPrompt.value = ""
+
+            sendDiv = document.querySelector(".sendDiv")
+            sendDiv.style.pointerEvents = "none"
+            sendDiv.style.opacity = "0.5"
+
+
+
 
             $.ajax({
                 url: "../../chatbot/chatbotsystem/pass/",
                 type: 'POST',
-                data: JSON.stringify({ "message": inputPrompt.value }),
+                data: JSON.stringify({ "message": inputValue }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                success: function (response) {
+
+                    const parentElement = document.querySelector('.secondVert');
+
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('listcontleft');
+
+
+                    const leftContainer = document.createElement('div');
+                    leftContainer.classList.add('listsubcontleft');
+
+                    const botPic = document.createElement('img');
+                    botPic.src = "{% static 'images/chatbotRob.png' %}";
+                    botPic.classList.add('botPic');
+
+                    leftContainer.appendChild(botPic);
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.classList.add('listContent');
+                    contentDiv.textContent = response.message;
+
+                    listItem.appendChild(leftContainer);
+                    listItem.appendChild(contentDiv);
+
+                    parentElement.appendChild(listItem);
+                    parentElement.scrollTop = parentElement.scrollHeight;
+
+                    sendDiv.style.pointerEvents = "auto"
+                    sendDiv.style.opacity = "1"
+
+                    btnGroup.style.opacity = 1
+                    idme.innerText = response.yourId
+                    console.log(response.yourId)
+
+                    deleteButton.addEventListener("click", function (e) {
+                        var idHold = parseInt(e.target.parentElement.firstElementChild.innerText)
+                        $.ajax({
+                            url: "../../chatbot/chatbotdel/",
+                            type: "POST",
+                            data: JSON.stringify({ "idInp": idHold }),
+                            contentType: 'application/json',
+                            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                            success: function (response) {
+                                console.log(response)
+                                window.location.reload()
+                            }
+                        })
+                    })
+                    editButton.addEventListener("click",function(e){
+                        var editword = e.target.parentElement.parentElement.parentElement.firstElementChild.nextElementSibling.innerText
+                        $(".getInput").val(editword)
+                    })
+
+
+                },
+                error: function (error) {
+                    console.error('An error occurred:', error.responseJSON);
+
+                }
+            });
+        })
+
+        $(".deletemess").click(function (e) {
+            var idHold = parseInt(e.target.parentElement.firstElementChild.innerText)
+            $.ajax({
+                url: "../../chatbot/chatbotdel/",
+                type: "POST",
+                data: JSON.stringify({ "idInp": idHold }),
                 contentType: 'application/json',
                 headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 success: function (response) {
                     console.log(response)
-                },
-                error: function (error) {
-                    console.error('An error occurred:', error.responseJSON);
+                    window.location.reload()
                 }
-            });
+            })
+        })
+        $(".editmess").click(function(e){
+            var editword = e.target.parentElement.parentElement.parentElement.firstElementChild.nextElementSibling.innerText
+            $(".getInput").val(editword)
+        })
+        $(".clearChat").click(function(e){
+            $.ajax({
+                url:"../../chatbot/chatbotdelall/",
+                method:"POST",
+                data: JSON.stringify({"idDel":parseInt($(".userPK").text())}),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                success:function(response){
+                    console.log(response)
+                    window.location.reload()
+                }
+            })
         })
     })
 </script>
