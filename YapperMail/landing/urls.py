@@ -3,6 +3,8 @@ from . import views
 from .views import signupForm, loginForm
 from django.conf.urls.static import static
 from django.conf import settings
+from EmailCompositionAndManagement.views import email_composition
+from notifications_app.views import index
 
 urlpatterns = [
     path('', views.landing, name='landing'), 
@@ -15,6 +17,7 @@ urlpatterns = [
     path('home/', views.home, name="home"),
     path('email-list/', views.email_list, name="email_list"),    
     path('profile/', views.profile, name='myprofile'),  
+    path('compose/<int:pk>/', index, name='compose_email'),  
     path('EmailComposition/', include('EmailCompositionAndManagement.urls')), 
     path('UserProfile/', include('UserProfile.urls')), 
     path('reset-password/', views.reset_password, name='reset_password'),

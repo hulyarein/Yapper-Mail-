@@ -11,11 +11,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -32,11 +33,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+
     'django.contrib.staticfiles',
     'UserProfile',
     'landing',
@@ -46,7 +49,8 @@ INSTALLED_APPS = [
     'TeamEmails',
     'Chatbot',
     'channels',
-    'notifications_app'
+    'notifications_app',
+    
 ]
 
 MIDDLEWARE = [
@@ -57,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 # Flobite
@@ -149,10 +154,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),
-                    '../YapperMail/EmailCompositionAndManagement/static'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),
+#                     '../YapperMail/EmailCompositionAndManagement/static',
+#                     os.path.join(BASE_DIR, 'notifications_app/static/'),
+#                     ]
+
+STATICFILES_DIRS = [
+                    os.path.join(BASE_DIR, 'globalstatic'),
+                    os.path.join(BASE_DIR, 'landing/static'),
+                    os.path.join(BASE_DIR, 'EmailCompositionAndManagement/static'),  # Use absolute path
+                    os.path.join(BASE_DIR, 'notifications_app/static'),  # Ensure this is correct
                     ]
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 MEDIA = 'images/'
@@ -170,11 +183,21 @@ LOGOUT_REDIRECT_URL = "landing"
 
 AUTH_USER_MODEL = 'landing.CustomUser'
 
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': "channel_redis.core.RedisChannelLayer",
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],
+#         },
+#     },
+# }
+
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': "channel_redis.core.RedisChannelLayer",
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",  
+]

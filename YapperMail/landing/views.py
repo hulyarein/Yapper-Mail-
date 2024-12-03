@@ -24,10 +24,18 @@ def landing(request):
 def home(request):
     emails = Email.objects.filter(toUser=request.user).order_by('-date_sent') 
     plans = Email.objects.filter(toUser=request.user).order_by('-date_sent')[:1] # Fetch all event requests ordered by creation date
-    return render(request, 'registration/home.html', {'emails': emails, 'plans': plans})  
+    # context = {
+    #     'usermeid': request.user.id,  # or logic to get a specific user ID
+    # }
+
+    usermeid = request.user.id
+    return render(request, 'registration/home.html', {'usermeid': usermeid, 'emails': emails, 'plans': plans})  
 
 def email_list(request):
     return render (request, 'emailList.html')
+
+def compose(request):
+    return render (request, 'composeEmail.html')
 
 def profile(request):
     return render (request, 'profilePage.html')
@@ -59,6 +67,26 @@ def signupForm(request):
         print(form.errors)
     return render(request, 'registration/signup.html', {"form": form})
 
+# def loginForm(request):
+#     if request.method == "POST":
+#         form = AuthenticationForm(request, data=request.POST)
+#         if form.is_valid():
+#             print("Form is valid")
+#             user = form.get_user()
+#             auth_login(request, user)
+#             # print("User is authenticated, redirecting to /landing/")
+#             return redirect('home') 
+#         else:
+#             print("Invalid form submission")
+#             return HttpResponse("Invalid login details. Please try again.")
+#     else:
+#         form = AuthenticationForm()
+#         print("Displaying login form")
+    
+#     # ako gi change laine -ninin
+#     return render(request, 'registration/login.html', {"form": form})
+#     # return render(request, 'home', {"form": form})
+
 def loginForm(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
@@ -66,18 +94,18 @@ def loginForm(request):
             print("Form is valid")
             user = form.get_user()
             auth_login(request, user)
-            # print("User is authenticated, redirecting to /landing/")
-            return redirect('home') 
+            # Pass the user.id to the template after successful login
+            return redirect('home')  # Redirect to the home page or another page
+        
         else:
             print("Invalid form submission")
             return HttpResponse("Invalid login details. Please try again.")
     else:
         form = AuthenticationForm()
         print("Displaying login form")
-    
-    # ako gi change laine -ninin
+
+    # Render the login form with the user_id context
     return render(request, 'registration/login.html', {"form": form})
-    # return render(request, 'home', {"form": form})
 
 
 if not firebase_admin._apps:

@@ -660,3 +660,12 @@ a{
     color: #F37D84;
     text-decoration: none;
 }
+
+.bi-bell {
+    color: #f37d84;               
+    font-size: 2em;              
+    background-color: transparent; 
+    border: none;                 
+    box-shadow: none;             
+    outline: none;                
+}

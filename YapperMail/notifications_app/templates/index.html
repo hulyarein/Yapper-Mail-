@@ -244,16 +244,15 @@
         <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
     </div>
     <div class="bodyContent">
-        <form method="post" class="emailCompose" enctype="multipart/form-data">
-            {%csrf_token%}
-            <div class=UsertoClass>
-                <div class="toDesign">
-                    To
-                </div>
-                <div class=formUserDiv>
-                    {{form.toUser}}
+        <form method="post" class="emailCompose" enctype="multipart/form-data" id="emailForm">
+            {% csrf_token %}
+            <div class="UsertoClass">
+                <div class="toDesign">To</div>
+                <div class="formUserDiv">
+                    {{ form.toUser }}
                 </div>
             </div>
+    
             <div style="margin-left: 60px; color: rgb(255, 64, 118);">
                 {% if form.toUser.errors %}
                 <div class="error" style="display: none;">Invalid email</div>
@@ -263,35 +262,29 @@
                 <div class="error" style="display: none;"></div>
                 {% endif %}
             </div>
-
-            <div class=SubjectClass>
-                <div class="SubjectDesign">
-                    Subject
-                </div>
-                <div class=formSubjectDiv>
-                    {{form.subject}}
+    
+            <div class="SubjectClass">
+                <div class="SubjectDesign">Subject</div>
+                <div class="formSubjectDiv">
+                    {{ form.subject }}
                 </div>
             </div>
-
+    
             <div class="descriptionDiv">
-                {{form.description}}
+                {{ form.description }}
             </div>
-            <div style="height: 130px; margin-bottom: 30px; margin-left: 60px ;
-                margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;"
-                id="fileList">
-
+    
+            <div style="height: 130px; margin-bottom: 30px; margin-left: 60px; margin-right: 60px; overflow: auto; display: flex; flex-direction: column; align-items: start;" id="fileList">
             </div>
-
+    
             <div class="ButtonClass">
-                <button class="SubmitBut" type="submit" id = "">
-                    Submit
-                </button>
+                <button type="button" class="SubmitBut" id="submitButton">Submit</button>
                 <img src="{% static 'images/Attach.png' %}" class="attachCls">
                 <input type="file" id="fileInput" name="file" multiple style="display:none;">
             </div>
         </form>
     </div>
-
+    
     <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
         <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
@@ -299,11 +292,12 @@
                 <strong class="me-auto">UserError</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body toastPut">
-                
-            </div>
+            <div class="toast-body toastPut"></div>
         </div>
     </div>
+    
+    <script src="{% static 'ws.js' %}"></script>
+
 </body>
 <script>
 
@@ -394,11 +388,6 @@
             });
 
             console.log(files)
-
-            // Hide upload button if no files left
-            /*if (files.length === 0) {
-                $('#uploadButton').hide();
-            }*/
         });
     })
 </script>

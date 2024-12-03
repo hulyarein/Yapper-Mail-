@@ -16,15 +16,6 @@ const firebaseConfig = {
     measurementId: "G-ZPLMLG7DGP",
 };
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDGqPLEP536VoJM9AqwbrkJb0hCYFap4oA",
-//   authDomain: "yapper-1d02b.firebaseapp.com",
-//   projectId: "yapper-1d02b",
-//   storageBucket: "yapper-1d02b.firebasestorage.app",
-//   messagingSenderId: "557683908066",
-//   appId: "1:557683908066:web:5b712691670bc109bbedbb"
-// };
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

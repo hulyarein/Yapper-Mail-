@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,23 +41,41 @@
             Search
           </button>
         </form>
+        
         <div class="compose-container">
           <i class="bi bi-plus-circle"></i>
-          <a class="compose" href="{% url 'login' %}">Compose</a>
+          <a class="compose"  href="{% url 'compose_email' pk=usermeid %}" >Compose</a>
+        </div>
+
+        <div class="dropdown notification-bell">
+          <button
+              type="button"
+              id="notificationDropdown"
+              class="btn btn-light"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="border: none; box-shadow: none; background-color: #FEDEE3;">
+              <i class="bi bi-bell" style="color: #f37d84; font-size: 2em; background-color: #FEDEE3;"></i>
+              <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+                  0
+              </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notificationList">
+              {% comment %} <li class="dropdown-item text-muted">No notifications</li> {% endcomment %}
+          </ul>
         </div>
 
         <div class="profile-container">
-          <i class="bi bi-bell" style="color: #f37d84"></i>
           <i class="bi bi-person-circle" style="color: #de3f2a"></i>
         </div>
+
       </div>
-    </div>
+    
 
     <div class="home-body">
       <div class="home-body-1">
         <h3 style="color: #de3f2a">
-          <span style="font-weight: bold"></span> {{
-          user.first_name|safe|escape }}
+          <span style="font-weight: bold">Welcome {{ user.first_name|escape }}</span>
         </h3>
         <div class="navigation">
           <a href="{% url 'home' %}">
@@ -96,7 +115,7 @@
 
           <div class="navigation-item">
             <i class="bi bi-gear-fill"></i>
-            <a href="{% url 'login' %}">Settings</a>
+            <a href="{% url 'login' %}">Logout</a>
           </div>
         </div>
 
@@ -125,36 +144,8 @@
             ></div>
           </div>
         </div>
-
-       </div>
-
-       <div class = "account-navigation">
-        <span style="color: #F37D84;">Account</span>
-
-        <a href = "{% url 'myprofile' %}">
-          <div class = "navigation-item">
-            <i class="bi bi-person-circle"></i> Account
-          </div>  
-        </a>
-
-        <div class = "navigation-item">
-          <i class="bi bi-gear-fill"></i>
-          <a href = "{% url 'login' %}">Log out</a>
-        </div>
-       </div>
-
-       <div class = "recent-navigation">
-        <span style="color: #F37D84;">Recent</span>
-        <div class = "recent-navigation-container">
-          <div class = "recent-navigation-item" style="background-color: green;"></div>
-          <div class = "recent-navigation-item"  style="background-color: orange;"></div>
-          <div class = "recent-navigation-item" style="background-color: purple;"></div>
-          <div class = "recent-navigation-item" style="background-color: red;"></div>
-          <div class = "recent-navigation-item" style="background-color: blue;"></div>
-        </div>
-       </div>
       </div>
-      
+
       <div class="home-body-2">
         <div class="welcome">
           {% if plans %} {% for plan in plans %}
@@ -202,11 +193,110 @@
           </div> 
         </div>
       </div>
-
-      <!-- <form method="post" action="{% url 'landing' %}">
-      {% csrf_token %}
-      <button type="submit">Logout</button>
-    </form> -->
+      
     </div>
+  </div>
+
+  <script>
+
+    const currUser = "{{ user.username }}"
+    // Define notification list and badge elements
+    const notificationList = document.querySelector('#notificationList'); // Adjust the selector
+    const notificationBadge = document.querySelector('#notificationBadge'); // Adjust the selector
+  
+    // Create WebSocket connection
+    const socket = new WebSocket(`ws://${window.location.host}/ws/socket-server/`);
+  
+    // When the connection is open, accept the connection
+    socket.onopen = () => {
+      console.log("Connected to the global notifications WebSocket!");
+    };
+  
+    socket.onclose = () => {
+      console.log("Socket closed!");
+    };
+  
+    // Handle incoming messages (email notifications)
+    socket.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+  
+      if (data.type === 'email_notification') {
+        const email = data.email;
+        const fromUser = email.fromUser;
+        const subject = email.subject;
+        const content = email.content;
+  
+        if (email.toUser == currUser){
+        const notificationItem = document.createElement("li");
+        notificationItem.classList.add("dropdown-item");
+        notificationItem.innerHTML = `<strong>${fromUser}</strong><br>${subject}<br><small>${content}</small>`;
+  
+        notificationItem.addEventListener("click", () => {
+          markNotificationAsRead({ fromUser, subject, content });
+        });
+  
+        // Add the notification to the dropdown menu
+        notificationList.insertBefore(notificationItem, notificationList.firstChild);
+  
+        // Show the badge if there are notifications
+        notificationBadge.style.display = "block";
+        
+        // Store the notification in localStorage
+        const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+        notifications.push({ fromUser, subject, content });
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+
+        const currentCount = notifications.length;
+        notificationBadge.innerText = currentCount;
+
+        }
+      }
+    };
+  
+    function markNotificationAsRead(notification) {
+      // Remove the notification from local storage
+      let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+      notifications = notifications.filter(notif => notif.fromUser !== notification.fromUser || notif.subject !== notification.subject);
+      localStorage.setItem('notifications', JSON.stringify(notifications));
+  
+      notificationBadge.innerText = notifications.length;
+      if (notifications.length === 0) {
+        notificationBadge.style.display = "none";
+      }
+  
+      const notificationItems = document.querySelectorAll('.dropdown-item');
+      notificationItems.forEach(item => {
+        if (item.innerText.includes(notification.subject)) {
+          item.remove();
+        }
+      });
+    }
+  
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+  
+      notifications.forEach(notification => {
+        const notificationItem = document.createElement("li");
+        notificationItem.classList.add("dropdown-item");
+        notificationItem.innerHTML = `<strong>${notification.fromUser}</strong><br>${notification.subject}<br><small>${notification.content}</small>`;
+  
+        notificationItem.addEventListener("click", () => {
+          markNotificationAsRead(notification);
+        });
+  
+        // Add to the dropdown menu
+        notificationList.insertBefore(notificationItem, notificationList.firstChild);
+      });
+  
+      // Update notification badge count
+      notificationBadge.style.display = notifications.length > 0 ? "block" : "none";
+      notificationBadge.innerText = notifications.length;
+    });
+  </script>
+  
+  <!-- Bootstrap JS (including Popper.js for dropdowns) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
