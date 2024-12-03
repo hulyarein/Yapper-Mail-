@@ -89,9 +89,31 @@ Follow these steps to get started with our website.
   ```
 ### Installation
 1. Clone the repository
-  ```sh
-  git clone 
-  ```
+   ```sh
+   git clone https://github.com/hulyarein/Yapper-Mail-.git
+   ```
+2. Open the repository on any code editor
+3. Create a virtual environment
+   ```sh
+   python -m venv venv
+   ```
+4. Activate the virtual environment
+   ```sh
+   venv/Scripts/activate
+   ```
+5. Install Requirements
+   ```sh
+   pip install -r requirements.txt
+   ```
+6. Change directory to YapperMail
+   ```sh
+   cd YapperMail
+   ```
+7. Run the server
+   ```sh
+   python manage.py runserver
+   ```
+
 
 
 
