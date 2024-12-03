@@ -1,6 +1,10 @@
 <h1 align="center">
 	<img width="500" alt="Yapper Mail" src="https://raw.githubusercontent.com/hulyarein/Yapper-Mail-/refs/heads/zyleBranch/YapperMail/EmailCompositionAndManagement/static/images/logo.png">
 </h1>
+
+<h3 align="center">
+	A website that simplifies email communication with intuitive tools and a functional design
+</h3>
 ### System Overview
 Yapper website is a customer-focused platform committed to achieve efficient and effective email communication across users. The Yapper website focuses on simplistic and functional design that makes users feel at ease. The Yapper website offers a wide variety of features that empower users to manage emails efficiently. This platform provides users with tools for composing, editing, and managing emails, all within an intuitive website.
 ### Functional Requirements
