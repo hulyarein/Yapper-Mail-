@@ -147,17 +147,18 @@ Click the image below
   </a>
 </section>
 
+## Contributors
+This section recognizes the talented individuals who have contributed to the development and improvement of this project. Their time, effort, and expertise have been crucial in bringing the project to life. We appreciate their dedication and collaborative spirit. If you would like to join the list of contributors or suggest improvements, feel free to contribute to the repository or reach out to us. Thank you to everyone who has helped shape this project!
 
+If you have an idea or suggestion to improve this project, feel free to contribute! You can either fork the repository and submit a pull request, or simply open an issue.
 
+* Julia Laine Segundo
+* Niño Cabiltes
+* Zyle Geralde L. de la Peña
 
-
-	
-     
-### *Link to files:* 
-**Business Requirement**: https://docs.google.com/document/d/1bqOzQfANRd6xc6X7hLll28O2EgqGiqlDE8_fe80V5lk/edit?usp=sharing <br/>
-**Gantt Chart**: https://cebuinstituteoftechnology-my.sharepoint.com/:x:/g/personal/julialaine_segundo_cit_edu/EUiUCHjXZ7ZNlEtY7vLagX4BIIzRWbsY2wmGiLFRY2sF4A?e=LLkVwV <br/>
-**ERD**: https://lucid.app/lucidchart/0eb8fb52-3d4a-4d88-9b28-b827abe3ef9a/edit?viewport_loc=-207%2C-630%2C3056%2C1488%2C0_0&invitationId=inv_9ffd2681-4f89-494b-bdae-f1d9fc848476 <br/>
-**UI/UX**: https://www.figma.com/design/AhFPW4uRwa75PsDdzeVZJI/Yapper-1.0?t=hZQyJFtnFTZfelH2-1 <br/>
+<a href="https://github.com/hulyarein/Yapper-Mail-/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=hulyarein/Yapper-Mail-" alt="contrib.rocks image" />
+</a>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
