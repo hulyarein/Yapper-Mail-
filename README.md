@@ -80,6 +80,18 @@
 ![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FF6F00?style=for-the-badge&logo=huggingface&logoColor=white)
 ![QwQ-32B-Preview](https://img.shields.io/badge/QwQ--32B--Preview-A040FF?style=for-the-badge&logo=huggingface&logoColor=white)
 
+## Getting Started
+Follow these steps to get started with our website.
+### Prerequisite
+* python
+  ```sh
+  python --version
+  ```
+### Installation
+1. Clone the repository
+  ```sh
+  git clone 
+  ```
 
 
 
