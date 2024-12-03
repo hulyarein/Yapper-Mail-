@@ -19,10 +19,31 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#systemoverview">System Overview</a>
+    </li>
+    <li>
+      <a href="#functional-requirements">Functional Requirements</a>
+    </li>
+    <li>
+       <a href="#installation">Installation</a>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
+
 
 
 ## System Overview
-<section id="System Overview">
+<section id="systemoverview">
 	Yapper website is a customer-focused platform committed to achieve efficient and effective email communication across users. The Yapper website focuses on simplistic and functional design that makes users feel at ease. The Yapper website offers a wide variety of features that empower users to manage emails efficiently. This platform provides users with tools for composing, editing, and managing emails, all within an intuitive website.
 </section>
 <br>
