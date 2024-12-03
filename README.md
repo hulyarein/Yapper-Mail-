@@ -23,7 +23,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#systemoverview">System Overview</a>
+      <a href="#system-overview">System Overview</a>
     </li>
     <li>
       <a href="#functional-requirements">Functional Requirements</a>
