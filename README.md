@@ -115,6 +115,37 @@ Follow these steps to get started with our website.
    ```
 8. Reach out to us for you to get the necessary api keys for the project
 
+## Business Requirements
+Click the image below
+<section id="BusinessRequirements" align = "center">
+  <a href="https://docs.google.com/document/d/1bqOzQfANRd6xc6X7hLll28O2EgqGiqlDE8_fe80V5lk/edit?usp=sharing" target="_blank">
+    <img src="https://drive.google.com/uc?export=view&id=1zIiD9Ot9n9cP5Ra-D4vkX0MJ9G7nNEG1" width = "700"/>
+  </a>
+</section>
+
+## Gantt Chart
+Click the image below
+<section id="Gantt Chart" align = "center">
+  <a href="https://cebuinstituteoftechnology-my.sharepoint.com/:x:/g/personal/julialaine_segundo_cit_edu/EUiUCHjXZ7ZNlEtY7vLagX4BIIzRWbsY2wmGiLFRY2sF4A?e=LLkVwV" target="_blank">
+    <img src="https://drive.google.com/uc?export=view&id=1Y7AZnL4FsKAzW5rX8eOJ7rajOaPMhELV" width = "700"/>
+  </a>
+</section>
+
+## ERD
+Click the image below
+<section id="ERD" align = "center">
+  <a href="https://lucid.app/lucidchart/0eb8fb52-3d4a-4d88-9b28-b827abe3ef9a/edit?viewport_loc=-207%2C-630%2C3056%2C1488%2C0_0&invitationId=inv_9ffd2681-4f89-494b-bdae-f1d9fc848476" target="_blank">
+    <img src="https://drive.google.com/uc?export=view&id=1ZMeRbHYGJj1aXVq0HloNzTl4VW3obNto" width = "700"/>
+  </a>
+</section>
+
+## UI/UX
+Click the image below
+<section id="UIUX" align = "center">
+  <a href="https://www.figma.com/design/AhFPW4uRwa75PsDdzeVZJI/Yapper-1.0?t=hZQyJFtnFTZfelH2-1" target="_blank">
+    <img src="https://drive.google.com/uc?export=view&id=1Q4MagszT1Czjs8Fw5IWpeJ04tlrORhUf" width = "700"/>
+  </a>
+</section>
 
 
 
