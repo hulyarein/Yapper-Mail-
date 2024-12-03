@@ -21,7 +21,7 @@
 
 
 
-### System Overview
+## System Overview
 Yapper website is a customer-focused platform committed to achieve efficient and effective email communication across users. The Yapper website focuses on simplistic and functional design that makes users feel at ease. The Yapper website offers a wide variety of features that empower users to manage emails efficiently. This platform provides users with tools for composing, editing, and managing emails, all within an intuitive website.
 ### Functional Requirements
 
