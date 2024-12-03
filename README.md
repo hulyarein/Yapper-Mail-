@@ -22,21 +22,69 @@
 
 
 ## System Overview
-Yapper website is a customer-focused platform committed to achieve efficient and effective email communication across users. The Yapper website focuses on simplistic and functional design that makes users feel at ease. The Yapper website offers a wide variety of features that empower users to manage emails efficiently. This platform provides users with tools for composing, editing, and managing emails, all within an intuitive website.
-### Functional Requirements
+<section id="System Overview">
+	Yapper website is a customer-focused platform committed to achieve efficient and effective email communication across users. The Yapper website focuses on simplistic and functional design that makes users feel at ease. The Yapper website offers a wide variety of features that empower users to manage emails efficiently. This platform provides users with tools for composing, editing, and managing emails, all within an intuitive website.
+</section>
+<br>
 
-- **User Login and Registration**
-  - Users can log in and sign up using their email and password. The registration process includes email verification for safety purposes.
-- **Dashboard**
-  - This is a central repository where users can access both their sent and received emails. The dashboard is designed to offer a condensed view of all email interactions allowing users to move smoothly between various emails.
-- **Email Composition and Management**
-  - Users are allowed to compose, edit, receive, and send emails, as well as include various attachments like texts, images, and documents. This platform allows users to manage their emails easily with the options for deleting as needed.
-- **Reply Creation and Management**
-  - Yapper supports sophisticated reply management allowing users to reply to emails with similar optimization as original messages. Users are allowed to edit, delete, and respond to replies creating a polished flow.
- - **Trash Management**
-   - Deleted emails are stored temporarily in a trash container allowing users to review or permanently remove the deleted email. This adds additional control over email management.
- - **User Profile Management**
-   - Yapper allows users to customize their profiles according to their preferences. This also allows users to change sensitive information such as passwords and emails to enhance security.
+## Functional Requirements
+<section id="functional-requirements">
+  <ol>
+  <li>
+    <strong>User Login and Registration</strong>: Users can log in and sign up using their email and password. The registration process includes email verification for safety purposes.
+  </li>
+  <br>
+  <li>
+    <strong>Dashboard</strong>: This is a central repository where users can access both their sent and received emails. The dashboard is designed to offer a condensed view of all email interactions allowing users to move smoothly between various emails.
+  </li>
+  <br>
+  <li>
+    <strong>Email Composition and Management</strong>: Users are allowed to compose, edit, receive, and send emails, as well as include various attachments like texts, images, and documents. This platform allows users to manage their emails easily with the options for deleting as needed.
+
+  </li>
+  <br>
+  <li>
+    <strong>Reply Creation and Management</strong>: Yapper supports sophisticated reply management allowing users to reply to emails with similar optimization as original messages. Users are allowed to edit, delete, and respond to replies creating a polished flow.
+
+  </li>
+  <br>
+  <li>
+    <strong>Trash Management </strong>: Deleted emails are stored temporarily in a trash container allowing users to review or permanently remove the deleted email. This adds additional control over email management.
+
+  </li>
+  <br>
+  <li>
+   <strong>User Profile Management</strong>: Yapper allows users to customize their profiles according to their preferences. This also allows users to change sensitive information such as passwords and emails to enhance security.
+  </li>
+  <br>
+  <li>
+   <strong>Team Emails</strong>: Yapper streamlines email management by centralizing communication, allowing users to efficiently collaborate with multiple team members and stay organized.
+
+  </li>
+  <br>
+  <li>
+   <strong>ChatBot</strong>: Yapper offers an AI-powered assistant that understands and addresses user needs, empowering them to manage emails with confidence and efficiency. With this smart assistant, users can streamline their workflow and get tailored support for all their email-related tasks.
+
+  </li>
+</ol>
+
+## Technologies Used
+![Django](https://img.shields.io/badge/Django-5.1.3-green?style=for-the-badge&logo=django&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple?style=for-the-badge&logo=bootstrap&logoColor=white)
+![jQuery](https://img.shields.io/badge/jQuery-3.6-blue?style=for-the-badge&logo=jquery&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?style=for-the-badge&logo=javascript&logoColor=white)
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FF6F00?style=for-the-badge&logo=huggingface&logoColor=white)
+![QwQ-32B-Preview](https://img.shields.io/badge/QwQ--32B--Preview-A040FF?style=for-the-badge&logo=huggingface&logoColor=white)
+
+
+
+
+
+
 	
      
 ### *Link to files:* 
