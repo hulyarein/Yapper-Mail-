@@ -147,7 +147,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),
-                    '../YapperMail/EmailCompositionAndManagement/static'
+                    '../YapperMail/EmailCompositionAndManagement/static',
+                    'UserProfile/static',
                     ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'

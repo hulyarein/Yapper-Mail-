@@ -9,6 +9,6 @@ urlpatterns = [
     path('profilePage/Number', views.changeNumber, name='changeNumber'),
     path('profilePage/Home', views.changeHome, name='changeHome'),
     path('profilePage/Work', views.changeWork, name='changeWork'),
-    path('profilePage/Password', views.changePassword, name='changePassword')
-
+    path('profilePage/Password', views.changePassword, name='changePassword'),
+    path('logout', views.logout_user, name='logout')
 ]

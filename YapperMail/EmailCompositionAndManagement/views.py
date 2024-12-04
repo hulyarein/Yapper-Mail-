@@ -10,7 +10,6 @@ from urllib.parse import unquote
 import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
-from landing import models
 
 
 # Create your views here.

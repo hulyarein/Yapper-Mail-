@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,JsonResponse
-from landing.models import Profile
 from landing.models import CustomUser
 from django.contrib.auth.decorators import login_required
 from .forms import ChangeNameForm, ChangeHomeAddressForm, ChangeWorkAddressForm, ChangeBirthdayForm, ChangeGenderForm, ChangePasswordForm, ChangePhoneNumberForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, update_session_auth_hash, logout
 from django.templatetags.static import static
+from django.urls import reverse
+from django.contrib.auth import logout
 
 @login_required
 def profilePage(request):
@@ -43,7 +44,7 @@ def profilePage(request):
     context = {
         'profilepic': profilepic,
         'first_name': ' '.join(word.capitalize() for word in user.first_name.split()),
-        'middle_name': ' '.join(word.capitalize() for word in user.middle_name.split())[:1] + "." if user.middle_name != ' ' or '' else "",
+        'middle_name': (user.middle_name[:1].capitalize() + ".") if user.middle_name else "",
         'last_name': ' '.join(word.capitalize() for word in user.last_name.split()),
         'phone_number': user.pnumber,
         'birthday': (user.birthday, "Not specified") [user.birthday == None], 
@@ -158,7 +159,7 @@ def changeNumber(request):
     user = request.user
 
     if request.method == 'POST':
-        form = ChangePhoneNumberForm(request.POST, user=user.user)
+        form = ChangePhoneNumberForm(request.POST, user=user)
 
         if form.is_valid():
             password = form.cleaned_data['pass_verification']
@@ -185,7 +186,7 @@ def changeWork(request):
     user = request.user
 
     if request.method == 'POST':
-        form = ChangeWorkAddressForm(request.POST, user=user.user)
+        form = ChangeWorkAddressForm(request.POST, user=user)
 
         if form.is_valid():
             password = form.cleaned_data['pass_verification']
@@ -214,7 +215,7 @@ def changeHome(request):
     user = request.user
 
     if request.method == 'POST':
-        form = ChangeHomeAddressForm(request.POST, user=user.user)
+        form = ChangeHomeAddressForm(request.POST, user=user)
 
         if form.is_valid():
             password = form.cleaned_data['pass_verification']
@@ -261,3 +262,9 @@ def changePassword(request):
         form = ChangePasswordForm(user=user)
 
     return render(request, 'passwordChange.html', {'form': form})
+
+@login_required
+def logout_user(request):
+    logout(request)
+    return redirect(reverse('login'))
+

@@ -282,18 +282,22 @@ for (country of countries) {
 }
 
 function selectOption() {
-  //   console.log(this);
-  const icon = this.querySelector(".iconify").cloneNode(true),
-    phone_code = this.querySelector("strong").cloneNode(true);
+  const icon = this.querySelector(".iconify").cloneNode(true);
+  const phone_code = this.querySelector("strong").innerText; // Get the country code as text
 
+  // Update the displayed selected option
   selected_option.innerHTML = "";
-  selected_option.append(icon, phone_code);
+  selected_option.append(icon, document.createTextNode(phone_code));
 
-  input_box.value = phone_code.innerText;
+  // Ensure the phone input starts with the selected country code
+  let currentInputValue = input_box.value.replace(/^\+\d+/, ""); // Remove any existing country code
+  input_box.value = `${phone_code}${currentInputValue}`; // Add the selected country code
 
+  // Close the dropdown
   select_box.classList.remove("active");
   selected_option.classList.remove("active");
 
+  // Clear search box and reset hidden options
   search_box.value = "";
   select_box
     .querySelectorAll(".hide")
