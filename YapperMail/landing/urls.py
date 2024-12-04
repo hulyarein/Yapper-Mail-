@@ -3,6 +3,7 @@ from . import views
 from .views import signupForm, loginForm
 from django.conf.urls.static import static
 from django.conf import settings
+from notifications_app.views import index
 
 urlpatterns = [
     path('', views.landing, name='landing'), 
@@ -15,10 +16,14 @@ urlpatterns = [
     path('home/', views.home, name="home"),
     path('email-list/', views.email_list, name="email_list"),    
     path('profile/', views.profile, name='myprofile'),  
+    path('compose/<int:pk>/', index, name='compose_email'),  
     path('EmailComposition/', include('EmailCompositionAndManagement.urls')), 
     path('UserProfile/', include('UserProfile.urls')), 
     path('reset-password/', views.reset_password, name='reset_password'),
     path("accounts/", include("django.contrib.auth.urls")),  
+    path('email_view/', views.email_view, name='email_view'),
+    path('receive_view/', views.receive_view, name='receive_view'),
+    path('retrieve_email_view/', views.retrieve_email_view, name='retrieve_email_view'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

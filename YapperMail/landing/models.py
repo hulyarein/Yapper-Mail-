@@ -14,3 +14,13 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+  
+class Profile(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
+    pnumber = models.CharField(max_length=12)  
+    fname = models.CharField(max_length=30, default='First Name')
+    lname = models.CharField(max_length=30, default='Last Name')
+    email = models.EmailField(default='example@example.com')
+
+    def __str__(self):
+        return self.user.username

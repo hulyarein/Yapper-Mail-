@@ -14,7 +14,6 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.6.4/firebase-auth.js"></script>
     
-    <!-- Load your firebaseconfig.js as a module -->
 </head>
 <body>
     <div class = "enternum-container">
@@ -26,23 +25,57 @@
             </div>
 
             <div>
-                <form action = "{% url 'verify_otp' %}" class = "enternum-wrapper" method = "post">
-                    {% csrf_token %}    
+                <div class = "enternum-wrapper">
                     <div class="col-12">
-                        <input type="text" id="phone_number" class="form-control form-control" placeholder="Phone number" aria-label=".form-control-sm example" name="phonenumber" style="width: 23em; " required>
+                        <input type="text" id="phone-number" class="form-control form-control" placeholder="Phone number" aria-label=".form-control-sm example" name="phonenumber" style="width: 23em; " required>
                     </div>
                     <div class="col-12">
-                       
-                        <button type="submit" class="btn btn-primary fs-6 fw-bold" style="border-radius: 10px; border-color: #F37D84; background-color: #F37D84; width: 100%; height: 30%;" id="sendOtpButton">Send Verification Code</button>
+                    
+                        <button id="sendOtpButton" class="btn btn-primary fs-6 fw-bold" style="border-radius: 10px; border-color: #F37D84; background-color: #F37D84; width: 100%; height: 30%;" >Send Verification Code</button>
                         <p id="otpStatusMessage"></p>
-                      </div>
-                </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="recaptcha-container"></div>
 
-    <script src="/static/js/landing.js"></script>
+    <!-- Modal -->
+    <div class="modal fade" id="verifyModal" tabindex="-1" aria-labelledby="verifyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            <div class = "verifyotp-wrap1">
+                <div><i class="bi bi-envelope-open" style="color: #F37D84; font-size: 1.7em;"></i></div>
+                <div style="text-align: center;">
+                    <h3 style="color:#1a1a1a"><span style="font-weight: bold; text-align: center;">Enter your code</h3>
+                    <p style="color: #545454; padding-left: 3em; padding-right: 3em; line-height: 1.5;">This helps us keep your account secure by verifying that it's really you</p>
+                </div>
+    
+                <div>
+                    <form class = "enternum-wrapper" method="post" id="verify-otp-form" action="{% url 'phone-login' %}"> 
+                        {% csrf_token %}
+                        <div class = "otp-container">
+                            <input type="text" maxlength="1" class="otp-digit" oninput="moveFocus(this, 'next')" />
+                            <input type="text" maxlength="1" class="otp-digit" oninput="moveFocus(this, 'next')" />
+                            <input type="text" maxlength="1" class="otp-digit" oninput="moveFocus(this, 'next')" />
+                            <input type="text" maxlength="1" class="otp-digit" oninput="moveFocus(this, 'next')" />
+                            <input type="text" maxlength="1" class="otp-digit" oninput="moveFocus(this, 'next')" />
+                            <input type="text" maxlength="1" class="otp-digit" oninput="moveFocus(this, 'prev')" />
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary fs-6 fw-bold" style="border-radius: 10px; border-color: #F37D84; background-color: #F37D84; width: 100%; height: 30%;" id="verifyOtpButton">Verify Code</button>
+                            <p id="otpStatusMessage"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script type="module" src = "/static/js/landing.js"></script>
 </body>
 </html>

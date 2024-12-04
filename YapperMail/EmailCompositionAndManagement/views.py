@@ -18,6 +18,7 @@ from django.templatetags.static import static
 
 
 # Create your views here.
+
 @login_required
 def email_composition(request,pk):
     error_message = False
@@ -99,9 +100,6 @@ def email_sent_view(request,pk,ok):
     
     else:
         OtherUserHold = getEmail.fromUser
-    
-    
-
 
     if request.method == "POST":
         form = ReplyComposeForm(request.POST,request.FILES)
@@ -116,7 +114,6 @@ def email_sent_view(request,pk,ok):
                 )
 
                 replyModel.save()
-
 
                 uploaded_files = request.FILES.getlist('file')
                 if uploaded_files:
@@ -682,3 +679,5 @@ def changeIsSnooze(request):
             return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
 
     return JsonResponse({"error":"not a Post method"},status = 400)
+
+
