@@ -669,3 +669,17 @@ a{
     box-shadow: none;             
     outline: none;                
 }
+
+/* Style for read notifications */
+.read-notification {
+    color: gray;
+  }
+  
+  /* Unread indicator */
+  .unread-indicator {
+    float: right;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+  }

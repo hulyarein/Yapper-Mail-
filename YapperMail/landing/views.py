@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import make_password
 from EmailCompositionAndManagement.models import Email
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -166,3 +167,26 @@ def reset_password(request):
             messages.error(request, 'Passwords do not match.')
 
     return render(request, 'registration/resetpassword.html')
+
+@csrf_exempt
+def email_view(request):
+    if request.method == 'POST':
+        email_data = json.loads(request.body)
+        request.session['email_data'] = email_data  # Store email data in session
+        print('Session Data:', request.session.get('email_data'))
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'failed'}, status=400)
+
+def receive_view(request):
+    email_data = request.session.get('email_data', None)  # Retrieve email data from session
+    if email_data:
+        return render(request, 'EmailSentView.html', {'email_data': email_data})
+    return JsonResponse({'error': 'No email data found'}, status=404)
+
+# retrieve_email_view: handles retrieving email_data from session on GET
+def retrieve_email_view(request):
+    email_data = request.session.get('email_data', None)  # Retrieve email data from session
+    print('Retrieving Session Data:', email_data)
+    if email_data:
+        return JsonResponse({'email_data': email_data})
+    return JsonResponse({'error': 'No email data found'}, status=404)

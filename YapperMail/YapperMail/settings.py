@@ -201,3 +201,5 @@ CHANNEL_LAYERS = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",  
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'

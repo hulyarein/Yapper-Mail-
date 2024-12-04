@@ -11,6 +11,7 @@ import json
 
 # Create your views here.
 
+
 def index(request, pk):
     error_message = False
     if request.method == "POST":
