@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,22 +41,42 @@
             Search
           </button>
         </form>
+        
         <div class="compose-container">
           <i class="bi bi-plus-circle"></i>
-          <a class="compose" href="{% url 'login' %}">Compose</a>
+          <a class="compose"  href="{% url 'compose_email' pk=usermeid %}" >Compose</a>
         </div>
 
+        <div class="dropdown notification-bell">
+          <button
+            type="button"
+            id="notificationDropdown"
+            class="btn btn-light"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            style="border: none; box-shadow: none; background-color: #FEDEE3;">
+            <i class="bi bi-bell" style="color: #f37d84; font-size: 2em; background-color: #FEDEE3;"></i>
+            <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+                0
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notificationList">
+              <!-- Notifications will be dynamically added here -->
+          </ul>
+        </div>
+        
+
         <div class="profile-container">
-          <i class="bi bi-bell" style="color: #f37d84"></i>
           <i class="bi bi-person-circle" style="color: #de3f2a"></i>
         </div>
+
       </div>
-    </div>
+    
+
     <div class="home-body">
       <div class="home-body-1">
         <h3 style="color: #de3f2a">
-          <span style="font-weight: bold">WELCOME</span> {{
-          user.first_name|safe|escape }}
+          <span style="font-weight: bold">Welcome {{ user.first_name|escape }}</span>
         </h3>
         <div class="navigation">
           <a href="{% url 'home' %}">
@@ -95,7 +116,7 @@
 
           <div class="navigation-item">
             <i class="bi bi-gear-fill"></i>
-            <a href="{% url 'login' %}">Settings</a>
+            <a href="{% url 'login' %}">Logout</a>
           </div>
         </div>
 
@@ -125,6 +146,7 @@
           </div>
         </div>
       </div>
+
       <div class="home-body-2">
         <div class="welcome">
           {% if plans %} {% for plan in plans %}
@@ -153,31 +175,178 @@
           {% endfor %} {% else %}
           <div class="no-tasks">No emails available.</div>
           {% endif %}
+          <div class = "taskboard-container">
+                <div class = "task-title">Event Request</div>
+                <div class = "task-email">userone@101.com</div>
+                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div>
 
-          <!-- <div class = "taskboard-container">
-                <div class = "task-title">Event Request</div>
-                <div class = "task-email">userone@101.com</div>
-                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-              </div>
-    
-              <div class = "taskboard-container">
-                <div class = "task-title">Event Request</div>
-                <div class = "task-email">userone@101.com</div>
-                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-              </div>
-    
-              <div class = "taskboard-container">
-                <div class = "task-title">Event Request</div>
-                <div class = "task-email">userone@101.com</div>
-                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-              </div> -->
+          <div class = "taskboard-container">
+            <div class = "task-title">Event Request</div>
+            <div class = "task-email">userone@101.com</div>
+            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div>
+
+          <div class = "taskboard-container">
+            <div class = "task-title">Event Request</div>
+            <div class = "task-email">userone@101.com</div>
+            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
+          </div> 
         </div>
       </div>
-
-      <!-- <form method="post" action="{% url 'landing' %}">
-      {% csrf_token %}
-      <button type="submit">Logout</button>
-    </form> -->
+      
     </div>
+  </div>
+
+<script>
+  let email, fromUser, subject, content;
+  const currUser = "{{ user.username }}";
+  const notificationList = document.querySelector('#notificationList'); 
+  const notificationBadge = document.querySelector('#notificationBadge'); 
+  const socket = new WebSocket(`ws://${window.location.host}/ws/socket-server/`);
+
+  socket.onopen = () => {
+      console.log("Connected to the global notifications WebSocket!");
+  };
+
+  socket.onclose = () => {
+      console.log("Socket closed!");
+  };
+
+  socket.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      console.log("Reached");
+
+      if (data.type === 'email_notification') {
+          email = data.email;
+          fromUser = email.fromUser;
+          subject = email.subject;
+          content = email.content;
+          console.log('Email data received:', fromUser, subject, content);
+          console.log("Reached 2");
+
+          if (email.toUser === currUser) {
+              const notificationItem = document.createElement("li");
+              notificationItem.classList.add("dropdown-item");
+              notificationItem.innerHTML = `
+                  <strong>${fromUser}</strong><br>${subject}<br><small>${content}</small>
+                  <span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>
+              `
+
+              notificationItem.addEventListener("click", () => {
+                  markNotificationAsRead({ fromUser, subject, content });
+                  notificationItem.classList.add("read-notification");
+                  notificationItem.querySelector(".unread-indicator").style.display = "none"; // Remove the circle
+              });
+
+              notificationList.insertBefore(notificationItem, notificationList.firstChild);
+
+              // Show the badge if there are unread notifications
+              const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+              notifications.push({ fromUser, subject, content, read: false });
+              localStorage.setItem('notifications', JSON.stringify(notifications));
+
+              const unreadCount = notifications.filter(n => !n.read).length;
+              notificationBadge.style.display = "block";
+              notificationBadge.innerText = unreadCount;
+          }
+      }
+  };
+
+  function markNotificationAsRead(notification) {
+      let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+      notifications = notifications.map(notif => {
+          if (notif.fromUser === notification.fromUser && notif.subject === notification.subject) {
+              notif.read = true;
+          }
+          return notif;
+      });
+      localStorage.setItem('notifications', JSON.stringify(notifications));
+
+      // Update badge count
+      const unreadCount = notifications.filter(n => !n.read).length;
+      notificationBadge.innerText = unreadCount;
+      if (unreadCount === 0) {
+          notificationBadge.style.display = "none";
+      }
+  };
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+
+    notifications.forEach(notification => {
+        const notificationItem = document.createElement("li");
+        notificationItem.classList.add("dropdown-item");
+        if (notification.read) {
+            notificationItem.classList.add("read-notification");
+        }
+        notificationItem.innerHTML = `
+            <strong>${notification.fromUser}</strong><br>${notification.subject}<br><small>${notification.content}</small>
+            ${!notification.read ? '<span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>' : ''}
+        `;
+
+        /* notificationItem.addEventListener("click", () => {
+
+            markNotificationAsRead(notification);
+            notificationItem.classList.add("read-notification");
+            const unreadIndicator = notificationItem.querySelector(".unread-indicator");
+            if (unreadIndicator) {
+                unreadIndicator.style.display = "none"; // Remove the circle
+            }
+
+            fetch('/email_view/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fromUser: notification.fromUser,
+                    subject: notification.subject,
+                    content: notification.content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // After storing the email data, send GET request to retrieve it
+                    fetch('/retrieve_email_view/', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.email_data) {
+                            // Now you have the email data, and you can do something with it
+                            console.log(data.email_data);  // Render email view, etc.
+
+                            // Redirect to email view after retrieving data
+                            window.location.href = '/receive_view/';
+                        } else {
+                            console.log('Error: No email data found');
+                        }
+                    })
+                    .catch(error => console.error('Error fetching email data:', error));
+                }
+            })
+            .catch(error => console.error('Error sending email data:', error));
+        }); */
+
+        console.log("Here")
+        notificationList.insertBefore(notificationItem, notificationList.firstChild);
+    });
+
+    const unreadCount = notifications.filter(n => !n.read).length;
+    notificationBadge.style.display = unreadCount > 0 ? "block" : "none";
+    notificationBadge.innerText = unreadCount;
+});
+
+</script>
+
+
+  
+  <!-- Bootstrap JS (including Popper.js for dropdowns) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

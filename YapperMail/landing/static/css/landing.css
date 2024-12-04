@@ -656,3 +656,30 @@ align-items: center;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+a{
+    color: #F37D84;
+    text-decoration: none;
+}
+
+.bi-bell {
+    color: #f37d84;               
+    font-size: 2em;              
+    background-color: transparent; 
+    border: none;                 
+    box-shadow: none;             
+    outline: none;                
+}
+
+/* Style for read notifications */
+.read-notification {
+    color: gray;
+  }
+  
+  /* Unread indicator */
+  .unread-indicator {
+    float: right;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+  }
