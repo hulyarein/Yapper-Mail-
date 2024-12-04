@@ -545,6 +545,10 @@ def deleteEmailFunc(request):
 
     emailsVar = get_object_or_404(Email, id=email_id)
     try:
+        if data.get('permanentDelete') == True:
+            emailsVar.delete()
+            
+            return JsonResponse({'message': 'Email deleted permanently.'}, status=200)
 
         if emailsVar.isDeleted:
             emailsVar.isDeleted = False
