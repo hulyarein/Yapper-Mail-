@@ -23,6 +23,10 @@
     const submitButton = document.getElementById  ('openModal');
     const passBtn = document.getElementById('passVerifyBtn');
 
+    form.reset();
+    submitButton.disabled = true;
+    passBtn.disabled = true;
+
     let initialPass = document.getElementById('passVerify').value;
 
     // Capture initial values
@@ -95,6 +99,7 @@
   });
   </script>
     {% include 'components/header.html' %}
+
     <div class="header">{% block header %}{% endblock %}</div>
       <a href="{% url 'profile' %}">
         <div class="w-3/5 flex justify-center items-center gap-2 mb-2">
@@ -105,30 +110,24 @@
         </div>
       </a>
       <hr class="border-[#f37d84]">
-      <div class="content pb-20 flex flex-col items-center">
-        <div class="fields border-2 border-[#F37D84] my-10 w-1/2 rounded-lg">
 
-          <form action="{% url 'changeWork' %}" class="flex flex-col m-12 gap-3" id="myForm">
+      <div class="flex flex-col items-center">
+        <div class="border-2 border-[#F37D84] my-10 w-3/4 lg:w-1/2 rounded-lg">
+          <form action="{% url 'changeWork' %}" class="flex flex-col mx-12 my-6 gap-3" id="myForm">
             {% csrf_token %}
-            <p class="ml-16">"Work work work work"</p>
+            <p class="">"Work work work work"</p>
             <div class="flex flex-col gap-10">
               <div class="flex flex-col">
-                <label class="mx-16 text-lg font-semibold">Work Address</label>
-                <input type="text" class="mx-11 p-3 border-1 border-[#f37d84]" value="{{ form.work_address.value }}" name="work_address" id="workAddress">
+                <label class="text-lg font-semibold">Work Address</label>
+                <input 
+                  type="text" 
+                  class="p-3 border-2 border-[#f37d84] focus:border-[#f66f78] focus:ring-1 focus:ring-[#f37d84] rounded-lg focus:outline-none w-full"
+                  value="{{ form.work_address.value }}"
+                  name="work_address" 
+                  id="workAddress">
               </div>
             </div>
-            <div class="flex justify-end gap-10 mr-16 items-center">
-              <a href="{% url 'profile' %}" class="font-semibold hover:font-medium"><label>Cancel</label></a>
-              <button type="button" 
-                      class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]" 
-                      data-bs-toggle="modal" 
-                      data-bs-target="#exampleModal"
-                      disabled
-                      id="openModal"
-                      >
-                      Save
-              </button>
-            </div>
+            {% include 'components/submitButtons.html'%}
             {% include 'components/pass_verify.html'%}
           </form>
         </div>

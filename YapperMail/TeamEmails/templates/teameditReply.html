@@ -11,9 +11,12 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <style>
+        *{
+            transition: 0.2s;
+        }
         body {
-            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
-            background-color: #fff7f7;
+            background: linear-gradient(to bottom, #fdeced, #fdeced, #fff1f1,#fff7f7);
+            background-color: #fff1f1;
             background-repeat: no-repeat;
             height: 97vh;
             display: flex;
@@ -171,11 +174,16 @@
             padding: 15px 30px;
             border-radius: 10px;
             border-style: none;
+            cursor: pointer;
+        }
+        .SubmitBut:hover{
+            background-color: #cd6a70;
         }
 
         .attachCls {
             width: 30px;
             height: 30px;
+            cursor: pointer;
         }
 
         .linkcls {
@@ -200,8 +208,9 @@
         }
         .backEmailComp{
             font-size: 30px;
-            color:#F69BA0 ;
+            color:#F37D84 ;
             margin-left: 10%;
+            cursor: pointer;
         }
 
 
@@ -241,7 +250,7 @@
     <div class = "userIdh" style="display: none;"> {{userRep}}</div>
     <div class = "emailIdh" style="display: none;">{{reply.emailId.id}}</div>
     <div class = "backEmailComp">
-        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
+        <img src = "{% static 'images/GoBack.png' %}" style="height: 25px; width: 25px;">
     </div>
     <div class="bodyContent">
         <div class = "replyIdCont" style="display: none;">{{reply.id}}</div>

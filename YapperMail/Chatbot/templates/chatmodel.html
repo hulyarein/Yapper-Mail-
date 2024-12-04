@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Email</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    
+
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
@@ -15,10 +15,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
-            background: linear-gradient(to bottom, #FCDFE0, #FCE2E3, #fff1f1,#fff7f7);
-            background-color: #fff7f7;
+            background: linear-gradient(to bottom, #fdeced, #fdeced, #fff1f1, #fff7f7);
+            background-color: #fff1f1;
             background-repeat: no-repeat;
-            height: 97vh;
             display: flex;
             flex-direction: column;
             font-family: Helvetica;
@@ -26,237 +25,346 @@
 
         .logoImage {
             width: 250px;
+            height: 250px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 1000px;
+            margin-bottom: 20px;
+            margin-top: -150%;
+            animation-name: showLog;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
         }
 
         .bodyContent {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
+            height: 100vh;
 
         }
 
-        .emailCompose {
-            min-height: 600px;
-            width: 80%;
-            background-color: white;
-            border-style: solid;
-            border-width: 3px;
-            border-color: #F37D84;
-            border-radius: 20px;
-        }
-
-        .buttonPart {
+        .firstVert {
+            background-color: #ffb3b7;
+            min-width: 300px;
+            color: white;
+            box-shadow: 0px 0px 10px rgb(100, 100, 100);
             display: flex;
             flex-direction: column;
+            z-index: 10;
+            align-items: center;
+            max-height: 100vh;
+            height: 100vh;
+            min-height: 500px;
+            overflow: auto;
         }
 
-        .composeButton {
-            width: 170px;
+        .secondVert {
+            width: 100%;
+            background: linear-gradient(to bottom, #fdeced, #fdeced, #fff1f1, #fff7f7);
+            background-color: #fff1f1;
+            display: flex;
+            flex-direction: column;
+            z-index: 8;
+            list-style-type: none;
+            padding-top: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            max-height: 100vh;
+            min-height: 417px;
+            height: 90vh;
+            overflow: auto;
+        }
+
+        .typing-container {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 26ch;
+            /* Adjust the width based on the length of your text */
+            border-right: none;
+            animation: typing 1.5s steps(25), blink 0.5s step-end infinite;
+            animation-fill-mode: forwards;
+        }
+
+        .typing-container2 {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 18ch;
+            visibility: hidden;
+            /* Adjust the width based on the length of your text */
+            border-right: none;
+            animation: typing2 1.5s steps(18), blink 0.5s step-end infinite;
+            animation-delay: 2s;
+            /* Delay matches the duration of the first animation */
+            animation-fill-mode: forwards;
+        }
+
+        .typing {
+            color: white;
+            margin-bottom: 0px;
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .typing2 {
+            color: white;
+            margin-bottom: 0px;
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .clearChat {
+            background-color: #E46F41;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .clearChat:hover {
+            padding: 15px;
+        }
+
+        * {
+            transition: 0.2s;
+        }
+
+        .listcontright {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
             margin-bottom: 20px;
         }
 
-        .inboxButton {
-            height: 35px;
-            width: 150px;
-            object-fit: contain;
-        }
-
-        .sentButton {
-            height: 35px;
-            width: 150px;
-            object-fit: contain;
-        }
-
-        .trashButton {
-            height: 35px;
-            width: 150px;
-            object-fit: contain;
-        }
-
-        .viewEmailButtons {
-            display: flex;
-            flex-direction: column;
-            margin-left: 20px;
-        }
-
-        .UsertoClass {
+        .listcontleft {
             display: flex;
             flex-direction: row;
-            align-items: end;
-            margin: 30px 50px;
-        }
-
-        .toDesign {
-            background-color: #F69BA0;
-            color: white;
-            padding: 15px 35px;
-            border-radius: 10px;
-        }
-
-        .userToForm {
-            border-style: none;
-            border-bottom-style: solid;
-            padding: 5px;
-            height: 100%;
-            font-size: 15px;
-            margin-left: 20px;
             width: 100%;
-        }
-
-        .userToForm:focus {
-            outline: none;
-        }
-
-        .formUserDiv {
             display: flex;
             flex-direction: row;
-            flex: 1;
-        }
-
-        .formSubjectDiv {
-            display: flex;
-            flex-direction: row;
-            flex: 1;
-        }
-
-        .SubjectDesign {
-            background-color: #F69BA0;
-            color: white;
-            padding: 15px 18px;
-            border-radius: 10px;
-        }
-
-        .SubjectClass {
-            display: flex;
-            flex-direction: row;
-            align-items: end;
-            margin: 30px 50px;
-        }
-
-        .subjectForm {
-            border-style: none;
-            border-bottom-style: solid;
-            padding: 5px;
-            height: 100%;
-            font-size: 15px;
-            margin-left: 20px;
-            width: 100%;
-        }
-
-        .subjectForm:focus {
-            outline: none;
-        }
-
-        .descriptionForm {
-            width: 100%;
-            font-size: 15px;
-            padding: 10px;
-            border-radius: 10px;
-        }
-
-        .descriptionDiv {
-            margin-top: 10px;
+            justify-content: start;
             margin-bottom: 10px;
-            margin-left: 60px;
-            margin-right: 60px;
         }
 
-        .ButtonClass {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-left: 60px
-        }
-
-        .SubmitBut {
-            background-color: #F37D84;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            border-style: none;
-        }
-
-        .attachCls {
-            width: 30px;
-            height: 30px;
-        }
-
-        .linkcls {
-            width: 30px;
-            height: 30px;
-        }
-
-        .file-item {
-            background-color: #F0F0F0;
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            color: #F69BA0;
-        }
-
-        .delete-button {
-            color: #F69BA0;
+        .listsubcontright {
+            margin-right: 10px;
             margin-left: 10px;
         }
 
-        .backEmailComp {
-            font-size: 30px;
-            color: #F69BA0;
-            margin-left: 10%;
+        .listsubcontleft {
+            margin-left: 10px;
+            margin-right: 10px;
         }
-        #fileList{
+
+        .botPic {
+            width: 40px;
+            height: 40px;
+        }
+
+        .profPic {
+            width: 40px;
+            height: 40px;
+            border-radius: 1000px;
+        }
+
+        .listContent {
+            max-width: 80%;
+            background-color: #fdc9cb;
+            word-break: break-all;
+            padding: 10px;
+            border-radius: 5px;
+            color: black;
+        }
+
+        .leftDiv {
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: row;
+        }
+
+        .rightDiv {
+            display: flex;
+            justify-content: flex-start;
+            flex-direction: row;
+        }
+
+        .secVertMain {
+            height: 100vh;
+            max-height: 100vh;
+            min-height: 500px;
             display: flex;
             flex-direction: column;
-            align-items: start;
+            justify-content: space-between;
+            width: 100%;
         }
 
+        .getInput {
+            width: 95%;
+            font-size: 15px;
+            padding: 10px 10px;
+            height: 70px;
+            margin-left: 10px;
+            border-radius: 5px;
+            border-style: solid;
+            border-width: 2px;
+            border-color: rgb(177, 177, 177);
+        }
 
-        @media (max-width:380px) {
-            .UsertoClass {
-                margin: 30px 30px;
+        .sendDiv {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .sendPrompt {
+            cursor: pointer;
+        }
+
+        @media (max-height:624px) {
+            .logoImage {
+                margin-top: 20px;
+                animation-name: showLog2;
+            }
+        }
+
+        @media (max-height:560px) {
+            .logoImage {
+                height: 180px;
+                width: 180px;
+            }
+        }
+
+        @media (max-width:560px) {
+            .logoImage {
+                display: none;
             }
 
-            .toDesign {
-                padding: 15px 20px;
+            .firstVert {
+                min-width: 120px;
             }
 
-            .SubjectDesign {
-                padding: 15px 10px;
+            .typing-container,
+            .typing-container2 {
+                display: none;
             }
 
-            .SubjectClass {
-                margin: 30px 30px;
+            .typing,
+            .typing2 {
+                display: none;
+            }
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
             }
 
-            .descriptionDiv {
-                margin-top: 10px;
-                margin-bottom: 10px;
-                margin-left: 60px;
-                margin-right: 60px;
+            to {
+                width: 26ch;
+            }
+        }
+
+        @keyframes typing2 {
+            from {
+                visibility: visible;
+                width: 0;
             }
 
+            to {
+                visibility: visible;
+                width: 18ch;
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        @keyframes showLog {
+            from {
+                margin-top: -150%;
+            }
+
+            to {
+                margin-top: 30%;
+            }
+        }
+
+        @keyframes showLog2 {
+            from {
+                margin-top: -150%;
+            }
+
+            to {
+                margin-top: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div>
-        <img src="{% static 'images/logo.png' %}" class="logoImage">
-    </div>
-    <div class="backEmailComp">
-        <img src = "{% static 'images/GoBack.png' %}" style="height: 20px; width: 20px;">
-    </div>
-    <div class = "userPK" style="">{{userPk.id}}</div>
     <div class="bodyContent">
-        <div class="emailCompose">
-            <div style="height: 530px; border-radius: 10px; padding: 10px;">
+        <div class="firstVert">
+            <div class="userPK" style="opacity: 0;">{{userPk.id}}</div>
+            <img src="{% static 'images/chatbotRob.png' %}" class="logoImage">
+            <div class="typing-container">
+                <p class="typing">Hello, I am Yapster,</p>
+            </div>
+            <div class="typing-container2">
+                <p class="typing2">An AI Helper.</p>
+            </div>
+            <div class="clearChat">Clear Chat</div>
+        </div>
+        <div class="secVertMain">
+            <ul class="secondVert">
 
+                {% for prompt in userPrompt %}
+                {% if prompt.fromAi %}
+                <li class="listcontleft">
+                    <div class="listsubcontleft">
+                        <img src="{% static 'images/chatbotRob.png' %}" class="botPic">
+                    </div>
+                    <div class="listContent">
+                        {{prompt.prompt_text}}
+                    </div>
+                </li>
+                {% else %}
+                <li class="listcontright">
+                    <div class="btn-group dropleft">
+                        <div style="display: flex; flex-direction: row; align-items: center; cursor: pointer;"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{% static 'images/down-arrow.png'%}"
+                                style="color:#fd5e66; height: 20px; width: 20px; display: flex; flex-direction: row; align-items: center; margin-right: 5px;">
+                        </div>
+
+                        <div class="dropdown-menu">
+                            <div style="opacity: 0; font-size: 2px;">{{prompt.id}}</div>
+                            <button class="dropdown-item deletemess" type="button">Delete</button>
+                            <button class="dropdown-item editmess" type="button">Edit</button>
+                        </div>
+                    </div>
+                    <div class="listContent">
+                        {{prompt.prompt_text}}
+                    </div>
+                    <div class="listsubcontright">
+                        <img src="{{profilepic}}" class="profPic">
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <div class="sendDiv">
+                <textarea class="getInput"></textarea>
+                <img src="{% static 'images/send.png' %}" style="height: 30px; width: 30px;" class="sendPrompt">
             </div>
-            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
-                <input type = "text" style="width: 90%; font-size: 15px; padding: 10px 10px;" class = "getInput">
-                <img src = "{% static 'images/send.png' %}" style="height: 30px; width: 30px;" class = "sendPrompt">
-            </div>
-            
         </div>
     </div>
 </body>
@@ -275,23 +383,191 @@
         }
         return cookieValue;
     }
-    $(document).ready(function(e){
-        $(".sendPrompt").click(function(e){
+    $(document).ready(function (e) {
+        const parentElementvv = document.querySelector('.secondVert');
+        parentElementvv.scrollTop = parentElementvv.scrollHeight;
+        $(".sendPrompt").click(function (e) {
             var inputPrompt = document.querySelector(".getInput")
+            var inputValue = inputPrompt.value.trim()
+            if (inputPrompt.value.trim() == "") {
+                console.log("none")
+                return;
+            }
+
+            const parentElement = document.querySelector('.secondVert');
+
+            const listItem = document.createElement('li');
+            listItem.classList.add('listcontright');
+
+            const btnGroup = document.createElement('div');
+            btnGroup.classList.add('btn-group', 'dropleft');
+            btnGroup.style.opacity = 0
+
+            const dropdownToggle = document.createElement('div');
+            dropdownToggle.style.cssText = "display: flex; flex-direction: row; align-items: center; cursor: pointer;";
+            dropdownToggle.setAttribute('data-bs-toggle', 'dropdown');
+            dropdownToggle.setAttribute('aria-haspopup', 'true');
+            dropdownToggle.setAttribute('aria-expanded', 'false');
+
+            const arrowImg = document.createElement('img');
+            arrowImg.src = "{% static 'images/down-arrow.png' %}";
+            arrowImg.style.cssText = "color:#fd5e66; height: 20px; width: 20px; margin-right: 5px;";
+
+            dropdownToggle.appendChild(arrowImg);
+
+            const dropdownMenu = document.createElement('div');
+            dropdownMenu.classList.add('dropdown-menu');
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('dropdown-item', 'deletemess');
+            deleteButton.setAttribute('type', 'button');
+            deleteButton.textContent = 'Delete';
+
+            const editButton = document.createElement('button');
+            editButton.classList.add('dropdown-item', 'editmess');
+            editButton.setAttribute('type', 'button');
+            editButton.textContent = 'Edit';
+
+            var idme = document.createElement('div')
+            idme.innerText = ""
+            idme.style.opacity = "0"
+            idme.style.fontSize = "2px"
+
+            dropdownMenu.appendChild(idme);
+            dropdownMenu.appendChild(deleteButton);
+            dropdownMenu.appendChild(editButton);
+
+            btnGroup.appendChild(dropdownToggle);
+            btnGroup.appendChild(dropdownMenu);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('listContent');
+            contentDiv.textContent = inputValue;
+
+            const rightContainer = document.createElement('div');
+            rightContainer.classList.add('listsubcontright');
+
+            const profileImg = document.createElement('img');
+            profileImg.src = "{{profilepic}}";
+            profileImg.classList.add('profPic');
+
+            rightContainer.appendChild(profileImg);
+
+            listItem.appendChild(btnGroup);
+            listItem.appendChild(contentDiv);
+            listItem.appendChild(rightContainer);
+
+            parentElement.appendChild(listItem);
+
+            parentElement.scrollTop = parentElement.scrollHeight;
+
+            inputPrompt.value = ""
+
+            sendDiv = document.querySelector(".sendDiv")
+            sendDiv.style.pointerEvents = "none"
+            sendDiv.style.opacity = "0.5"
+
+
+
 
             $.ajax({
-                url: "../../chatbot/chatbotsystem/pass/",  
+                url: "../../chatbot/chatbotsystem/pass/",
                 type: 'POST',
-                data: JSON.stringify({ "message": inputPrompt.value }),  
-                contentType: 'application/json',  
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },  
+                data: JSON.stringify({ "message": inputValue }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 success: function (response) {
-                   console.log(response)
+
+                    const parentElement = document.querySelector('.secondVert');
+
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('listcontleft');
+
+
+                    const leftContainer = document.createElement('div');
+                    leftContainer.classList.add('listsubcontleft');
+
+                    const botPic = document.createElement('img');
+                    botPic.src = "{% static 'images/chatbotRob.png' %}";
+                    botPic.classList.add('botPic');
+
+                    leftContainer.appendChild(botPic);
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.classList.add('listContent');
+                    contentDiv.textContent = response.message;
+
+                    listItem.appendChild(leftContainer);
+                    listItem.appendChild(contentDiv);
+
+                    parentElement.appendChild(listItem);
+                    parentElement.scrollTop = parentElement.scrollHeight;
+
+                    sendDiv.style.pointerEvents = "auto"
+                    sendDiv.style.opacity = "1"
+
+                    btnGroup.style.opacity = 1
+                    idme.innerText = response.yourId
+                    console.log(response.yourId)
+
+                    deleteButton.addEventListener("click", function (e) {
+                        var idHold = parseInt(e.target.parentElement.firstElementChild.innerText)
+                        $.ajax({
+                            url: "../../chatbot/chatbotdel/",
+                            type: "POST",
+                            data: JSON.stringify({ "idInp": idHold }),
+                            contentType: 'application/json',
+                            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                            success: function (response) {
+                                console.log(response)
+                                window.location.reload()
+                            }
+                        })
+                    })
+                    editButton.addEventListener("click",function(e){
+                        var editword = e.target.parentElement.parentElement.parentElement.firstElementChild.nextElementSibling.innerText
+                        $(".getInput").val(editword)
+                    })
+
+
                 },
                 error: function (error) {
                     console.error('An error occurred:', error.responseJSON);
+
                 }
             });
+        })
+
+        $(".deletemess").click(function (e) {
+            var idHold = parseInt(e.target.parentElement.firstElementChild.innerText)
+            $.ajax({
+                url: "../../chatbot/chatbotdel/",
+                type: "POST",
+                data: JSON.stringify({ "idInp": idHold }),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                success: function (response) {
+                    console.log(response)
+                    window.location.reload()
+                }
+            })
+        })
+        $(".editmess").click(function(e){
+            var editword = e.target.parentElement.parentElement.parentElement.firstElementChild.nextElementSibling.innerText
+            $(".getInput").val(editword)
+        })
+        $(".clearChat").click(function(e){
+            $.ajax({
+                url:"../../chatbot/chatbotdelall/",
+                method:"POST",
+                data: JSON.stringify({"idDel":parseInt($(".userPK").text())}),
+                contentType: 'application/json',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                success:function(response){
+                    console.log(response)
+                    window.location.reload()
+                }
+            })
         })
     })
 </script>

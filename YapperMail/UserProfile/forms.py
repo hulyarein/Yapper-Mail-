@@ -1,6 +1,5 @@
 from django import forms
 from landing.models import CustomUser as User
-from landing.models import Profile
 from django.contrib.auth.hashers import check_password
 from datetime import date
 from django.core.exceptions import ValidationError
@@ -175,7 +174,9 @@ class ChangeGenderForm(forms.ModelForm):
     )
     other_gender = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Please specify if "Other"'})
+        widget=forms.TextInput(attrs={'class': 'form-control lg:mx-11 border-2 border-[#f37d84] focus:border-[#f66f78] focus:ring-1 focus:ring-[#f37d84] rounded-lg focus:outline-none', 
+                                      'placeholder': 'Please specify if "Other"'})
+        
     )
     pass_verification = forms.CharField(
         widget=forms.PasswordInput(attrs={

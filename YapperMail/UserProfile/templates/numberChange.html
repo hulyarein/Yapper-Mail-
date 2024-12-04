@@ -99,6 +99,10 @@
         const form = document.getElementById('myForm');
         const submitButton = document.getElementById  ('openModal');
         const passBtn = document.getElementById('passVerifyBtn');
+
+        form.reset();
+        submitButton.disabled = true;
+        passBtn.disabled = true;
     
         let initialPass = document.getElementById('passVerify').value;
         // Capture initial values
@@ -127,6 +131,15 @@
           passBtn.disabled = !hasPass;
           submitButton.disabled = !hasChanges; 
         };
+
+        document.getElementById('pnumber').addEventListener("input", () => {
+          const selectedCode = selected_option.querySelector("strong").innerText.trim(); // Get current selected country code
+          if (!input_box.value.startsWith(selectedCode)) {
+            // Ensure the input starts with the selected country code
+            const userInput = input_box.value.replace(/^\+\d+/, ""); // Remove any existing country code
+            input_box.value = `${selectedCode}${userInput}`;
+          }
+        });
     
         form.addEventListener('input', checkChanges);
     
@@ -228,49 +241,47 @@
       </a>
       <hr class="border-[#f37d84]">
       <div class="content pb-20 flex flex-col items-center">
-        <div class="fields border-2 border-[#F37D84] my-10 w-1/2 rounded-lg">
+        <div class="fields border-2 border-[#F37D84] my-6 mx-12 w-3/4 lg:w-1/2 rounded-lg">
           <form action="{% url 'changeNumber' %}" class="flex flex-col m-12 gap-3" id="myForm">
             {% csrf_token %}
-            <p class="">Stop callin', stop callin'
+            <p class="lg:mx-11">Stop callin', stop callin'
               I don't wanna think any more
               I left my head and heart on the dance floor</p>
-            <div class="flex flex-col">
-              <div class="alert alert-danger" id="errorMessages" style="display: none;" role="alert"></div>
+            <div class="flex flex-col lg:mx-11">
+              <div class="alert alert-danger lg:mx-11" id="errorMessages" style="display: none;" role="alert"></div>
+
               <div class="select-box w-full z-10">
                 <div class="selected-option">
                     <div class="flex items-center w-1/8">
                         <span class="iconify" data-icon="flag:ph-4x3"></span>
                         <strong>+63</strong>
                     </div>
-                    <input type="tel" name="pnumber" placeholder="Phone Number" value="{{ form.pnumber.value }}" id="pnumber">
+                    <input type="tel" name="pnumber" placeholder="Phone Number" value="{{ form.pnumber.value }}" id="pnumber" class="text-xs lg:text-base">
                 </div>
+
                 <div class="options">
-                    <input type="text" class="search-box" placeholder="Search Country Name">
+                    <input type="text" class="search-box text-sm lg:text-base" placeholder="Search Country Name">
                     <ol></ol>
                 </div>
               </div>
+
               <div class="flex flex-col gap-10 z-0">
                 <div class="flex flex-col">
                   <label class="text-lg font-semibold">Verification Code</label>
                   <div class="relative">
-                    <input type="text" id="verificationCode" class="p-3 border-1 border-[#f37d84] w-full" placeholder="Enter code">
-                    <a id="sendVerificationLink" href="#" class="absolute right-3 top-4 text-[#f37d84] font-semibold">Send Verification</a>
+                    <input 
+                      type="text" 
+                      id="verificationCode" 
+                      class="p-3 border-2 border-[#f37d84] focus:border-[#f66f78] focus:ring-1 focus:ring-[#f37d84] rounded-lg focus:outline-none w-full"
+                      placeholder="Enter code">
+                    <a id="sendVerificationLink" href="#" class="absolute right-3 top-4 text-[#f37d84] font-semibold text-xs lg:text-base"> Send<span class="block lg:inline"> Verification</span></a>
                   </div>
                 </div>
                 <div id="recaptcha-container"></div>
               </div>
-
-              <div class="flex justify-end gap-10 items-center z-0">
-                <a href="{% url 'profile' %}" class="font-semibold hover:font-medium"><label>Cancel</label></a>
-                <button type="button" 
-                        class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]" 
-                        id="openModal"
-                        >
-                        Save
-                </button>
-              </div>
-              {% include 'components/pass_verify.html'%}
             </div>
+            {% include 'components/submitButtons.html'%}
+            {% include 'components/pass_verify.html'%}
           </form>
         </div>
       </div>

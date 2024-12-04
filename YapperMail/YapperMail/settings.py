@@ -154,17 +154,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),
 #                     '../YapperMail/EmailCompositionAndManagement/static',
 #                     os.path.join(BASE_DIR, 'notifications_app/static/'),
 #                     ]
-
+STATIC_URL = '/static/
 STATICFILES_DIRS = [
                     os.path.join(BASE_DIR, 'globalstatic'),
                     os.path.join(BASE_DIR, 'landing/static'),
                     os.path.join(BASE_DIR, 'EmailCompositionAndManagement/static'),  # Use absolute path
                     os.path.join(BASE_DIR, 'notifications_app/static'),  # Ensure this is correct
-                    ]
+# =======
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),
+#                     '../YapperMail/EmailCompositionAndManagement/static',
+#                     'UserProfile/static']
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'

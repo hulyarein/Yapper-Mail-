@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     pnumber = models.CharField(max_length=13, unique=True)  # Add pnumber field
-    middle_name = models.CharField(max_length=30, default=' ', blank=True, null=True)
+    middle_name = models.CharField(max_length=30,blank=True, null=True)
     birthday = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=50, default='PNS')
     home_address = models.CharField(max_length=200, blank=True, null=True)

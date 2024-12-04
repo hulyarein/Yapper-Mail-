@@ -25,6 +25,10 @@
         const passBtn = document.getElementById("passVerifyBtn");
         let initialPass = document.getElementById("passVerify").value;
 
+        form.reset();
+        submitButton.disabled = true;
+        passBtn.disabled = true;
+
         function findSelectedRadio() {
           const selectedRadio = document.querySelector(
             'input[name="gender"]:checked'
@@ -119,8 +123,10 @@
       </div>
     </a>
     <hr class="border-[#f37d84]" />
-    <div class="content pb-20 flex flex-col items-center">
-      <div class="fields border-2 border-[#F37D84] my-10 w-2/5 rounded-lg">
+    <div class="flex flex-col items-center">
+      <div
+        class="border-2 border-[#F37D84] my-6 mx-12 w-3/4 lg:w-1/2 rounded-lg"
+      >
         <form
           action="{% url 'changeGender' %}"
           id="myForm"
@@ -136,18 +142,21 @@
               checked{% endif %} />
               <label for="Male" name="genderRadio">Male</label>
             </div>
+
             <div class="flex flex-row items-center gap-2">
               <input class="form-check-input" type="radio" name="gender"
               value="Female" id="Female" {% if form.gender.value == "Female" %}
               checked{% endif %} />
               <label for="Female" name="genderRadio">Female</label>
             </div>
+
             <div class="flex flex-row items-center gap-2">
               <input class="form-check-input" type="radio" name="gender"
               value="PNS" id="PNS" {% if form.gender.value == "PNS" %} checked
               {% endif %} />
               <label for="PNS" name="genderRadio">Prefer not to Say</label>
             </div>
+
             <div class="flex flex-row items-center gap-2">
               <input class="form-check-input" type="radio" name="gender"
               value="Other" id="Others" {% if form.gender.value == "Other" %}
@@ -156,23 +165,9 @@
               {{ form.other_gender }}
             </div>
           </div>
-          <div class="flex justify-end gap-10 items-center">
-            <a
-              href="{% url 'profile' %}"
-              class="font-semibold hover:font-medium"
-              ><label>Cancel</label></a
-            >
-            <button
-              type="button"
-              class="btn btn-primary w-[100px] font-semibold rounded-3xl bg-[#F37D84] border-[#F37D84] hover:bg-[#f66f78] hover:border-[#f66f78] h-12 disabled:bg-gray-400 disabled:border-[#BDBDBD]"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-              disabled
-              id="openModal"
-            >
-              Save
-            </button>
-          </div>
+
+          <!-- prettier-ignore -->
+          {% include 'components/submitButtons.html' %} 
           {% include 'components/pass_verify.html' %}
         </form>
       </div>
