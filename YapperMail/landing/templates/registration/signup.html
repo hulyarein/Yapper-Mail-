@@ -21,22 +21,36 @@
                 <p class="fs-3 fw-bold" style="color: #111111;" >Sign up</p> 
 
                 <div class="col-md-6">
-                    <input type="text" class="form-control form-control-lg" placeholder="First name" aria-label="First name" name="fname">
+                    <input type="text" class="form-control form-control-lg" placeholder="First name" aria-label="First name" name="fname" required>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control form-control-lg " placeholder="Last name" aria-label="Last name" name="lname">
+                    <input type="text" class="form-control form-control-lg " placeholder="Last name" aria-label="Last name" name="lname" required>
                 </div>
                 <div class="col-12">
-                    <input type="text" class=" form-control form-control-lg" placeholder="Phone number" aria-label="Phone number" name="pnumber">
+                    <input 
+                        type="text" 
+                        class="form-control form-control-lg" 
+                        placeholder="Phone number" 
+                        aria-label="Phone number" 
+                        name="pnumber" 
+                        pattern="\+63[0-9]{10}" 
+                        title="Phone number must start with +63 and contain 10 digits (e.g., +639123456789)" 
+                        oninput="if (!this.value.startsWith('+63')) this.value = '+63';"
+                        required
+                    >
+
+                    <div class="invalid-feedback">
+                        Please enter a valid phone number starting with +63.
+                    </div>
                 </div>
                 <div class="col-12">
-                    <input type="text" class="form-control form-control-lg" placeholder="Email" aria-label=".form-control-sm example" name="email">
+                    <input type="text" class="form-control form-control-lg" placeholder="Email" aria-label=".form-control-sm example" name="email" required>
                 </div>
                 <div class="col-md-6">
-                    <input type="password" class="form-control form-control-lg" placeholder="Password" aria-label="First name" name="password1">
+                    <input type="password" class="form-control form-control-lg" placeholder="Password" aria-label="First name" name="password1" required>
                 </div>
                 <div class="col-md-6">
-                    <input type="password" class="form-control form-control-lg" placeholder="Confirm password" aria-label="Last name" name="password2">
+                    <input type="password" class="form-control form-control-lg" placeholder="Confirm password" aria-label="Last name" name="password2" required>
                 </div>
                 
                 <div class="col-12">

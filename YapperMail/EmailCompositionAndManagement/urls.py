@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views
+from notifications_app.views import *
 
 
 urlpatterns = [
-    path('composeEmail/<int:pk>',views.email_composition,name='email_composition'),
+    path('composeEmail/<int:pk>', index ,name='email_composition'),
     path('emailSentView/<int:pk>/<int:ok>',views.email_sent_view,name='emailSentView'),
     path('emailReceiveView/',views.email_reply_view,name='emailReceiveView'),
     path('editEmail/<int:pk>/<int:uk>',views.edit_email,name='editEmail'),

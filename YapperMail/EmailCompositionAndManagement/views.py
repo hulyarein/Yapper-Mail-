@@ -14,7 +14,9 @@ from django.db.models import Q
 from landing.models import *
 from django.contrib import messages
 from django.db import IntegrityError,DatabaseError
-from django.templatetags.static import static
+# from django.templatetags.static import static
+from django.conf.urls.static import static
+from notifications_app.models import *
 
 
 # Create your views here.
@@ -33,13 +35,12 @@ def email_composition(request,pk):
             try:
                 fromUser = request.user
                 toUserDatabase = CustomUser.objects.get(email = toUser)
-                email = Email(
+                email = Email.objects.get_or_create(
                     fromUser=fromUser,
                     toUser=toUserDatabase,
                     subject=subject,
                     content=description
                 )
-                email.save()
 
                 uploaded_files = request.FILES.getlist('file')
                 if uploaded_files:
@@ -68,7 +69,14 @@ def email_composition(request,pk):
                     )
                     categemailTo.save()
 
-                return redirect('emailListView')
+                Notification.objects.create(
+                    from_user = fromUser,
+                    to_user = toUser,
+                    title = subject,
+                    message = description,
+                    email_id = email
+                )
+                return redirect ('emailListView')
             except CustomUser.DoesNotExist:
                 error_message = True
             except IntegrityError as e:
@@ -144,7 +152,7 @@ def email_sent_view(request,pk,ok):
     print(profilepicTo)
     print(OtherUserHold)
 
-        
+
     return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,'allCateg':allCateg,"profilepicFrom":profilepicFrom,"profilepicTo":profilepicTo,"OtherUserHold":OtherUserHold})
 
 @login_required

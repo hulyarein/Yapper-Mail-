@@ -8,30 +8,73 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.http import JsonResponse
+from landing.models import CustomUser
+from django.shortcuts import get_object_or_404
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 # Create your views here.
+from .models import Notification
 
+@login_required
+def get_notifications(request):
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+    data = [{
+        'id': notif.id,
+        'title': notif.title,
+        'message': notif.message,
+        'from_user': notif.from_user,
+        'is_read': notif.is_read
+    } for notif in notifications]
+    return JsonResponse({'notifications': data})
+
+@login_required
+def mark_as_read(request, notification_id):
+    try:
+        notification = Notification.objects.get(id=notification_id, user=request.user)
+        notification.is_read = True
+        notification.save()
+        return JsonResponse({'status': 'success'})
+    except Notification.DoesNotExist:
+        return JsonResponse({'status': 'failed', 'error': 'Notification not found'}, status=404)
 
 def index(request, pk):
     error_message = False
     if request.method == "POST":
+        
+
         form = EmailComposeForm(request.POST,request.FILES)
         if form.is_valid():
             toUser = form.cleaned_data['toUser']
             subject = form.cleaned_data['subject']
             description = form.cleaned_data['description']
 
+            print("Email bruh", toUser)
+
+            async_to_sync(get_channel_layer().group_send)(
+                "global_notif",
+                {
+                    'type': 'receive',
+                    'email': {
+                        'fromUser': request.user.id, 
+                        'toUser': toUser, 
+                        'subject': subject,
+                        'content': description
+                    }
+                }
+            )
+
 
             try:
                 fromUser = request.user
                 toUserDatabase = CustomUser.objects.get(email = toUser)
-                email = Email(
+                email = Email.objects.get_or_create(
                     fromUser=fromUser,
                     toUser=toUserDatabase,
                     subject=subject,
                     content=description
                 )
-                email.save()
 
                 uploaded_files = request.FILES.getlist('file')
                 if uploaded_files:
@@ -48,7 +91,7 @@ def index(request, pk):
 
                 categemailFrom = CategoryEmail(
                     userCat = fromUser,
-                    emaildCat = email
+                    emaildCat = email[0]
                 )
                 categemailFrom.save()
 
@@ -56,9 +99,17 @@ def index(request, pk):
 
                     categemailTo = CategoryEmail(
                         userCat = toUserDatabase,
-                        emaildCat = email
+                        emaildCat = email[0]
                     )
                     categemailTo.save()
+                
+                Notification.objects.create(
+                    from_user = fromUser,
+                    to_user = CustomUser.objects.filter(username=toUser).first(),
+                    title = subject,
+                    message = description,
+                    email_id = email[0]
+                )
 
                 return redirect('emailListView')
             except CustomUser.DoesNotExist:
@@ -80,8 +131,6 @@ def index(request, pk):
     return render(request,"index.html",{'form':form,"errormessage":error_message})
     # return render(request, 'index.html')
 
-
-processed_email_user_id = None
 
 @csrf_exempt 
 @login_required
@@ -124,3 +173,12 @@ def get_logged_in(request):
     logged_in = request.user.id if request.user.is_authenticated else None
     return JsonResponse({
             "logged_in": logged_in})
+
+
+# views.py
+@login_required
+def notification_detail(request, email_id):
+    print("GOT HERE LNAO AJDNASJNDSJAD")
+    email = get_object_or_404(Email, id=email_id)
+    print("Email", email)
+    return render(request, 'notification_detail.html', {'email': email})

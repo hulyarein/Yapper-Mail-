@@ -400,7 +400,7 @@ align-items: center;
     grid-template-columns: 1fr 0.5fr;
     grid-template-rows: 0.45fr 0.55fr;
     width: 69%;
-    height: 98%;
+    height: 100%;
     background-color: rgba(243, 125, 132, 0.4);
     border-radius: 20px;
     padding: 1em;
@@ -431,7 +431,8 @@ align-items: center;
     background-color: #ffffff;
     opacity:   100%;
     overflow-y: auto;
-
+    align-items: center;
+    position: relative;
 }
 
 
@@ -445,7 +446,7 @@ align-items: center;
     display: flex;
     flex-direction: column;
     background-color: rgb(222, 222, 222,0.5);
-    width: 300px;
+    width: 90%;
     height: 190px;
     border-radius: 20px;
     color: #1A1A1A;
@@ -517,9 +518,6 @@ align-items: center;
     border-radius: 20px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-
-
-
 
 .enternum-wrapper{
     display: flex;
@@ -682,4 +680,96 @@ a{
     height: 8px;
     background-color: red;
     border-radius: 50%;
+  }
+
+  .bookmark{
+    width: 30%;
+    height: 4.5%;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    position: absolute; /* Absolute positioning */
+    right: 9%; /* Adjust right position as needed */
+    margin-bottom: 30%;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;    
+    line-height: 2;
+  }
+  
+  /* Color schemes for each type */
+ .delegate {
+    background-color: #79C797; /* Red */
+  }
+  
+  .scheduled {
+    background-color: #618BFF; /* Orange */
+  }
+  
+  .do {
+    background-color: #DB464F; /* Green */
+  }
+  
+
+  /* Content styling */
+  .task-content {
+    margin-top: 20px;
+  }
+  
+  .task-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .task-email {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .task-text {
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  #calendar {
+    width: 80%;
+    max-width: 1000px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    color: #1A1A1A;
+  }
+  
+  #calendar-header {
+    display: grid;
+    grid-template-columns: 100px repeat(6, 1fr);
+    background-color: #F9BAC0;
+    font-weight: bold;
+    border-radius: 10px;
+  }
+  
+  .header-cell {
+    padding: 10px;
+    text-align: center;
+    border-right: 1px solid #ddd;
+    border-radius: 10px;
+  }
+  
+  #calendar-body {
+    display: grid;
+    grid-template-columns: 100px repeat(6, 1fr);
+  }
+  
+  .time-slot {
+    /* border-top: 1px solid #ddd; */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .email-block {
+    background-color: #FFEB3B;  /* Yellow color for email block */
+    border-radius: 5px;
+    margin: 2px;
+    padding: 5px;
+    font-size: 12px;
   }

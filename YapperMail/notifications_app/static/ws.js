@@ -68,7 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (submitButton) {
         submitButton.onclick = function (e) {
             // Prevent form from submitting
-            e.preventDefault();
+            // e.preventDefault();
+            // alert(e)
 
             // Get form values
             const toUserElement = document.querySelector("[name='toUser']");

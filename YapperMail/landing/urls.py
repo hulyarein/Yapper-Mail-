@@ -4,6 +4,7 @@ from .views import signupForm, loginForm
 from django.conf.urls.static import static
 from django.conf import settings
 from notifications_app.views import index
+from EmailCompositionAndManagement.views import *
 
 urlpatterns = [
     path('', views.landing, name='landing'), 
@@ -24,6 +25,10 @@ urlpatterns = [
     path('email_view/', views.email_view, name='email_view'),
     path('receive_view/', views.receive_view, name='receive_view'),
     path('retrieve_email_view/', views.retrieve_email_view, name='retrieve_email_view'),
+    path('email_calendar/', views.email_calendar, name='email_calendar'),
+    path('search/', views.search_emails, name='search_emails'),
+    
+    # static(settings.MEDIA_URL)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

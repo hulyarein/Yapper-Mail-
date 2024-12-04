@@ -26,8 +26,27 @@
 
             <div>
                 <div class = "enternum-wrapper">
-                    <div class="col-12">
+                    {% comment %} <div class="col-12">
                         <input type="text" id="phone-number" class="form-control form-control" placeholder="Phone number" aria-label=".form-control-sm example" name="phonenumber" style="width: 23em; " required>
+                    </div> {% endcomment %}
+                    <div class = "col-12">
+                        <input 
+                            id="phone-number"
+                            type="text" 
+                            class="form-control form-control" 
+                            placeholder="Phone number" 
+                            aria-label="Phone number" 
+                            name="phonenumber" 
+                            pattern="\+63[0-9]{10}" 
+                            title="Phone number must start with +63 and contain 10 digits (e.g., +639123456789)" 
+                            oninput="if (!this.value.startsWith('+63')) this.value = '+63';"
+                            style="width: 23em;"
+                            required
+                        >
+
+                        <div class="invalid-feedback">
+                            Please enter a valid phone number starting with +63.
+                        </div>
                     </div>
                     <div class="col-12">
                     

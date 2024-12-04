@@ -28,9 +28,26 @@
             <div class="col-11" style="padding: 10px;">
                 
                 <div class = "enternum-wrapper">
-
-                    <div class="col-12">
+                    {% comment %} <div class="col-12">
                         <input type="text" id="phone-number" class="form-control form-control" placeholder="Phone number" aria-label=".form-control-sm example" name="phonenumber" style="width: 100%; " required>
+                    </div> {% endcomment %}
+                    <div class = "col-12">
+                        <input 
+                            id="phone-number"
+                            type="text" 
+                            class="form-control form-control" 
+                            placeholder="Phone number" 
+                            aria-label="Phone number" 
+                            name="phonenumber" 
+                            pattern="\+63[0-9]{10}" 
+                            title="Phone number must start with +63 and contain 10 digits (e.g., +639123456789)" 
+                            oninput="if (!this.value.startsWith('+63')) this.value = '+63';"
+                            style="width: 23em;"
+                            required
+                        >
+                        <div class="invalid-feedback">
+                            Please enter a valid phone number starting with +63.
+                        </div>
                     </div>
                     <div class="col-12">
                         <button id="sendOtpButton" class="btn btn-primary fs-6 fw-bold" style="border-radius: 10px; border-color: #F37D84; background-color: #F37D84; width: 100%; height: 30%;">Send Verification Code</button>
@@ -82,7 +99,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script type="module" src = "/static/js/landing.js"></script>
-
-   
 </body>
 </html>

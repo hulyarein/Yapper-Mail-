@@ -1,8 +1,9 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
-from EmailCompositionAndManagement.models import Email
+from EmailCompositionAndManagement.models import *
 from asgiref.sync import async_to_sync
 from landing.models import CustomUser
+from .models import Notification
 
 class AppNotifications(WebsocketConsumer):
     def connect(self):
@@ -26,27 +27,18 @@ class AppNotifications(WebsocketConsumer):
             self.channel_name
         )
 
-    def receive(self, text_data):
-        data = json.loads(text_data)
 
-        # Handle the email data from the sender
-        email_data = data['email']
+    def receive(self, text_data):
+        email_data = text_data['email']
+
         from_user_id = email_data.get('fromUser')
         to_user_id = email_data.get('toUser')
         subject = email_data.get('subject')
         content = email_data.get('content')
 
         try:
-            from_user = CustomUser.objects.get(id=from_user_id)
-            to_user = CustomUser.objects.get(username=to_user_id)
-
-            # Save email data to the database
-            email = Email.objects.create(
-                fromUser=from_user,
-                toUser=to_user,
-                subject=subject,
-                content=content
-            )
+            from_user = CustomUser.objects.filter(id=from_user_id).first()
+            to_user = CustomUser.objects.filter(username=to_user_id).first()
 
             # Send the notification to the 'global_notif' group (broadcast to all users)
             async_to_sync(self.channel_layer.group_send)(
@@ -57,7 +49,10 @@ class AppNotifications(WebsocketConsumer):
                         'toUser': to_user.username,
                         'fromUser': from_user.username,
                         'subject': subject,
-                        'content': content
+                        'content': content,
+                        'emailId' : email_data[0].id,
+                        'fromUserId' : from_user_id,
+                        'is_read' : False
                     }
                 }
             )
@@ -72,6 +67,7 @@ class AppNotifications(WebsocketConsumer):
 
     def email_notification(self, event):
         # This method is triggered by group_send
+        print("Sending this data to all users!")
         email_data = event['email']
         self.send(text_data=json.dumps({
             'type': 'email_notification',

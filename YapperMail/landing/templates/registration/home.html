@@ -22,33 +22,70 @@
     <div class="home-container">
       <div class="home-navbar">
         <div class="logoo"></div>
-        <form class="navbar-search" role="search">
-          <input
-            class="form-control search-bar"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button
-            class="btn btn-primary"
-            style="
-              border-radius: 20px;
-              border-color: #f37d84;
-              background-color: #f37d84;
-              width: 7em;
-            "
-            type="submit"
-          >
-            Search
-          </button>
-        </form>
         
+        <form class = "navbar-search" method="get" action="{% url 'search_emails' %}">
+          <div class="d-flex">
+              <input
+                  id="queryInput"
+                  class="form-control search-bar"
+                  type="search"
+                  name="search_query"
+                  value="{{ query }}" 
+                  placeholder="Search"
+                  aria-label="Search"
+                  autocomplete="off"
+                  style="border-radius: 20px; margin-right: 20px;"
+              />
+
+              <button
+              id="applySearch"
+              class="btn btn-primary"
+              style="border-radius: 20px; border-color: #f37d84; background-color: #f37d84; width: 7em;"
+              type="submit"
+              >
+                  Search
+              </button>
+          </div>          
+        </form>
+
+        <!-- Modal for displaying search results -->
+        {% if query %}
+        <div class="modal fade show" id="searchResultsModal" tabindex="-1" aria-labelledby="searchResultsModalLabel" aria-hidden="false" style="display: block;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchResultsModalLabel">Search Results</h5>
+                        <a href="{% url 'home' %}" class="btn-close" aria-label="Close"></a>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Search results for "{{ query }}"</h3>
+                        <ul>
+                            {% if results %}
+                                {% for email in results %}
+                                <a href="/emailmanagement/emailSentView/{{ request.user.id }}/{{ email.id }}">
+                                  <li>
+                                      <strong>{{ email.subject }}</strong><br>
+                                      {{ email.fromUser.email }}<br>
+                                      {{ email.content|slice:":100" }}...
+                                  </li>
+                                 </a>
+                                {% endfor %}
+                            {% else %}
+                                <li>No emails found.</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="compose-container">
           <i class="bi bi-plus-circle"></i>
-          <a class="compose"  href="{% url 'compose_email' pk=usermeid %}" >Compose</a>
+          <a class="compose" href="{% url 'compose_email' pk=usermeid %}" >Compose</a>
         </div>
 
-        <div class="dropdown notification-bell">
+        {% comment %} <div class="dropdown notification-bell">
           <button
             type="button"
             id="notificationDropdown"
@@ -62,9 +99,41 @@
             </span>
           </button>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notificationList">
-              <!-- Notifications will be dynamically added here -->
+               {% for notification in notifications %}
+
+               <a href="/emailmanagement/emailSentView/{{ request.user.id }}/{{notification.email_id.id }}" class="dropdown-item {% if notification.is_read %} read-notification{% endif %}">
+                <strong>{{ notification.from_user.username }}</strong><br>{{ notification.title }}<br><small>{{ notification.message }}</small>
+                {% if  not notification.is_read %}
+                  <span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>
+                {% endif %}
+              </a>
+              {% endfor %}
+          </ul>
+        </div> {% endcomment %}
+
+        <div class="dropdown notification-bell">
+          <button
+              type="button"
+              id="notificationDropdown"
+              class="btn btn-light"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="border: none; box-shadow: none; background-color: #FEDEE3;">
+              <i class="bi bi-bell" style="color: #f37d84; font-size: 2em; background-color: #FEDEE3;"></i>
+              <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  
+              </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notificationList">
+            {% for notification in notifications %}
+              <a href="/emailmanagement/emailSentView/{{ request.user.id }}/{{notification.email_id.id }}"  class="dropdown-item" onclick="markAsRead(this)">
+                  <strong>{{ notification.from_user.username }}</strong><br>{{ notification.title }}<br><small>{{ notification.message }}</small>
+                  <span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>
+              </a> 
+            {% endfor %}
           </ul>
         </div>
+      
         
 
         <div class="profile-container">
@@ -121,7 +190,7 @@
           </div>
         </div>
 
-        <div class="recent-navigation">
+        {% comment %} <div class="recent-navigation">
           <span style="color: #f37d84">Recent</span>
           <div class="recent-navigation-container">
             <div
@@ -145,7 +214,7 @@
               style="background-color: blue"
             ></div>
           </div>
-        </div>
+        </div>  {% endcomment %}
       </div>
 
       <div class="home-body-2">
@@ -162,210 +231,276 @@
           <div class="no-tasks">No plans available.</div>
           {% endif %}
         </div>
-        <div class="schedule">
+        <div class="schedule calendar">
           <h1>My Schedule</h1>
+          <div id="calendar-header">
+            <div class="header-cell">Mon</div>
+            <div class="header-cell">Tue</div>
+            <div class="header-cell">Wed</div>
+            <div class="header-cell">Thu</div>
+            <div class="header-cell">Fri</div>
+            <div class="header-cell">Sat</div>
+            <div class="header-cell">Sun</div>
+          </div>
+
+          <div id="calendar-body"></div>
+
         </div>
         <div class="taskboard">
-          <h1>Task board</h1>
-          {% if emails %} {% for email in emails %}
-          <div class="taskboard-container">
-            <div class="task-title">{{ email.subject }}</div>
-            <div class="task-email">{{ email.fromUser}}</div>
-            <div class="task-text">{{ email.content }}</div>
-          </div>
-          {% endfor %} {% else %}
-          <div class="no-tasks">No emails available.</div>
+          <h2>Task board</h2>
+
+          {% if emails %}
+            {% for email in emails %}
+              {% for category in email.categEmail.all %}
+                {% if category.isDelegate or category.isDo or category.isScheduled %}
+                  <div class="taskboard-container">
+                      {% if category.isDelegate %}
+                        <div class="bookmark delegate">Delegate</div>
+                      {% elif category.isScheduled %}
+                        <div class="bookmark scheduled">Scheduled</div>
+                      {% elif category.isDo %}
+                        <div class="bookmark do">Do</div>
+                      {% endif %}
+                      <div class="task-content">
+                        <div class="task-title">{{ email.subject }}</div>
+                        <div class="task-email">{{ email.fromUser.username }}</div>
+                        <div class="task-text">{{ email.content }}</div>
+                      </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          {% else %}
+            <p>No emails found.</p>
           {% endif %}
-          <div class = "taskboard-container">
-                <div class = "task-title">Event Request</div>
-                <div class = "task-email">userone@101.com</div>
-                <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-          </div>
 
-          <div class = "taskboard-container">
-            <div class = "task-title">Event Request</div>
-            <div class = "task-email">userone@101.com</div>
-            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-          </div>
-
-          <div class = "taskboard-container">
-            <div class = "task-title">Event Request</div>
-            <div class = "task-email">userone@101.com</div>
-            <div class = "task-text">Good day, I need to request assistance for an event this October...</div>
-          </div> 
         </div>
       </div>
-      
     </div>
   </div>
 
-<script>
+  <script>
 
-  /*click inbox to go this emailmanagement/emailList location*/
-  var clickInbox = document.querySelector(".clickInbox")
-  clickInbox.addEventListener("click",function(e){
-    window.location.href = "../emailmanagement/emailList"
-  })
+    var clickInbox = document.querySelector(".clickInbox")
+    clickInbox.addEventListener("click",function(e){
+      window.location.href = "../emailmanagement/emailList"
+    })
 
-  var teamClick = document.querySelector(".clickTeam")
-  teamClick.addEventListener("click",function(e){
-    window.location.href = "../teamemailmanagement/emailList"
-  })
+    var teamClick = document.querySelector(".clickTeam")
+    teamClick.addEventListener("click",function(e){
+      window.location.href = "../teamemailmanagement/emailList"
+    })
 
-  var clickchatBot = document.querySelector(".clickchatBot")
-  clickchatBot.addEventListener("click",function(e){
-    window.location.href = "../chatbot/chatbotsystem/"
-  })
+    var clickchatBot = document.querySelector(".clickchatBot")
+    clickchatBot.addEventListener("click",function(e){
+      window.location.href = "../chatbot/chatbotsystem/"
+    })
 
-  
-  let email, fromUser, subject, content;
-  const currUser = "{{ user.username }}";
-  const notificationList = document.querySelector('#notificationList'); 
-  const notificationBadge = document.querySelector('#notificationBadge'); 
-  const socket = new WebSocket(`ws://${window.location.host}/ws/socket-server/`);
+    
+    let email, fromUser, subject, content;
+    const currUser = "{{ user.username }}";
+    const notificationList = document.querySelector('#notificationList'); 
+    const notificationBadge = document.querySelector('#notificationBadge'); 
+    const socket = new WebSocket(`ws://${window.location.host}/ws/socket-server/`);
 
-  socket.onopen = () => {
-      console.log("Connected to the global notifications WebSocket!");
-  };
+    socket.onopen = () => {
+        console.log("Connected to the global notifications WebSocket!");
+    };
 
-  socket.onclose = () => {
-      console.log("Socket closed!");
-  };
+    socket.onclose = () => {
+        console.log("Socket closed!");
+    };
 
-  socket.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      console.log("Reached");
+    socket.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        console.log(data);
 
-      if (data.type === 'email_notification') {
-          email = data.email;
-          fromUser = email.fromUser;
-          subject = email.subject;
-          content = email.content;
-          console.log('Email data received:', fromUser, subject, content);
-          console.log("Reached 2");
+        if (data.type === 'email_notification') {
+            email = data.email;
+            fromUser = email.fromUser;
+            subject = email.subject;
+            content = email.content;
 
-          if (email.toUser === currUser) {
-              const notificationItem = document.createElement("li");
-              notificationItem.classList.add("dropdown-item");
-              notificationItem.innerHTML = `
-                  <strong>${fromUser}</strong><br>${subject}<br><small>${content}</small>
-                  <span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>
-              `
+            if (email.toUser === currUser) {
+                const notificationItem = document.createElement("a");
 
-              notificationItem.addEventListener("click", () => {
-                  markNotificationAsRead({ fromUser, subject, content });
-                  notificationItem.classList.add("read-notification");
-                  notificationItem.querySelector(".unread-indicator").style.display = "none"; // Remove the circle
-              });
-
-              notificationList.insertBefore(notificationItem, notificationList.firstChild);
-
-              // Show the badge if there are unread notifications
-              const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-              notifications.push({ fromUser, subject, content, read: false });
-              localStorage.setItem('notifications', JSON.stringify(notifications));
-
-              const unreadCount = notifications.filter(n => !n.read).length;
-              notificationBadge.style.display = "block";
-              notificationBadge.innerText = unreadCount;
-          }
-      }
-  };
-
-  function markNotificationAsRead(notification) {
-      let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-      notifications = notifications.map(notif => {
-          if (notif.fromUser === notification.fromUser && notif.subject === notification.subject) {
-              notif.read = true;
-          }
-          return notif;
-      });
-      localStorage.setItem('notifications', JSON.stringify(notifications));
-
-      // Update badge count
-      const unreadCount = notifications.filter(n => !n.read).length;
-      notificationBadge.innerText = unreadCount;
-      if (unreadCount === 0) {
-          notificationBadge.style.display = "none";
-      }
-  };
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-
-    notifications.forEach(notification => {
-        const notificationItem = document.createElement("li");
-        notificationItem.classList.add("dropdown-item");
-        if (notification.read) {
-            notificationItem.classList.add("read-notification");
-        }
-        notificationItem.innerHTML = `
-            <strong>${notification.fromUser}</strong><br>${notification.subject}<br><small>${notification.content}</small>
-            ${!notification.read ? '<span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>' : ''}
-        `;
-
-        /* notificationItem.addEventListener("click", () => {
-
-            markNotificationAsRead(notification);
-            notificationItem.classList.add("read-notification");
-            const unreadIndicator = notificationItem.querySelector(".unread-indicator");
-            if (unreadIndicator) {
-                unreadIndicator.style.display = "none"; // Remove the circle
-            }
-
-            fetch('/email_view/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    fromUser: notification.fromUser,
-                    subject: notification.subject,
-                    content: notification.content
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    // After storing the email data, send GET request to retrieve it
-                    fetch('/retrieve_email_view/', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.email_data) {
-                            // Now you have the email data, and you can do something with it
-                            console.log(data.email_data);  // Render email view, etc.
-
-                            // Redirect to email view after retrieving data
-                            window.location.href = '/receive_view/';
-                        } else {
-                            console.log('Error: No email data found');
-                        }
-                    })
-                    .catch(error => console.error('Error fetching email data:', error));
+                const href = `/emailmanagement/emailSentView/${email.fromUserId}/${email.emailId}`;
+              
+                notificationItem.setAttribute("href", href);
+                notificationItem.classList.add("dropdown-item");
+                
+                if (email.is_read) {
+                    notificationItem.classList.add("read-notification");
                 }
-            })
-            .catch(error => console.error('Error sending email data:', error));
-        }); */
+                
+                notificationItem.innerHTML = `
+                    <strong>${email.toUser}</strong><br>
+                    ${email.subject}<br>
+                    <small>${email.content}</small>
+                `;
 
-        console.log("Here")
-        notificationList.insertBefore(notificationItem, notificationList.firstChild);
-    });
+                if (!email.is_read) {
+                  const unreadIndicator = document.createElement("span");
+                  unreadIndicator.classList.add("unread-indicator");
+                  unreadIndicator.style.cssText = "float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;";
+                  notificationItem.appendChild(unreadIndicator);
+                }
 
-    const unreadCount = notifications.filter(n => !n.read).length;
-    notificationBadge.style.display = unreadCount > 0 ? "block" : "none";
-    notificationBadge.innerText = unreadCount;
-});
+                notificationList.insertBefore(notificationItem, notificationList.firstChild);
 
-</script>
+                const unreadCount = notifications.filter(n => !n.read).length;
+                
+                notificationBadge.style.display = "block";
+                notificationBadge.innerText = unreadCount;
+            }
+        }
+    };
 
+    {% comment %} function markNotificationAsRead(notification) {
+        notifications = notifications.map(notif => {
+            if (notif.fromUser === notification.fromUser && notif.subject === notification.subject) {
+                notif.read = true;
+            }
+            return notif;
+        });
 
-  
+        const unreadCount = notifications.filter(n => !n.read).length;
+        notificationBadge.innerText = unreadCount;
+        if (unreadCount === 0) {
+            notificationBadge.style.display = "none";
+        }
+    };  {% endcomment %}
+
+    function markAsRead(notificationElementt) {
+      const unreadIndicator = notificationElement.querySelector(".unread-indicator");
+      if (unreadIndicator) {
+          unreadIndicator.style.display = "none";
+      }
+
+      notificationElement.style.color = "#6c757d";
+
+      const badge = document.getElementById("notificationBadge");
+      let count = parseInt(badge.textContent);
+      count = count > 0 ? count - 1 : 0;
+      badge.textContent = count;
+
+      if (count === 0) {
+          badge.style.display = "none";
+      }
+    }
+
+      notifications.forEach(notification => {
+          const notificationItem = document.createElement("li");
+          notificationItem.classList.add("dropdown-item");
+          if (notification.read) {
+              notificationItem.classList.add("read-notification");
+          }
+          notificationItem.innerHTML = `
+              <strong>${notification.fromUser}</strong><br>${notification.subject}<br><small>${notification.content}</small>
+              ${!notification.read ? '<span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>' : ''}
+          `;
+
+          notificationItem.addEventListener("click", () => {
+
+              markNotificationAsRead(notification);
+              notificationItem.classList.add("read-notification");
+              const unreadIndicator = notificationItem.querySelector(".unread-indicator");
+              if (unreadIndicator) {
+                  unreadIndicator.style.display = "none"; 
+              }
+
+              fetch('/email_view/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      fromUser: notification.fromUser,
+                      subject: notification.subject,
+                      content: notification.content
+                  })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.status === 'success') {
+                      fetch('/retrieve_email_view/', {
+                          method: 'GET',
+                          headers: {
+                              'Content-Type': 'application/json',
+                          }
+                      })
+                      .then(response => response.json())
+                      .then(data => {
+                          if (data.email_data) {
+                              console.log(data.email_data);  
+                              window.location.href = '/receive_view/';
+                          } else {
+                              console.log('Error: No email data found');
+                          }
+                      })
+                      .catch(error => console.error('Error fetching email data:', error));
+                  }
+              })
+              .catch(error => console.error('Error sending email data:', error));
+          });
+
+          console.log("Here")
+          notificationList.insertBefore(notificationItem, notificationList.firstChild);
+      });
+
+      const unreadCount = notifications.filter(n => !n.read).length;
+      notificationBadge.style.display = unreadCount > 0 ? "block" : "none";
+      notificationBadge.innerText = unreadCount;
+
+      const searchResultItems = document.querySelectorAll('.search-result-item');
+        
+        searchResultItems.forEach(item => {
+            item.addEventListener("click", function () {
+                const fromUser = item.getAttribute("data-from-user");
+                const subject = item.getAttribute("data-subject");
+                const content = item.getAttribute("data-content");
+
+                fetch('/email_view/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        fromUser: fromUser,
+                        subject: subject,
+                        content: content
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        fetch('/retrieve_email_view/', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.email_data) {
+                                console.log(data.email_data);  
+                                window.location.href = '/receive_view/';
+                            } else {
+                                console.log('Error: No email data found');
+                            }
+                        })
+                        .catch(error => console.error('Error fetching email data:', error));
+                    }
+                    
+                })
+                .catch(error => console.error('Error sending email data:', error));
+            });
+        });
+  </script>
+
+  <script src = "/static/js/calendar.js"></script>  
   <!-- Bootstrap JS (including Popper.js for dropdowns) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  
   </body>
 </html>

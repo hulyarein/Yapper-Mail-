@@ -17,10 +17,13 @@ class CustomUserCreationForm(UserCreationForm):
         user.first_name = self.cleaned_data['fname']
         user.last_name = self.cleaned_data['lname']
         user.email = self.cleaned_data['email']
-        user.username = self.cleaned_data['email']  # Set username to email
-        user.pnumber = self.cleaned_data['pnumber']  # Save pnumber in the User model
+        user.username = self.cleaned_data['email']  
+        user.pnumber = self.cleaned_data['pnumber']  
         
         if commit:
             user.save()
         
         return user
+
+class EmailSearchForm(forms.Form):
+    search_query = forms.CharField(label='Search Emails', max_length=100)
