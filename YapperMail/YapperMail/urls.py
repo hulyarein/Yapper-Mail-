@@ -25,4 +25,6 @@ urlpatterns = [
     path('teamemailmanagement/',include('TeamEmails.urls')),
     path('chatbot/',include("Chatbot.urls"))
 ]
+
+
  

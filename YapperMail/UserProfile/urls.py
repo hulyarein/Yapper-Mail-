@@ -12,3 +12,5 @@ urlpatterns = [
     path('profilePage/Password', views.changePassword, name='changePassword'),
     path('logout', views.logout_user, name='logout')
 ]
+
+

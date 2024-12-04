@@ -1,19 +1,24 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from .forms import EmailComposeForm,ReplyComposeForm,EditEmailForm,EditReplyForm,SearchForm
-from .models import Email,EmailFiles,TemporaryUser,Reply,ReplyFiles
+from .models import Email,EmailFiles,TemporaryUser,Reply,ReplyFiles,CategoryEmail
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist,ValidationError
 from django.http import FileResponse, Http404
 import os
 from urllib.parse import unquote
+from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse,HttpResponse
 from django.db.models import Q
+from landing.models import *
+from django.contrib import messages
+from django.db import IntegrityError,DatabaseError
+from django.templatetags.static import static
 
 
 # Create your views here.
-
+@login_required
 def email_composition(request,pk):
     error_message = False
     if request.method == "POST":
@@ -26,7 +31,7 @@ def email_composition(request,pk):
 
             try:
                 fromUser = request.user
-                toUserDatabase = User.objects.get(email = toUser)
+                toUserDatabase = CustomUser.objects.get(email = toUser)
                 email = Email(
                     fromUser=fromUser,
                     toUser=toUserDatabase,
@@ -48,9 +53,30 @@ def email_composition(request,pk):
                 else:
                     print("No files were uploaded.")
 
+                categemailFrom = CategoryEmail(
+                    userCat = fromUser,
+                    emaildCat = email
+                )
+                categemailFrom.save()
+
+                if fromUser != toUserDatabase:
+
+                    categemailTo = CategoryEmail(
+                        userCat = toUserDatabase,
+                        emaildCat = email
+                    )
+                    categemailTo.save()
+
                 return redirect('emailListView')
-            except ObjectDoesNotExist:
+            except CustomUser.DoesNotExist:
                 error_message = True
+            except IntegrityError as e:
+                error_message = True
+                messages.error(request, f"Database error: {e}")
+            except Exception as e:
+                error_message = True
+                print(f"Unexpected error: {e}")
+                messages.error(request, "An unexpected error occurred. Please try again.")
         else:
             print("Not working")
             print(form.errors)
@@ -60,14 +86,21 @@ def email_composition(request,pk):
 
     return render(request,"composeEmail.html",{'form':form,"errormessage":error_message})
 
-
+@login_required
 def email_sent_view(request,pk,ok):
-    getEmail = Email.objects.get(id = ok)
 
-    getFiles = EmailFiles.objects.filter(emailId = getEmail)
-
-    #userRep = TemporaryUser.objects.get(id = pk)
-    userRep = User.objects.get(id = pk)
+    getEmail = get_object_or_404(Email, id=ok)
+    userRep = get_object_or_404(CustomUser, id=pk)
+    getFiles = EmailFiles.objects.filter(emailId=getEmail)
+    allCateg = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
+    OtherUserHold = ""
+    if(userRep == getEmail.fromUser):
+        OtherUserHold = getEmail.toUser
+    
+    else:
+        OtherUserHold = getEmail.fromUser
+    
+    
 
 
     if request.method == "POST":
@@ -108,9 +141,16 @@ def email_sent_view(request,pk,ok):
     
     allRep = Reply.objects.filter(emailId = getEmail)
     allRepFiles = ReplyFiles.objects.filter(emailId = getEmail)
-        
-    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep})
+    profilepicFrom = userRep.profile_picture.url if userRep.profile_picture else static('images/default_profile.jpg')
+    profilepicTo = OtherUserHold.profile_picture.url if OtherUserHold.profile_picture else static('images/default_profile.jpg')
+    print(profilepicFrom)
+    print(profilepicTo)
+    print(OtherUserHold)
 
+        
+    return render(request,"emailSentView.html",{'form':form,'emailCont':getEmail,'filesCont':getFiles,'allRep':allRep,'allRepFiles':allRepFiles,'userRep':userRep,'allCateg':allCateg,"profilepicFrom":profilepicFrom,"profilepicTo":profilepicTo,"OtherUserHold":OtherUserHold})
+
+@login_required
 def email_reply_view(request):
 
     if request.method == "POST":
@@ -121,7 +161,7 @@ def email_reply_view(request):
 
             try:
                 emailRep = Email.objects.get(id = pk)
-                userRep = models.CustomUser.objects.get(id = 3)
+                userRep = CustomUser.objects.get(id = 3)
 
                 replyModel = Reply(
                     fromUser = userRep,
@@ -143,9 +183,12 @@ def email_reply_view(request):
         
     return render(request,"emailReceiveView.html",{'form':form})
 
+@login_required
 def edit_email(request,pk,uk):
-    getEmail = Email.objects.get(id = pk)
-    getFiles = EmailFiles.objects.filter(emailId = getEmail)
+    getEmail = get_object_or_404(Email, id=pk)
+    getFiles = EmailFiles.objects.filter(emailId=getEmail)
+    error_message = "Flase"
+    error_mes = ""
     
     if request.method == "POST":
         form = EditEmailForm(request.POST)
@@ -174,14 +217,15 @@ def edit_email(request,pk,uk):
                     print("No files were uploaded.")
 
                 return redirect(f'../../emailSentView/{uk}/{pk}')
-            except ObjectDoesNotExist:
-                error_message = True
+            except CustomUser.DoesNotExist:
+                error_mes = "The recipient does not exist."
+            except ValidationError as e:
+                error_mes= f"Validation error: {str(e)}"
+            except Exception as e:
+                error_mes = f"An unexpected error occurred: {str(e)}"
         else:
+            error_message= "True"
             print("not valid")
-
-
-
-
     else:
         initialValue = {
             'toUser':getEmail.toUser.email,
@@ -190,8 +234,9 @@ def edit_email(request,pk,uk):
         }
         form = EditEmailForm(initial = initialValue)
 
-    return render(request,"editEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk})
+    return render(request,"editEmail.html",{'form':form,'emailSent':getEmail,'emailFilesSent':getFiles,"userRep":uk,"errorMess":error_message})
 
+@login_required
 def editExistingImage(request,pk):
     '''getEmail = Email.objects.get(id = pk)
     getFiles = EmailFiles.objects.filter(emailId = getEmail)
@@ -224,10 +269,11 @@ def editExistingImage(request,pk):
 
 
 
-
+@login_required
 def edit_reply(request,pk,uk):
-    getReply = Reply.objects.get(id = pk)
-    getReplyFiles = ReplyFiles.objects.filter(replyid = getReply)
+    error_messagerep = "False"
+    getReply = get_object_or_404(Reply, id=pk)
+    getReplyFiles = ReplyFiles.objects.filter(replyid=getReply)
     if request.method == "POST":
         form = EditReplyForm(request.POST)
         if form.is_valid():
@@ -254,17 +300,17 @@ def edit_reply(request,pk,uk):
 
             except ObjectDoesNotExist:
                 print("Does Not exist")
-
-
-
+        else:
+            error_messagerep = "True"
     else:
         initialValue = {
             'description':getReply.content
         }
         form = EditReplyForm(initial=initialValue)
 
-    return render(request,"editReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk})
+    return render(request,"editReply.html",{'form':form,'myfiles':getReplyFiles,'reply':getReply,'userRep':uk,"errorme":error_messagerep})
 
+@login_required
 def existingReplyFile(request, pk):
     if request.method == 'POST':
         try:
@@ -295,10 +341,13 @@ def existingReplyFile(request, pk):
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 UPLOAD_DIRECTORY = os.path.join(BASE_DIR, "")
 
+@login_required
 def download_file(request, filename):
+    print(BASE_DIR)
+    print(UPLOAD_DIRECTORY)
     filename = unquote(filename)
 
-    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY, filename))
+    file_path = os.path.normpath(os.path.join(UPLOAD_DIRECTORY,'media', filename))
 
     print("Requested filename:", filename)
     print("Full file path:", file_path)
@@ -313,16 +362,85 @@ def download_file(request, filename):
         raise Http404(f"File not found: {filename}")
     
 
-
+@login_required
 def emailListView(request):
     form = SearchForm()
 
-    #userVar = TemporaryUser.objects.get(id = 1)
-    userVar = request.user
-    emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
-    deletedEmails = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
-    return render(request,'emailList.html',{'form':form,'emails':emailsVar,'LogUser':userVar})
+    try:
+        userVar = request.user
+        if not CustomUser.objects.filter(id=userVar.id).exists():
+            raise ObjectDoesNotExist("The logged-in user no longer exists in the database.")
 
+        emailsVar = Email.objects.filter(
+            (Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted=False)
+        )
+        deletedEmails = Email.objects.filter(
+            (Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted=True)
+        )
+
+        print(userVar.profile_picture.url)
+
+        listUserme = []
+
+        for nnn in emailsVar:
+            bbb = nnn.fromUser.profile_picture.url if nnn.fromUser.profile_picture else static('images/default_profile.jpg')
+            listUserme.append(bbb)
+
+        for mmm in range(len(listUserme)):
+            emailsVar[mmm].profshowme = listUserme[mmm]
+
+        profilepic = userVar.profile_picture.url if userVar.profile_picture else static('images/default_profile.jpg')
+
+
+
+
+    except ObjectDoesNotExist:
+        emailsVar = []
+        deletedEmails = []
+        form = None
+        return render(
+            request,
+            'emailList.html',
+            {
+                'form': form,
+                'emails': emailsVar,
+                'LogUser': None,
+                'error_message': "User or related data does not exist.",
+            },
+        )
+
+    except DatabaseError as db_err:
+        print(f"Database error: {db_err}")
+        return render(
+            request,
+            'emailList.html',
+            {
+                'form': None,
+                'emails': [],
+                'LogUser': None,
+                'error_message': "A database error occurred. Please try again later.",
+            },
+        )
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return render(
+            request,
+            'emailList.html',
+            {
+                'form': None,
+                'emails': [],
+                'LogUser': None,
+                'error_message': "An unexpected error occurred. Please contact support.",
+            },
+        )
+
+    return render(request,'emailList.html',{'form':form,'emails':emailsVar,'LogUser':userVar,'profilepic':profilepic})
+
+
+    
+
+@login_required
 def sentEmailList(request):
     if request.method == "POST":
         try:
@@ -332,14 +450,15 @@ def sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = Email.objects.filter(Q(fromUser=userVar) & Q(isDeleted = False))
-
+                default_profile_picture = static('images/default_profile.jpg')
                 email_data = [
                     {
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
-                        "toUser":email.toUser.email
+                        "toUser":email.toUser.email,
+                        "profshowme": email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -351,14 +470,15 @@ def sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = Email.objects.filter(Q(toUser=userVar) & Q(isDeleted = False))
-
+                default_profile_picture = static('images/default_profile.jpg')
                 email_data = [
                     {
                         "id": email.id,
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
-                        "toUser":email.toUser.email
+                        "toUser":email.toUser.email,
+                        "profshowme": email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -369,6 +489,7 @@ def sentEmailList(request):
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
                 emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = False))
+                default_profile_picture = static('images/default_profile.jpg')
 
                 email_data = [
                     {
@@ -376,7 +497,8 @@ def sentEmailList(request):
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
-                        "toUser":email.toUser.email
+                        "toUser":email.toUser.email,
+                        "profshowme": email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -386,7 +508,8 @@ def sentEmailList(request):
             elif data.get('sentNum') == 5:
                 #userVar = TemporaryUser.objects.get(id=1)
                 userVar = request.user
-                emailsVar = Email.objects.filter(Q(isDeleted = True))
+                emailsVar = Email.objects.filter((Q(fromUser=userVar) | Q(toUser=userVar)) & Q(isDeleted = True))
+                default_profile_picture = static('images/default_profile.jpg')
 
                 email_data = [
                     {
@@ -394,7 +517,8 @@ def sentEmailList(request):
                         "subject": email.subject,
                         "content": email.content,
                         "fromUser": email.fromUser.email,
-                        "toUser":email.toUser.email
+                        "toUser":email.toUser.email,
+                        "profshowme": email.fromUser.profile_picture.url if email.fromUser.profile_picture else default_profile_picture
                     }
                     for email in emailsVar
                 ]
@@ -411,16 +535,16 @@ def sentEmailList(request):
     #
     return JsonResponse({'emails': "not Post"}, status=400)
 
-
+@login_required
 def deleteEmailFunc(request):
+    data = json.loads(request.body)
+    email_id = data.get('delId')
+
+    if not email_id:
+        return JsonResponse({'message': 'Email ID is required.'}, status=400)
+
+    emailsVar = get_object_or_404(Email, id=email_id)
     try:
-        data = json.loads(request.body)
-        email_id = data.get('delId')
-
-        if not email_id:
-            return JsonResponse({'message': 'Email ID is required.'}, status=400)
-
-        emailsVar = Email.objects.get(id=email_id)
 
         if emailsVar.isDeleted:
             emailsVar.isDeleted = False
@@ -432,10 +556,9 @@ def deleteEmailFunc(request):
             emailsVar.save()
 
             return JsonResponse({'message': 'Email deleted successfully.'}, status=200)
-
-    except ObjectDoesNotExist:
+    except Http404:
         return JsonResponse({'message': 'Email not found.'}, status=404)
-
+    
     except json.JSONDecodeError:
         return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
 
@@ -445,7 +568,7 @@ def deleteEmailFunc(request):
         return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
 
 
-
+@login_required
 def deleteReplyFunc(request):
     try:
         data = json.loads(request.body)
@@ -455,7 +578,7 @@ def deleteReplyFunc(request):
             return JsonResponse({'message': 'Reply ID is required.'}, status=400)
 
         # 
-        replyVar = Reply.objects.get(id=reply_id)
+        replyVar = get_object_or_404(Reply, id=reply_id)
         replyVar.delete()
 
         return JsonResponse({'message': 'Reply deleted successfully.'}, status=200)
@@ -470,3 +593,88 @@ def deleteReplyFunc(request):
         # 
         print(f"Unexpected error: {e}")
         return JsonResponse({'message': 'An error occurred while deleting the reply.'}, status=500)
+    
+
+@login_required
+def changeIsImportant(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(Email, id=emailid)
+        userRep = get_object_or_404(CustomUser, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate= True
+            allCateginst.isScheduled = False
+            allCateginst.isDo = False
+            allCateginst.save()
+
+            return JsonResponse({"message":"Successfull"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
+
+@login_required
+def changeIsScheduled(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(Email, id=emailid)
+        userRep = get_object_or_404(CustomUser, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate = False
+            allCateginst.isScheduled = True
+            allCateginst.isDo = False
+            allCateginst.save()
+
+            return JsonResponse({"message":"Success"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
+
+@login_required
+def changeIsSnooze(request):
+    if(request.method == "POST"):
+        data = json.loads(request.body)
+        emailid = data.get("emailid")
+        userid = data.get("userid")
+        getEmail = get_object_or_404(Email, id=emailid)
+        userRep = get_object_or_404(CustomUser, id=userid)
+        print(emailid)
+        try:
+            allCateginst = get_object_or_404(CategoryEmail, userCat=userRep, emaildCat=getEmail)
+            allCateginst.isDelegate = False
+            allCateginst.isScheduled = False
+            allCateginst.isDo = True
+            allCateginst.save()
+
+            return JsonResponse({"message":"Success"})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error":"Email does not exist"},status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+        except Exception as e: 
+            print(f"Unexpected error: {e}")
+            return JsonResponse({'message': 'An error occurred while updating the email.'}, status=500)
+
+    return JsonResponse({"error":"not a Post method"},status = 400)
