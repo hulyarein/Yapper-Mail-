@@ -159,12 +159,12 @@ USE_TZ = True
 #                     '../YapperMail/EmailCompositionAndManagement/static',
 #                     os.path.join(BASE_DIR, 'notifications_app/static/'),
 #                     ]
-STATIC_URL = '/static/
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
                     os.path.join(BASE_DIR, 'globalstatic'),
                     os.path.join(BASE_DIR, 'landing/static'),
                     os.path.join(BASE_DIR, 'EmailCompositionAndManagement/static'),  # Use absolute path
-                    os.path.join(BASE_DIR, 'notifications_app/static'),  # Ensure this is correct
+                    os.path.join(BASE_DIR, 'notifications_app/static'),]  # Ensure this is correct
 # =======
 # STATIC_URL = '/static/'
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'landing/static'),

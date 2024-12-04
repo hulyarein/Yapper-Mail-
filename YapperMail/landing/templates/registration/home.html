@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yapper</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -85,13 +86,13 @@
             </div>
           </a>
 
-          <a href="{% url 'email_list' %}">
-            <div class="navigation-item"><i class="bi bi-inbox"></i> Inbox</div>
+          <a>
+            <div class="navigation-item clickInbox" style="cursor: pointer;"><i class="bi bi-inbox"></i> Inbox</div>
           </a>
 
-          <div class="navigation-item">
+          <div class="navigation-item clickTeam" style="cursor: pointer;">
             <i class="bi bi-people-fill"></i>
-            <a href="{% url 'login' %}">Team</a>
+            <a>Team</a>
           </div>
 
           <div class="navigation-item">
@@ -99,9 +100,9 @@
             <a href="{% url 'login' %}">Calendar</a>
           </div>
 
-          <div class="navigation-item">
-            <i class="bi bi-trash"></i>
-            <a href="{% url 'login' %}">Trash</a>
+          <div class="navigation-item clickchatBot" style="cursor: pointer;">
+            <i class="fas fa-robot"></i>
+            <a>Chatbot</a>
           </div>
         </div>
 
@@ -199,6 +200,24 @@
   </div>
 
 <script>
+
+  /*click inbox to go this emailmanagement/emailList location*/
+  var clickInbox = document.querySelector(".clickInbox")
+  clickInbox.addEventListener("click",function(e){
+    window.location.href = "../emailmanagement/emailList"
+  })
+
+  var teamClick = document.querySelector(".clickTeam")
+  teamClick.addEventListener("click",function(e){
+    window.location.href = "../teamemailmanagement/emailList"
+  })
+
+  var clickchatBot = document.querySelector(".clickchatBot")
+  clickchatBot.addEventListener("click",function(e){
+    window.location.href = "../chatbot/chatbotsystem/"
+  })
+
+  
   let email, fromUser, subject, content;
   const currUser = "{{ user.username }}";
   const notificationList = document.querySelector('#notificationList'); 
