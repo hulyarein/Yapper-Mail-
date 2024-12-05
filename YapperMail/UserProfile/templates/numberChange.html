@@ -21,48 +21,68 @@
   <body class="bg-[#F4F4F4]">
     {% include 'components/header.html' %}
 
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.4/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"></script>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js";
+    <script type="module" defer>
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
       import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-auth.js";
       import { firebaseConfig } from "{% static 'Script/fbconfig.js' %}";
-    
+      
       const app = initializeApp(firebaseConfig);
+      if (!app) {
+        console.error("Firebase app initialization failed.");
+      }
       const auth = getAuth(app);
-    
+      
       let cooldownActive = false;
       let cooldownTime = 300;
-      let appVerifier;
-    
+      let appVerifier = null;
+      
       function sendVerificationCode() {
         if (cooldownActive) return;
-    
+      
         const phoneNumber = document.querySelector('input[name="pnumber"]').value;
-        
-        if (appVerifier) {
-          appVerifier.clear();
+      
+        // Check if the reCAPTCHA container exists before initializing
+        const recaptchaContainer = document.getElementById('recaptcha-container');
+        if (!recaptchaContainer) {
+          console.error("reCAPTCHA container not found.");
+          return;
         }
-
-        appVerifier = new RecaptchaVerifier('recaptcha-container', {
-          'size': 'invisible',
-        }, auth);
     
-        // Send the verification code
+        if (!appVerifier) {
+          try {
+            appVerifier = new RecaptchaVerifier(recaptchaContainer, {
+              size: 'invisible',
+            }, auth);
+            console.log("RecaptchaVerifier initialized successfully.");
+          } catch (err) {
+            console.error("Error initializing RecaptchaVerifier:", err);
+            return; // Exit if initialization fails
+          }
+        } else {
+          try {
+            appVerifier.clear(); // Reset the previous reCAPTCHA instance
+            appVerifier = null;  // Nullify it for reinitialization
+          } catch (err) {
+            console.error("Error clearing previous reCAPTCHA instance:", err);
+          }
+        }
+    
+        // Use the existing appVerifier instance
         signInWithPhoneNumber(auth, phoneNumber, appVerifier)
           .then((confirmationResult) => {
-            // Store the confirmation result to verify the code later
             window.confirmationResult = confirmationResult;
             startCooldown();
           })
           .catch((error) => {
+            console.error("Error during verification:", error);
+    
+            // Display error message
             const errorMessagesDiv = document.getElementById('errorMessages');
             errorMessagesDiv.textContent = error.message;
-            errorMessagesDiv.style.display = "block"; // Show the error message
-            console.error("Error during verification:", error);
-
-            // Optionally show an error message to the user
+            errorMessagesDiv.style.display = "block";
           });
       }
     
@@ -87,25 +107,23 @@
           }
         }, 1000);
       }
-
+    
       window.onload = function() {
-        // Ensure the fields are reset to initial values on page load
         document.getElementById('pnumber').value = '{{ form.pnumber.value }}';
         document.getElementById('verificationCode').value = '';
         document.getElementById('openModal').disabled = true;
       };
-
+    
       document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('myForm');
-        const submitButton = document.getElementById  ('openModal');
+        const submitButton = document.getElementById('openModal');
         const passBtn = document.getElementById('passVerifyBtn');
-
+    
         form.reset();
         submitButton.disabled = true;
         passBtn.disabled = true;
     
         let initialPass = document.getElementById('passVerify').value;
-        // Capture initial values
         let initialValues = {
           phone_number: document.getElementById('pnumber').value,
           verification_code: document.getElementById('verificationCode').value
@@ -118,24 +136,19 @@
           };
     
           const currPass = document.getElementById('passVerify').value;
-    
-          // Check if values have changed
-          const hasChanges = 
+          const hasChanges =
             currentValues.phone_number !== initialValues.phone_number &&
-            currentValues.verification_code !==  initialValues.verification_code; 
+            currentValues.verification_code !== initialValues.verification_code;
     
           const hasPass = currPass !== initialPass;
-
-          console.log(hasChanges);
     
           passBtn.disabled = !hasPass;
-          submitButton.disabled = !hasChanges; 
+          submitButton.disabled = !hasChanges;
         };
-
+    
         document.getElementById('pnumber').addEventListener("input", () => {
           const selectedCode = selected_option.querySelector("strong").innerText.trim(); // Get current selected country code
           if (!input_box.value.startsWith(selectedCode)) {
-            // Ensure the input starts with the selected country code
             const userInput = input_box.value.replace(/^\+\d+/, ""); // Remove any existing country code
             input_box.value = `${selectedCode}${userInput}`;
           }
@@ -146,53 +159,46 @@
         let modalElement, modalInstance;
     
         submitButton.addEventListener('click', () => {
-            const modalElement = document.getElementById('exampleModal'); // Get the modal element
-            const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement); // Initialize modal instance
-
-            const verificationCode = document.getElementById('verificationCode').value;
-
-            // Check if confirmationResult is available (from sendVerificationCode success)
-            if (window.confirmationResult) {
-                window.confirmationResult.confirm(verificationCode)
-                    .then((result) => {
-                        // OTP verification successful
-                        console.log("Verification successful:", result);
-                        modalInstance.show(); // Show the modal only if verification is successful
-                    })
-                    .catch((error) => {
-                        // OTP verification failed
-                        console.error("OTP verification failed:", error);
-                        
-                        // Display an error message to the user
-                        const errorMessagesDiv = document.getElementById('errorMessages');
-                        errorMessagesDiv.textContent = "Invalid verification code. Please try again.";
-                        errorMessagesDiv.style.display = "block"; // Show the error message
-
-                        // Optionally, reset the verification code input
-                        document.getElementById('verificationCode').value = '';
-                        
-                        // Hide the modal if it was opened earlier
-                        if (modalInstance) {
-                            modalInstance.hide();
-                        }
-                    });
-            } else {
-                console.error("Confirmation result not available. Please send a verification code first.");
-                // Optionally show an error message
-            }
+          const modalElement = document.getElementById('exampleModal');
+          const modalInstance = new bootstrap.Modal(modalElement);
+          
+          const verificationCode = document.getElementById('verificationCode').value;
+        
+          if (window.confirmationResult) {
+            window.confirmationResult.confirm(verificationCode)
+              .then((result) => {
+                console.log("Verification successful:", result);
+                modalInstance.show(); // Only show the modal if the verification is successful
+              })
+              .catch((error) => {
+                console.error("OTP verification failed:", error);
+        
+                const errorMessagesDiv = document.getElementById('errorMessages');
+                errorMessagesDiv.textContent = "Invalid verification code. Please try again.";
+                errorMessagesDiv.style.display = "block";
+        
+                document.getElementById('verificationCode').value = '';
+        
+                // Hide the modal if the verification fails
+                modalInstance.hide();
+              });
+          } else {
+            console.error("Confirmation result not available. Please send a verification code first.");
+          }
         });
-
+        
+    
         document.getElementById('sendVerificationLink').addEventListener('click', (event) => {
-          event.preventDefault(); // Prevent default anchor behavior
+          event.preventDefault();
           sendVerificationCode();
         });
-
+    
         form.addEventListener('submit', (event) => {
-          event.preventDefault(); // Prevent default form submission
-
-          const modalElement = document.getElementById('exampleModal'); // Get the modal element
-          const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement); // Initialize modal instance
-
+          event.preventDefault();
+    
+          const modalElement = document.getElementById('exampleModal');
+          const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+    
           fetch(form.action, {
             method: 'POST',
             headers: {
@@ -211,13 +217,9 @@
             } else {
               document.getElementById('passVerify').value = '';
               modalInstance.hide();
-              alert('Changes saved successfully!'); 
-
-              // Update initial values to the current ones after successful submission
+              alert('Changes saved successfully!');
               initialValues.phone_number = document.getElementById('pnumber').value;
               document.getElementById('verificationCode').value = "";
-
-              // Recheck to disable buttons if no changes detected
               checkChanges();
             }
           })
@@ -225,9 +227,10 @@
             console.error('Error:', error);
           });
         });
-
       });
     </script>
+    
+    
     
     
     <div class="header">{% block header %}{% endblock %}</div>

@@ -535,6 +535,25 @@ def sentEmailList(request):
 @login_required
 def deleteEmailFunc(request):
     data = json.loads(request.body)
+
+    try:
+        if data.get('deleteAllEmails') == True:
+            userVar = request.user
+            emailsVar = Email.objects.filter(Q(fromUser=userVar) & Q(isDeleted = True))
+            emailsVar.delete()
+
+            return JsonResponse({'message': 'All emails deleted successfully.'}, status=200)
+    except Http404:
+        return JsonResponse({'message': 'Email not found.'}, status=404)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({'message': 'Invalid JSON data.'}, status=400)
+
+    except Exception as e:
+        # 
+        print(f"Unexpected error: {e}")
+        return JsonResponse({'message': 'An error occurred while deleting the email.'}, status=500)
+
     email_id = data.get('delId')
 
     if not email_id:
@@ -542,6 +561,10 @@ def deleteEmailFunc(request):
 
     emailsVar = get_object_or_404(Email, id=email_id)
     try:
+        if data.get('permanentDelete') == True:
+            emailsVar.delete()
+            
+            return JsonResponse({'message': 'Email deleted permanently.'}, status=200)
 
         if emailsVar.isDeleted:
             emailsVar.isDeleted = False

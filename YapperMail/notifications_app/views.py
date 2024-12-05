@@ -23,7 +23,7 @@ def index(request, pk):
 
 
             try:
-                fromUser = request.user
+                fromUser = CustomUser.objects.get(id = pk)
                 toUserDatabase = CustomUser.objects.get(email = toUser)
                 email = Email(
                     fromUser=fromUser,
