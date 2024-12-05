@@ -93,12 +93,15 @@ def home(request):
     plans = Email.objects.filter(toUser=request.user).order_by('-date_sent')[:1]
     notifications = Notification.objects.filter(to_user=request.user).order_by('-created_at')[:10]
     usermeid = request.user.id
+
+    notif_read = Notification.objects.filter(is_read=False)
     
     context = {
         'usermeid': usermeid,
         'emails': emails,
         'plans': plans,
-        'notifications' : notifications
+        'notifications' : notifications,
+        'are_read' : True if len(notif_read) == 0 else False
     }
 
     return render(request, 'registration/home.html', context)  

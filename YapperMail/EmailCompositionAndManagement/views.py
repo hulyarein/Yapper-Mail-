@@ -97,6 +97,10 @@ def email_composition(request,pk):
 
 @login_required
 def email_sent_view(request,pk,ok):
+    notification = Notification.objects.get(email_id = ok)
+    notification.is_read = True
+    print("Notification: ", notification.title)
+    notification.save()
 
     getEmail = get_object_or_404(Email, id=ok)
     userRep = get_object_or_404(CustomUser, id=pk)

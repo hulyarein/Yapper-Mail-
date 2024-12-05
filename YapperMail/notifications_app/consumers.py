@@ -4,6 +4,7 @@ from EmailCompositionAndManagement.models import *
 from asgiref.sync import async_to_sync
 from landing.models import CustomUser
 from .models import Notification
+import traceback
 
 class AppNotifications(WebsocketConsumer):
     def connect(self):
@@ -40,9 +41,33 @@ class AppNotifications(WebsocketConsumer):
             from_user = CustomUser.objects.filter(id=from_user_id).first()
             to_user = CustomUser.objects.filter(username=to_user_id).first()
 
+            email = Email.objects.get_or_create(
+                fromUser = from_user,
+                toUser = to_user,
+                subject = email_data["subject"],
+                content = email_data["content"]
+            )
+
+
+
             # Send the notification to the 'global_notif' group (broadcast to all users)
-            async_to_sync(self.channel_layer.group_send)(
-                'global_notif',  # Using the 'global_notif' group name for global notifications
+            # async_to_sync(self.channel_layer.group_send)(
+            #     'global_notif',  # Using the 'global_notif' group name for global notifications
+                # {
+                #     'type': 'email_notification',
+                #     'email': {
+                #         'toUser': to_user.username,
+                #         'fromUser': from_user.username,
+                #         'subject': subject,
+                #         'content': content,
+                #         'emailId' : email[0].id,
+                #         'fromUserId' : from_user_id,
+                #         'is_read' : False
+                #     }
+                # }
+            # )
+
+            self.send(text_data=json.dumps(
                 {
                     'type': 'email_notification',
                     'email': {
@@ -50,26 +75,16 @@ class AppNotifications(WebsocketConsumer):
                         'fromUser': from_user.username,
                         'subject': subject,
                         'content': content,
-                        'emailId' : email_data[0].id,
+                        'emailId' : email[0].id,
                         'fromUserId' : from_user_id,
                         'is_read' : False
                     }
-                }
-            )
+                }))
         except CustomUser.DoesNotExist:
             self.send(text_data=json.dumps({
                 'result': 'Invalid User(s) specified'
             }))
         except Exception as e:
             self.send(text_data=json.dumps({
-                'result': f'Error: {str(e)}'
+                'result': f'Error: {e}'
             }))
-
-    def email_notification(self, event):
-        # This method is triggered by group_send
-        print("Sending this data to all users!")
-        email_data = event['email']
-        self.send(text_data=json.dumps({
-            'type': 'email_notification',
-            'email': email_data
-        }))

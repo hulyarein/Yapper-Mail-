@@ -120,15 +120,24 @@
               aria-expanded="false"
               style="border: none; box-shadow: none; background-color: #FEDEE3;">
               <i class="bi bi-bell" style="color: #f37d84; font-size: 2em; background-color: #FEDEE3;"></i>
-              <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  
+
+
+              {% comment %} {% if not are_read  %}  {% endcomment %}
+              <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="{% if are_read  %} display: none;{% endif %} "> 
               </span>
+              {% comment %} {% endif %} {% endcomment %}
+                  
+              
           </button>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" id="notificationList">
             {% for notification in notifications %}
-              <a href="/emailmanagement/emailSentView/{{ request.user.id }}/{{notification.email_id.id }}"  class="dropdown-item" onclick="markAsRead(this)">
+              <a href="/emailmanagement/emailSentView/{{ request.user.id }}/{{notification.email_id.id }}"  class="dropdown-item">
                   <strong>{{ notification.from_user.username }}</strong><br>{{ notification.title }}<br><small>{{ notification.message }}</small>
+                  
+                  {% if not notification.is_read %}
                   <span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>
+                  {% endif %}
+                  
               </a> 
             {% endfor %}
           </ul>
@@ -189,32 +198,6 @@
             <a href="{% url 'login' %}">Logout</a>
           </div>
         </div>
-
-        {% comment %} <div class="recent-navigation">
-          <span style="color: #f37d84">Recent</span>
-          <div class="recent-navigation-container">
-            <div
-              class="recent-navigation-item"
-              style="background-color: green"
-            ></div>
-            <div
-              class="recent-navigation-item"
-              style="background-color: orange"
-            ></div>
-            <div
-              class="recent-navigation-item"
-              style="background-color: purple"
-            ></div>
-            <div
-              class="recent-navigation-item"
-              style="background-color: red"
-            ></div>
-            <div
-              class="recent-navigation-item"
-              style="background-color: blue"
-            ></div>
-          </div>
-        </div>  {% endcomment %}
       </div>
 
       <div class="home-body-2">
@@ -280,6 +263,7 @@
   </div>
 
   <script>
+    document.onLoad
 
     var clickInbox = document.querySelector(".clickInbox")
     clickInbox.addEventListener("click",function(e){
@@ -337,165 +321,21 @@
                     <strong>${email.toUser}</strong><br>
                     ${email.subject}<br>
                     <small>${email.content}</small>
+                    <span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>
                 `;
-
-                if (!email.is_read) {
-                  const unreadIndicator = document.createElement("span");
-                  unreadIndicator.classList.add("unread-indicator");
-                  unreadIndicator.style.cssText = "float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;";
-                  notificationItem.appendChild(unreadIndicator);
-                }
 
                 notificationList.insertBefore(notificationItem, notificationList.firstChild);
 
-                const unreadCount = notifications.filter(n => !n.read).length;
+                notificationBadge.style.display = "block"
+
+                // const unreadCount = notifications.filter(n => !n.read).length;
                 
-                notificationBadge.style.display = "block";
-                notificationBadge.innerText = unreadCount;
+                // notificationBadge.style.display = "block";
+                // notificationBadge.innerText = unreadCount;
             }
         }
     };
 
-    {% comment %} function markNotificationAsRead(notification) {
-        notifications = notifications.map(notif => {
-            if (notif.fromUser === notification.fromUser && notif.subject === notification.subject) {
-                notif.read = true;
-            }
-            return notif;
-        });
-
-        const unreadCount = notifications.filter(n => !n.read).length;
-        notificationBadge.innerText = unreadCount;
-        if (unreadCount === 0) {
-            notificationBadge.style.display = "none";
-        }
-    };  {% endcomment %}
-
-    function markAsRead(notificationElementt) {
-      const unreadIndicator = notificationElement.querySelector(".unread-indicator");
-      if (unreadIndicator) {
-          unreadIndicator.style.display = "none";
-      }
-
-      notificationElement.style.color = "#6c757d";
-
-      const badge = document.getElementById("notificationBadge");
-      let count = parseInt(badge.textContent);
-      count = count > 0 ? count - 1 : 0;
-      badge.textContent = count;
-
-      if (count === 0) {
-          badge.style.display = "none";
-      }
-    }
-
-      notifications.forEach(notification => {
-          const notificationItem = document.createElement("li");
-          notificationItem.classList.add("dropdown-item");
-          if (notification.read) {
-              notificationItem.classList.add("read-notification");
-          }
-          notificationItem.innerHTML = `
-              <strong>${notification.fromUser}</strong><br>${notification.subject}<br><small>${notification.content}</small>
-              ${!notification.read ? '<span class="unread-indicator" style="float: right; width: 8px; height: 8px; background-color: red; border-radius: 50%;"></span>' : ''}
-          `;
-
-          notificationItem.addEventListener("click", () => {
-
-              markNotificationAsRead(notification);
-              notificationItem.classList.add("read-notification");
-              const unreadIndicator = notificationItem.querySelector(".unread-indicator");
-              if (unreadIndicator) {
-                  unreadIndicator.style.display = "none"; 
-              }
-
-              fetch('/email_view/', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                      fromUser: notification.fromUser,
-                      subject: notification.subject,
-                      content: notification.content
-                  })
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.status === 'success') {
-                      fetch('/retrieve_email_view/', {
-                          method: 'GET',
-                          headers: {
-                              'Content-Type': 'application/json',
-                          }
-                      })
-                      .then(response => response.json())
-                      .then(data => {
-                          if (data.email_data) {
-                              console.log(data.email_data);  
-                              window.location.href = '/receive_view/';
-                          } else {
-                              console.log('Error: No email data found');
-                          }
-                      })
-                      .catch(error => console.error('Error fetching email data:', error));
-                  }
-              })
-              .catch(error => console.error('Error sending email data:', error));
-          });
-
-          console.log("Here")
-          notificationList.insertBefore(notificationItem, notificationList.firstChild);
-      });
-
-      const unreadCount = notifications.filter(n => !n.read).length;
-      notificationBadge.style.display = unreadCount > 0 ? "block" : "none";
-      notificationBadge.innerText = unreadCount;
-
-      const searchResultItems = document.querySelectorAll('.search-result-item');
-        
-        searchResultItems.forEach(item => {
-            item.addEventListener("click", function () {
-                const fromUser = item.getAttribute("data-from-user");
-                const subject = item.getAttribute("data-subject");
-                const content = item.getAttribute("data-content");
-
-                fetch('/email_view/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        fromUser: fromUser,
-                        subject: subject,
-                        content: content
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        fetch('/retrieve_email_view/', {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.email_data) {
-                                console.log(data.email_data);  
-                                window.location.href = '/receive_view/';
-                            } else {
-                                console.log('Error: No email data found');
-                            }
-                        })
-                        .catch(error => console.error('Error fetching email data:', error));
-                    }
-                    
-                })
-                .catch(error => console.error('Error sending email data:', error));
-            });
-        });
   </script>
 
   <script src = "/static/js/calendar.js"></script>  
