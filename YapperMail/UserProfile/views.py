@@ -56,9 +56,7 @@ def profilePage(request):
 
     return render(request, "profilePage.html", context)
 
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.contrib.auth import authenticate
+
 
 @login_required
 def changeName(request):
